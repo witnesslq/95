@@ -1,0 +1,146 @@
+@CHARSET "UTF-8";
+html,body{
+	margin: 0;
+	padding: 0;
+	font-family: "微软雅黑","宋体", Arial,serif;
+}
+
+a:link,a:visited{color:#1E90FF;text-decoration:none;}
+a:hover{color:#636262;text-decoration:none;}
+
+.btn{ 
+	height: 24px;
+	overflow: hidden;
+	width: 75px;
+	line-height: 24px;
+	cursor: pointer;
+	position: relative;  
+	text-align:center;
+	border: solid 0px #A3C0E8;
+	color:#fff;
+	background:#E0EDFF url(../images/buttonimages/button.gif) left 0;
+}
+.btn:hover, a:hover{
+    background-color:#cef1ff;
+    border:0px solid #a3d3fc;
+    color:#336699;
+}
+
+
+/**
+	伪元素定义disabled的样式
+*/
+input[type='text']:disabled{
+	background-color: white;
+	color:#ACA899;
+}
+
+input[type='text']::-ms-clear{display:none;}
+
+.btn:disabled{
+	border: 0px solid #DDD;
+	background-color: #F5F5F5;
+	color:#ACA899;
+}
+
+/*
+添加、修改页面的 table样式
+*/
+.table_info_box { 
+		width: 100%; 
+		border-collapse: collapse;
+		border: 0px solid #ddd; 
+		font-size: 12px;
+		}
+		
+.table_info_box .td_tit {
+		padding:2px;
+		height:23px;
+		line-height: 23px;
+		color: #135294;
+		}
+.table_info_box .td_cont{ 
+		padding:2px;
+		height:23px;
+		line-height:23px;
+		color: #135294;
+		}
+		
+
+/**
+	用于详细信息
+*/
+.table_infos{  
+	border: 1px solid #B1CDE3;  
+	padding:0;   
+	margin:0 auto;  
+	border-collapse: collapse;  
+	TABLE-LAYOUT:fixed;
+	WORD-BREAK:break-all;
+} 
+.table_infos td {  
+	border: 1px solid #B1CDE3;  
+	background: #fff;  
+	font-size:14px;  
+	padding: 3px 3px 3px 8px;  
+	color: #4f6b72;  
+	height: 24px
+}
+
+.table_infos .td_tit_Report1 { 
+	background: #e8f5fe; 
+	text-align: right;
+	font-size: 12px;
+	font-weight: normal;
+	background:#E0EDFF url(../images/header2-bg.gif) repeat-x center;
+}
+
+/**
+表头
+*/
+.table_infos .td_tit_Report2 { 
+	background: #e8f5fe; 
+	text-align: center;
+	font-size: 12px;
+	height:24px;
+	font-weight: normal;
+	background:#E0EDFF url(../images/header-bg.gif) repeat-x center;
+}
+
+.info_mess{
+	height: 40px;
+	line-height:40px;
+	font-size: 20px;
+	font-weight: bolder;
+	color: #4f6b72;  
+
+}
+
+
+
+/*
+表格上的搜索框
+*/
+.searchDiv{
+		background:#CEDFEF  url('../images/panel-toolbar.gif') repeat-x; 
+	    border:1px solid #9CBAE7;  
+	    border-top:1px solid #EFF7F7;
+		margin:0px;
+		padding: 2px;
+		overflow: auto;
+		}
+.ser_tit{
+		height: 23px;
+		padding: 2px;
+		text-align: right;
+		}
+.ser_cont{
+		height: 23px;
+		padding: 2px;
+		}
+		
+/*鼠标移动到行上时，样式*/
+.my-grid-row-over{
+	cursor: pointer;
+
+}

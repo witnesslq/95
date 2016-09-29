@@ -1,0 +1,24 @@
+@charset "utf-8";
+/* CSS Document */
+body{background:#7ab6e7;  margin:0; padding:0; }
+image { border:0px;}
+.bg{ width:100%;  margin:0; padding:0; }
+.bg1{ 
+background:url(../images/login/bg1.jpg);
+width:1024px; 
+height:527px; 
+position:absolute; 
+left:50%; 
+top:50%; 
+margin-left:-512px;
+margin-top:-260px; }
+
+.dengluk{ float:left;  width:265px; height:134px;margin-top:200px; margin-left:380px;_margin-left:190px; }
+.zh{ float:left; width:265px; height:31px; margin-bottom:16px;}
+.tu{ float:left;}
+.zhanghao{ float:left; width:225px; height:27px; border:1px #b7b7b7 solid;  color:#999; font-size:14px; margin:0; line-height:27px; padding-left:6px;}
+.verifycode{ float:left; width:150px; height:27px; border:1px #b7b7b7 solid;  color:#999; font-size:14px; margin:0; line-height:27px; padding-left:6px;}
+.rcode{ float:left; width:69px; height:31px; border:1px #b7b7b7; font-size:14px; margin:0; line-height:27px; padding-left:6px;}
+.button{ float:left; width:265px; height:37px; display:inline;}
+.login{float:left; background:url(../images/login/denglu.png) no-repeat; width:115px; height:37px;margin-top:18px;}
+.cancel{ float:left;background:url(../images/login/quxiao.png) no-repeat; width:115px; height:37px;margin-top:18px; margin-left:32px; }

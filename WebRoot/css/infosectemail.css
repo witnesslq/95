@@ -1,0 +1,96 @@
+@charset "utf-8";
+
+/* CSS Document */
+body {
+	font-family: "Microsoft YaHei";
+	color: #333;
+	font-size: 14px;
+}
+
+table {
+	border: 1px solid #dddddd;
+	border-spacing: 0px;
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+td {
+	border-top: 1px #dddddd solid;
+	line-height: 30px;
+	padding: 5px 10px;
+}
+
+div {
+	border: #a9a9a9 1px solid;
+	border-right: #dddddd 1px solid;
+	border-bottom: #dddddd 1px solid;
+	height: 25px;
+	background: #FFF
+}
+
+.tit {
+	text-align: right;
+	vertical-align: top;
+	width: 20%;
+}
+
+.txt {
+	height: 220px;
+}
+
+.tab_2 {
+	text-align: center;
+	width: 100%;
+	margin: 10px auto;
+}
+
+.tit_2 {
+	width: 45%
+}
+
+th {
+	background: #64b1f7;
+	font-size: 14px;
+	color: #FFF;
+	padding: 0px;
+}
+
+.box_l {
+	height: 150px;
+	width: 300px;
+	float: right;
+}
+
+.box_r {
+	height: 150px;
+	width: 300px;
+	float: left;
+}
+
+.btn {
+	width: 80px;
+	height: 23px;
+	border: 0;
+	color: #FFF;
+	background: url(../images/btn.png) 0 0 no-repeat;
+}
+
+.btn_l {
+	width: 99px;
+	height: 23px;
+	border: 0;
+	color: #FFF;
+	background: url(../images/btn_l.png) 0 0 no-repeat;
+}
+
+.btn3 {
+	width: 88px;
+	height: 26px;
+	border: 0;
+	color: #FFF;
+	background: url(../images/btn3.png) 0 0 no-repeat;
+}
+
+.foot {
+	text-align: center;
+}

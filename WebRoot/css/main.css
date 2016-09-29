@@ -1,0 +1,16 @@
+@CHARSET "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.ser_tit{
+		height: 25px;
+		padding: 2px;
+		text-align: right;
+		}
+.ser_cont{
+		height: 25px;
+		padding: 2px;
+		}

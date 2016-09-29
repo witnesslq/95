@@ -1,0 +1,140 @@
+/* ���div*/
+#main {
+	position: absolute;
+	width: 702px;
+	height: 487px;
+	border: 1px solid #999;
+	overflow: auto;
+	top:40px;
+	left:15px;
+}
+.row {
+	height:50px;
+   	margin:10px;
+}
+#main div{
+	position: absolute;
+	width: 41px;
+	height: 41px;
+	/*float: left;*/
+	background-image: url(<%=basePath%>/images/rsroom/U.png);
+	text-align: center;
+	line-height: 41px;
+}
+			
+		/*�м�div*/	
+#front_view{
+	position: absolute;
+	width: 248px;
+	height: 487px;
+	border: 1px solid #999;
+	left: 737px;
+	top:40px;
+}
+#show_u{
+	position: absolute;
+	border-spacing:1px;
+	border-collapse:separate;
+	border:0;
+	border-bottom:solid 1px #999;
+	height: 423px;
+	left: 11px;
+	top: 9px;
+	width:148px;
+}
+#content{
+	position: absolute;
+	cursor:pointer;
+	height: 460px;
+	width:170px border: 0px solid #999;
+	left: 69px;
+	top: 10px;
+}
+
+#unumber_info {
+    border: 0 none;
+    border-collapse: collapse;   
+    height: 423px;
+    line-height: 10px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    table-layout: fixed;
+    top: 9px;
+    width: 100%;
+}
+#show_u tr,#show_u td {
+    border:0 none;
+    padding:0px;
+    margin:0px;
+}
+#unumber_info tr,#unumber_info td {
+    border:0 none;
+    padding:0px;
+    margin:0px;
+}
+		/*�Ҳ�div*/	
+#information{
+	position: absolute;
+	border-collapse: separate;
+	width: 290px;
+	height: 486px;
+	border: 1px solid #999;
+	left: 1005px;
+	font-size:15px;
+	border-spacing:1px;
+	top:40px;
+			}
+
+.state{
+	float:left;
+	}
+	
+#deviceInfo{
+	position:absolute;
+	border: 1px solid #999;
+    width:430px;
+    font-size:15px;
+    left:28px;
+}
+#top{
+    weith:100%;
+    height:20px;
+}
+.rackInfo{
+     width:600px;
+     height:200px;
+     margin:0 auto;
+}
+.rack{
+	    color:black;	
+		cursor:pointor;
+		position:absolute;
+	}
+.selected{
+	color:yellow;
+	border:solid 1px red; 
+}
+.blackcolor{
+    background-color:#78E9ED;
+}
+.roombtn{
+position: absolute;
+left:15px;
+height:40px;
+line-height:40px
+}
+#information table{
+		border-right:1px solid #AECAF0;
+		border-bottom:1px solid #AECAF0;
+}
+#information table td{
+	    height:28px;
+		border-left:1px solid #AECAF0;
+		border-top:1px solid #AECAF0;
+	} 
+.firstrow{
+	   text-align:center;
+	   font-weight:blod;
+	   background-color:#EFF5FE;
+	} 

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="sys" extends="json-default">
+		<!-- 用户登录 -->
+		<action name="ossLogin" class="com.dhcc.common.system.login.LoginAction"  method="QueryUser">
+			<result type="json"></result>
+		</action>
+		<!-- 用户顶级菜单查询  -->
+		<action name="topMenuQueryHomePage" class="com.dhcc.common.system.menu.MenuManagerAction"  method="topMenuQueryList">
+			<result type="json"></result>
+		</action>
+		<!-- 树状菜单列表查询的信息 -->
+		<action name="treeMenuQuery" class="com.dhcc.common.system.menu.MenuManagerAction"  method="treeMenuQuery">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 主菜单列表查询 -->
+		<action name="menuQueryList" class="com.dhcc.common.system.menu.MenuQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 菜单删除 -->
+		<action name="menuDel" class="com.dhcc.common.system.menu.MenuManageAction"  method="menuDel">
+			<result type="json"></result>
+		</action>
+		<!-- 菜单添加 -->
+		<action name="menuAdd" class="com.dhcc.common.system.menu.MenuManageAction"  method="menuAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 获取单个菜单的详细信息 -->
+		<action name="menugetById" class="com.dhcc.common.system.menu.MenuManageAction"  method="menugetById">
+			<result type="json"></result>
+		</action>
+		<!-- 修改单个菜单的信息 -->
+		<action name="menuEdit" class="com.dhcc.common.system.menu.MenuManageAction"  method="menuUpdate">
+			<result type="json"></result>
+		</action>
+		<!-- 得到顶级菜单子菜单列表信息 -->
+		<action name="menuChildList" class="com.dhcc.common.system.menu.MenuManageAction"  method="treeMenuList">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 公司列表查询 -->
+		<action name="corpQueryList" class="com.dhcc.common.system.corp.CorpQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 公司列表查询 -->
+		<action name="testAndroid" class="com.dhcc.common.system.corp.CorpQueryListAction" method="testAndroid">
+			<result type="json"></result>
+		</action>
+		<!-- 公司列表查询 -->
+		<action name="deptQueryList" class="com.dhcc.common.system.corp.CorpQueryListAction" method="deptQueryList">
+			<result type="json"></result>
+		</action>
+		<!-- 公司删除 -->
+		<action name="corpDel" class="com.dhcc.common.system.corp.CorpManagerAction"  method="corpDel">
+			<result type="json"></result>
+		</action>
+		<!-- 公司添加 -->
+		<action name="corpAdd" class="com.dhcc.common.system.corp.CorpManagerAction"  method="corpAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 单个公司的详细信息 -->
+		<action name="corpgetById" class="com.dhcc.common.system.corp.CorpManagerAction"  method="corpgetById">
+			<result type="json"></result>
+		</action>
+		<!-- 修改单个公司的信息 -->
+		<action name="corpEdit" class="com.dhcc.common.system.corp.CorpManagerAction"  method="corpUpdate">
+			<result type="json"></result>
+		</action>
+		<!-- 公司的下拉框信息 -->
+		<action name="corpSelectedQuery" class="com.dhcc.common.system.corp.CorpManagerAction"  method="corpSelectedQuery">
+			<result type="json"></result>
+		</action>
+		<!-- 公司部门树形结构 -->
+		<action name="cropDeptTreeQuery" class="com.dhcc.common.system.corp.CorpManagerAction" method="QueryCropDeptAll">
+			<result type="json"></result>
+		</action>
+		<!-- 是否可以删除所选择的单位id -->
+		<action name="ifDelCorp" class="com.dhcc.common.system.corp.CorpManagerAction" method="ifDelCorp">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 岗位列表查询 -->
+		<action name="stationQueryList" class="com.dhcc.common.system.station.StationQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 岗位所拥有的用户列表 -->
+		<action name="stationHaveUserList" class="com.dhcc.common.system.station.StationQueryListAction" method="stationHaveUserList">
+			<result type="json"></result>
+		</action>
+		<!-- 删除岗位和用户列表的关联关系 -->
+		<action name="stationDelUser" class="com.dhcc.common.system.station.StationQueryListAction" method="stationDelUser">
+			<result type="json"></result>
+		</action>
+		<!-- 岗位的添加 -->
+		<action name="stationAdd" class="com.dhcc.common.system.station.StationManageAction" method="stationAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 岗位列表信息查询 -->
+		<action name="stationDel" class="com.dhcc.common.system.station.StationManageAction" method="stationDel">
+			<result type="json"></result>
+		</action>
+		<!-- 获取岗位信息 -->
+		<action name="stationGetMess" class="com.dhcc.common.system.station.StationManageAction" method="stationQueryById">
+			<result type="json"></result>
+		</action>
+		<!-- 岗位信息修改 -->
+		<action name="stationUpdate" class="com.dhcc.common.system.station.StationManageAction" method="stationUpdate">
+			<result type="json"></result>
+		</action>
+		<!-- 删除职务、岗位、角色时查看是否有人员分配该信息 -->
+		<action name="QueryIsDelete" class="com.dhcc.common.system.station.StationManageAction" method="QueryIsDelete">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 职务列表查询 -->
+		<action name="postQueryList" class="com.dhcc.common.system.post.PostQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 职务的添加 -->
+		<action name="postAdd" class="com.dhcc.common.system.post.PostManageAction" method="postAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 职务列表信息查询 -->
+		<action name="postDel" class="com.dhcc.common.system.post.PostManageAction" method="postDel">
+			<result type="json"></result>
+		</action>
+		<!-- 获取职务信息 -->
+		<action name="postGetMess" class="com.dhcc.common.system.post.PostManageAction" method="postQueryById">
+			<result type="json"></result>
+		</action>
+		<!-- 职务信息修改 -->
+		<action name="postUpdate" class="com.dhcc.common.system.post.PostManageAction" method="postUpdate">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 数据字典列表 -->
+		<action name="dictionaryQuery" class="com.dhcc.common.system.dictionary.DictionaryQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 数据字典添加 -->
+		<action name="dictAdd" class="com.dhcc.common.system.dictionary.DictionaryManaerAction"  method="dictAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 数据字典删除 -->
+		<action name="dictDel" class="com.dhcc.common.system.dictionary.DictionaryManaerAction"  method="dictDel">
+			<result type="json"></result>
+		</action>
+		<!-- 单个数据字典信息 -->
+		<action name="dictgetById" class="com.dhcc.common.system.dictionary.DictionaryManaerAction"  method="dictgetById">
+			<result type="json"></result>
+		</action>
+		<!-- 修改数据字典 -->
+		<action name="dictEdit" class="com.dhcc.common.system.dictionary.DictionaryManaerAction"  method="dictUpdate">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 系统配置列表 -->
+		<action name="configQuery" class="com.dhcc.common.system.config.ConfigQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 系统配置添加 -->
+		<action name="configAdd" class="com.dhcc.common.system.config.ConfigManagerAction"  method="configAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 系统配置删除 -->
+		<action name="configDel" class="com.dhcc.common.system.config.ConfigManagerAction"  method="configDel">
+			<result type="json"></result>
+		</action>
+		<!-- 单个系统配置信息 -->
+		<action name="configQueryById" class="com.dhcc.common.system.config.ConfigManagerAction"  method="configQueryById">
+			<result type="json"></result>
+		</action>
+		<!-- 修改系统配置 -->
+		<action name="configEdit" class="com.dhcc.common.system.config.ConfigManagerAction"  method="configUpdate">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 用户列表查询 -->
+		<action name="UserQueryList" class="com.dhcc.common.system.user.TreeManageAction">
+			<result type="json"></result>
+		</action>
+		<!-- 通过单位id查询topcorpid -->
+		<action name="QueryTopCorpId" class="com.dhcc.common.system.user.TreeManageAction" method="QueryTopCorpId">
+			<result type="json"></result>
+		</action>
+		<!-- 通过单位id查询所属职务列表 -->
+		<action name="QueryPostByDept" class="com.dhcc.common.system.user.TreeManageAction" method="QueryPostByDept">
+			<result type="json"></result>
+		</action>
+		<!-- 通过单位id查询所属岗位列表 -->
+		<action name="QueryStationByDept" class="com.dhcc.common.system.user.TreeManageAction" method="QueryStationByDept">
+			<result type="json"></result>
+		</action>
+		<!-- 通过单位id查询所属权限列表 -->
+		<action name="QueryRoleByDept" class="com.dhcc.common.system.user.TreeManageAction" method="QueryRoleByDept">
+			<result type="json"></result>
+		</action>
+		<!-- 通过单位id查询所属区域列表 -->
+		<action name="QueryAreaByDept" class="com.dhcc.common.system.user.TreeManageAction" method="QueryAreaByDept">
+			<result type="json"></result>
+		</action>
+		<!-- 用户添加 -->
+		<action name="treeAdduser" class="com.dhcc.common.system.user.TreeAddUserAction" method="userSaveOrUpdate">
+			<result type="json"></result>
+		</action>
+		<!-- 公司部门树形结构 -->
+		<action name="dcidTreeQuery" class="com.dhcc.common.system.user.TreeAddUserAction" method="dcidTreeQuery">
+			<result type="json"></result>
+		</action>
+		<!-- 用户信息删除 -->
+		<action name="treeuserDel" class="com.dhcc.common.system.user.TreeAddUserAction" method="userDel">
+			<result type="json"></result>
+		</action>
+		<!-- 查看登录名是否存在 -->
+		<action name="treeuserExist" class="com.dhcc.common.system.user.TreeAddUserAction" method="userExist">
+			<result type="json"></result>
+		</action>
+		<!-- 用户详细信息 -->
+		<action name="treeuserGetById" class="com.dhcc.common.system.user.TreeAddUserAction" method="UserQueryById">
+			<result type="json"></result>
+		</action>
+		<!-- 用户密码修改 -->
+		<action name="userModifyPass" class="com.dhcc.common.system.user.TreeAddUserAction" method="modifyPass">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 顶级菜单查询all  -->
+		<action name="topMenuQueryAll" class="com.dhcc.common.system.menu.MenuManagerAction"  method="topMenuQueryListForAll">
+			<result type="json"></result>
+		</action>
+		<!-- 全部查出树状菜单 -->
+		<action name="topMenuQueryTree" class="com.dhcc.common.system.menu.MenuManagerAction"  method="topMenuQueryTree">
+			<result type="json"></result>
+		</action>
+		<!-- 角色操作权限菜单查询  -->
+		<action name="menuListForAu" class="com.dhcc.common.system.menu.MenuManagerAction"  method="menuListForAu">
+			<result type="json"></result>
+		</action>
+		<!-- 查询菜单的图标列表 -->
+		<action name="menuIconQuery" class="com.dhcc.common.system.menu.MenuManagerAction"  method="menuIconQuery">
+			<result type="json"></result>
+		</action>
+		<!-- 查询菜单下是否关联 -->
+		<action name="menuQueryHasChildren" class="com.dhcc.common.system.menu.MenuManageAction"  method="menuQueryHasChildren">
+			<result type="json"></result>
+		</action>
+		<!-- 按钮资源列表查询 -->
+		<action name="btnResourceQueryList" class="com.dhcc.common.system.resource.ResQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 按钮资源列表添加 -->
+		<action name="btnResourceAdd" class="com.dhcc.common.system.resource.ResManageAction" method="resAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 按钮资源列表删除 -->
+		<action name="btnResourceDel" class="com.dhcc.common.system.resource.ResManageAction" method="resDel">
+			<result type="json"></result>
+		</action>
+		<!-- 按钮资源列表修改 -->
+		<action name="btnResourceUpdate" class="com.dhcc.common.system.resource.ResManageAction" method="resUpdate">
+			<result type="json"></result>
+		</action>
+		<!-- 按钮资源列表查询 -->
+		<action name="btnResourceQueryById" class="com.dhcc.common.system.resource.ResManageAction" method="resGetById">
+			<result type="json"></result>
+		</action>
+		<!-- 页面对应的按钮资源获取 通过页面url -->
+		<action name="btnQueryByUserPageUrl" class="com.dhcc.common.system.resource.ResManageAction" method="btnQueryByUserPageUrl">
+			<result type="json"></result>
+		</action>
+		<!-- 角色操作权限页面 菜单对应的 按钮资源查询 -->
+		<action name="roleBtnQueryByMenuId" class="com.dhcc.common.system.resource.ResManageAction" method="roleBtnQueryByMenuId">
+			<result type="json"></result>
+		</action>
+		<!-- 角色列表 -->
+		<action name="roleQueryList" class="com.dhcc.common.system.role.RoleQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 角色所拥有的用户列表 -->
+		<action name="roleHaveUserList" class="com.dhcc.common.system.role.RoleQueryListAction" method="roleHaveUserList">
+			<result type="json"></result>
+		</action>
+		<!-- 删除角色和用户列表的关联关系 -->
+		<action name="roleDelUser" class="com.dhcc.common.system.role.RoleQueryListAction" method="roleDelUser">
+			<result type="json"></result>
+		</action>
+		<!-- 角色添加 -->
+		<action name="roleAdd" class="com.dhcc.common.system.role.RoleManagerAction"  method="roleAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 角色删除 -->
+		<action name="roleDel" class="com.dhcc.common.system.role.RoleManagerAction"  method="roleDel">
+			<result type="json"></result>
+		</action>
+		<!-- 根据id查单个角色信息 -->
+		<action name="roleQueryById" class="com.dhcc.common.system.role.RoleManagerAction" method="roleInfoQueryById">
+			<result type="json"></result>
+		</action>
+		<!-- 修改角色 -->
+		<action name="roleEdit" class="com.dhcc.common.system.role.RoleManagerAction" method="roleUpdate">
+			<result type="json"></result>
+		</action>
+		<!-- 修改角色操作权限 -->
+		<action name="roleMenuModify" class="com.dhcc.common.system.role.RoleManagerAction" method="roleMenuModify">
+			<result type="json"></result>
+		</action>
+		<!-- 按钮资源权限修改 -->
+		<action name="roleBtnModify" class="com.dhcc.common.system.resource.ResManageAction" method="roleBtnModify">
+			<result type="json"></result>
+		</action>
+		<!-- 角色对应权限的按钮资源获取 -->
+		<action name="btnQueryAll" class="com.dhcc.common.system.resource.ResManageAction" method="btnQueryAll">
+			<result type="json"></result>
+		</action>
+		<!-- 日志列表查看 -->
+		<action name="sysLogQuery" class="com.dhcc.common.system.systemLog.SysLogAction" method="sysLogQuery">
+			<result type="json"></result>
+		</action>
+		<!-- 日志列表删除-->
+		<action name="sysLogDel" class="com.dhcc.common.system.systemLog.SysLogAction" method="sysLogDel">
+			<result type="json"></result>
+		</action>
+		<!-- 系统门户模块 start-->
+		<!-- 系统门户信息获取 -->
+		<action name="queryPortal" class="com.dhcc.common.system.portal.PortalManagerAction" method="queryPortal">
+			<result type="json"></result>
+		</action>
+		<!-- 系统门户信息更新 -->
+		<action name="updatePortal" class="com.dhcc.common.system.portal.PortalManagerAction" method="updatePortal">
+			<result type="json"></result>
+		</action>
+		<!-- 系统门户信息添加 -->
+		<action name="addPortal" class="com.dhcc.common.system.portal.PortalManagerAction" method="addPortal">
+			<result type="json"></result>
+		</action>
+		<!-- 系统门户urlselect加载 -->
+		<action name="querySelectPortal" class="com.dhcc.common.system.portal.PortalManagerAction" method="queryPortalSelect">
+			<result type="json"></result>
+		</action>
+		<!-- 系统门户资源配置 -->
+		<action name="queryPortalList" class="com.dhcc.common.system.portal.SysPortalManager" method="queryPortalList">
+			<result type="json"></result>
+		</action>
+		<!-- 系统门户资源删除 -->
+		<action name="sysPortalDelete" class="com.dhcc.common.system.portal.SysPortalManager" method="sysPortalDelete">
+			<result type="json"></result>
+		</action>
+		<!-- 系统门户资源添加 -->
+		<action name="sysPortalAdd" class="com.dhcc.common.system.portal.SysPortalManager" method="sysPortalAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 系统门户资源修改 -->
+		<action name="sysPortalUpdate" class="com.dhcc.common.system.portal.SysPortalManager" method="sysPortalUpdate">
+			<result type="json"></result>
+		</action>
+		<!-- 系统门户资源查询 -->
+		<action name="sysPortalQueryById" class="com.dhcc.common.system.portal.SysPortalManager" method="sysPortalQueryById">
+			<result type="json"></result>
+		</action>
+		<!-- 系统门户模块 end-->
+		<!-- 邮箱配置管理 -->
+			<!-- 查询 -->
+			<action name="getEmailInfo" class="com.dhcc.common.system.email.EmailAction" method="queryEmailInfo">
+				<result type="json"></result>
+			</action>
+			<!-- 更新 -->
+			<action name="updateEmailInfo" class="com.dhcc.common.system.email.EmailAction" method="updateEmailInfo">
+				<result type="json"></result>
+			</action>
+			<!-- 测试 -->
+			<action name="testEmailInfo" class="com.dhcc.common.system.email.EmailAction" method="testEmailInfo">
+				<result type="json"></result>
+			</action>	
+		<!-- 邮箱配置管理结束 -->
+		<!-- 下拉框信息查询 -->
+		<action name="selectedQuery" class="com.dhcc.common.util.CommAction" method="SelectedGet">
+			<result type="json"></result>
+		</action>
+		<!-- 系统配置表下拉框信息查询 -->
+		<action name="selectedQueryConfig" class="com.dhcc.common.util.CommAction" method="SelectedGetConfig">
+			<result type="json"></result>
+		</action>
+		<!-- 流程名称下拉框信息查询 -->
+		<action name="selectedQueryBusiness" class="com.dhcc.common.util.CommAction" method="SelectedGetBusiness">
+			<result type="json"></result>
+		</action>
+		<!-- 获取config表中的最大权限id -->
+		<action name="queryConfigSuperUserID" class="com.dhcc.common.util.CommAction" method="queryConfigSuperUserID">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 所属区域列表查询 -->
+		<action name="areaQueryList" class="com.dhcc.common.system.area.AreaQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 所属区域的添加 -->
+		<action name="areaAdd" class="com.dhcc.common.system.area.AreaManageAction" method="areaAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 所属区域列表信息查询 -->
+		<action name="areaDel" class="com.dhcc.common.system.area.AreaManageAction" method="areaDel">
+			<result type="json"></result>
+		</action>
+		<!-- 获取所属区域信息 -->
+		<action name="areaGetMess" class="com.dhcc.common.system.area.AreaManageAction" method="areaQueryById">
+			<result type="json"></result>
+		</action>
+		<!-- 所属区域信息修改 -->
+		<action name="areaUpdate" class="com.dhcc.common.system.area.AreaManageAction" method="areaUpdate">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 手机app角色编码保存 -->
+		<!-- <action name="saveApprole" class="com.dhcc.common.system.approle.ApproleAction" method="saveApprole">
+			<result type="json"></result>
+		</action>
+		手机app角色编码查询
+		<action name="queryApprole" class="com.dhcc.common.system.approle.ApproleAction" method="queryApprole">
+			<result type="json"></result>
+		</action>
+		手机app角色编码删除
+		<action name="deleteApprole" class="com.dhcc.common.system.approle.ApproleAction" method="deleteApprole">
+			<result type="json"></result>
+		</action>
+		角色下拉框选择
+		<action name="queryselectrole" class="com.dhcc.common.system.approle.ApproleAction" method="queryselectrole">
+			<result type="json"></result>
+		</action> -->
+		
+		<!-- 所属组件信息添加 -->
+		<action name="componentAdd" class="com.dhcc.common.system.components.ComponentManagerAction" method="componentAdd">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 所属组件信息删除 -->
+		<action name="componentDelete" class="com.dhcc.common.system.components.ComponentManagerAction" method="componentDelete">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 所属组件信息查询 -->
+		<action name="componentgetById" class="com.dhcc.common.system.components.ComponentManagerAction" method="componentgetById">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 所属组件信息修改 -->
+		<action name="componentUpdate" class="com.dhcc.common.system.components.ComponentManagerAction" method="componentUpdate">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 组件列表 -->
+		<action name="componentQueryList" class="com.dhcc.common.system.components.ComponentQueryListAction">
+			<result type="json"></result>
+		</action>
+		
+	</package>
+</struts>

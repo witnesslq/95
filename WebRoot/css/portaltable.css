@@ -1,0 +1,74 @@
+@CHARSET "UTF-8";
+
+html,body{
+   		margin: 0;
+   		padding: 0;
+    	}
+
+/*按钮样式*/
+.btn{ 
+	height: 22px;
+	overflow: hidden;
+	width: 80px;
+	line-height: 110%;
+	cursor: pointer;
+	position: relative;  
+	text-align:center;
+	border: solid 1px #F5F5F5;
+	color:#FFFFFF;
+	background:#E0EDFF url(../images/layout/header-bg.gif) repeat-x center;
+}
+/*表格样式*/
+.table_info{  
+	border: 1px solid #B1CDE3;  
+	padding:0;   
+	margin:0 auto;  
+	border-collapse: collapse;  
+	TABLE-LAYOUT:fixed;
+	WORD-BREAK:break-all;
+} 
+.table_info td {  
+	border: 1px solid #F5F5F5;  
+	background: #fff;  
+	font-size:14px;  
+	padding: 3px 3px 3px 8px;  
+	color: #4f6b72;  
+	height: 20px;
+}
+
+.table_info .td_tit{ 
+	text-align: right;
+	font-size: 12px;
+	font-weight: normal;
+	background:#AE0B02;
+	color: white;
+}
+
+.table_info .td_cont{
+   	text-align: center;
+    }
+
+.info_mess{
+	height: 40px;
+	line-height:40px;
+	font-size: 20px;
+	font-weight: bolder;
+	color: #4f6b72;  
+}
+/**
+表头
+*/
+.table_info .td_tit_Report2 { 
+	text-align: center;
+	font-size: 12px;
+	height:20px;
+	font-weight: normal;
+	background: #E9CDA6;
+	color: #AB533D;
+}
+
+
+.my_span_blue{
+   		cursor: pointer;
+   		color: #AE0B02;
+    	}
