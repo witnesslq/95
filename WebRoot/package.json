@@ -1,0 +1,24 @@
+{
+  "name": "95",
+  "version": "0.0.1",
+  "description": "95计费管理门户",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pei-han/95.git"
+  },
+  "author": "dhcc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pei-han/95/issues"
+  },
+  "homepage": "https://github.com/pei-han/95#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "highcharts": "^5.0.0",
+    "jquery": "^1.12.4"
+  }
+}
