@@ -4,3 +4,5 @@
 target
 WebRoot/WEB-INF/classes
 WebRoot/node_modules
+.myeclipse/*
+.mymetadata
