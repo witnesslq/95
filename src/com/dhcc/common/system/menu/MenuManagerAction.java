@@ -31,6 +31,26 @@ public class MenuManagerAction extends ActionSupport{
 	private List<MenuAuModel> list = new ArrayList<MenuAuModel>();
 	private String roleid;//褰撳墠瑙掕壊鐨刬d 锛岀敤浜庢煡璇㈣瑙掕壊鎵�鎷ユ湁鐨勮彍鍗�
 	
+	
+	public String MenuQueryList(){
+		MenuDao mdn = new MenuDao();
+		String userid = (String)ActionContext.getContext().getSession().get("userid");//寰楀埌鐢ㄦ埛id
+		List list = mdn.menuQueryListForUser(userid);
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(list);//鎶妉ist杞崲鎴恓son
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		mdn= null;
+		return SUCCESS;
+	}
 	/**
 	 * 鐢ㄦ埛鎵�鎷ユ湁鐨勯《绾ц彍鍗曟煡璇�
 	 */

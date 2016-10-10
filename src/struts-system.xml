@@ -16,7 +16,10 @@
 		<action name="treeMenuQuery" class="com.dhcc.common.system.menu.MenuManagerAction"  method="treeMenuQuery">
 			<result type="json"></result>
 		</action>
-		
+		<!-- 全部菜单列表查询的信息 -->
+		<action name="allMenuQuery" class="com.dhcc.common.system.menu.MenuManagerAction"  method="MenuQueryList">
+			<result type="json"></result>
+		</action>
 		<!-- 主菜单列表查询 -->
 		<action name="menuQueryList" class="com.dhcc.common.system.menu.MenuQueryListAction">
 			<result type="json"></result>
