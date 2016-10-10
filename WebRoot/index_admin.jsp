@@ -358,6 +358,7 @@ immediately after the control sidebar -->
 <script type="text/x-ejs-template" id="menuTmpl">
 <\%
 if(menu && menu.length>0){
+
 for(var i=0,size=menu.length;i<menu.length;i++){
   var item = menu[i];
   if(item.subMenu){

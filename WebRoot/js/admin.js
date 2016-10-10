@@ -2,6 +2,7 @@ $(function() {
 
 	/*
 		显示右边菜单
+		
 	 */
 	$.ajax({
 		url: "allMenuQuery.action",
