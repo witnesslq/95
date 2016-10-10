@@ -20,6 +20,7 @@
     "admin-lte": "^2.3.6",
     "bootstrap": "^3.3.7",
     "bootstrap-treeview": "^1.2.0",
+    "ejs": "^2.5.2",
     "highcharts": "^5.0.0",
     "jquery": "^1.12.4"
   },
