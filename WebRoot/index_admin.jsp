@@ -20,9 +20,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"> -->
     <!-- Ionicons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"> -->
     <!-- Theme style -->
     <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
@@ -239,7 +239,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </div>
     </div>
     <!-- Sidebar Menu -->
-    <ul class="sidebar-menu" id="mainMenu">
+    <ul class="sidebar-menu" id="menu">
       <li class="header">HEADER</li>
       <!-- Optionally, you can add icons to the links -->
       >
@@ -355,14 +355,36 @@ immediately after the control sidebar -->
 <script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
-<script type="text/x-ejs-template" id="topMenuTmpl">
+<script type="text/x-ejs-template" id="menuTmpl">
 <\%
-if(data && data.length>0){
-for(var i=0,size=data.length;i<data.length;i++){
-  var item = data[i];
+if(menu && menu.length>0){
+for(var i=0,size=menu.length;i<menu.length;i++){
+  var item = menu[i];
+  if(item.subMenu){
+  %>
+    <li class="treeview">
+              <a href="#"><i class="fa fa-link"></i> <span><\%=item.title  %></span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+      <\% 
+      var secondMenu = item.subMenu;
+        for(var j = 0;j<secondMenu.length;j++){
+          var secondItem = secondMenu[j];
+        %>
+                <li><a href="#"><\%=secondItem.title  %></a></li>
+        <\% } %>
+              </ul>
+      </li>
+  <\%  
+  }else{
 %>
-<li class="active"><a href="#"><i class="fa fa-link"></i> <span><\%=item.title %></span></a></li>
+<li><a href="#"><i class="fa fa-link"></i> <span><\%=item.title %></span></a></li>
+
 <\%
+  }
 }
 }
 %>
