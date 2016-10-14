@@ -14,16 +14,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Starter</title>
+  <title>IDC／ISP流量统计与质量监测系统</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
   <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css"/>
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+  <!-- Theme style --> <!-- Theme style -->
   <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
   <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
         page. However, you can choose any other skin. Make sure you
@@ -242,7 +242,7 @@ desired effect
       <!-- /.search form -->
 
       <!-- Sidebar Menu -->
-      <ul class="sidebar-menu">
+      <ul class="sidebar-menu" id="menu">
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
        
@@ -255,16 +255,7 @@ desired effect
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Page Header
-        <small>Optional description</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
-      </ol>
-    </section>
+    
 
     <!-- Main content -->
     <section class="content" >
@@ -373,13 +364,43 @@ desired effect
 <script src="<%=basePath %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="<%=basePath %>/node_modules/admin-lte/dist/js/app.min.js"></script>
-<script  type="text/javascript"  src="<%=basePath  %>js/index1.js" ></script>
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-     Both of these plugins are recommended to enhance the
-     user experience. Slimscroll is required when using the
-     fixed layout. -->
-     <script type="text/javascript">
-     getTopMenu();
-     </script>
+<script type="text/x-ejs-template" id="menuTmpl">
+<\%
+if(menu && menu.length>0){
+
+for(var i=0,size=menu.length;i<menu.length;i++){
+  var item = menu[i];
+  if(item.subMenu){
+  %>
+    <li class="treeview">
+              <a href="#"><i class="fa fa-link"></i> <span><\%=item.title  %></span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+      <\% 
+      var secondMenu = item.subMenu;
+        for(var j = 0;j<secondMenu.length;j++){
+          var secondItem = secondMenu[j];
+        %>
+                <li><a href="<\%=secondItem.url%>" target="content"><\%=secondItem.title  %></a></li>
+        <\% } %>
+              </ul>
+      </li>
+  <\%  
+  }else{
+%>
+<li><a href="#"><i class="fa fa-link"></i> <span><\%=item.title %></span></a></li>
+
+<\%
+  }
+}
+}
+%>
+</script>
+<script src="<%=basePath  %>/node_modules/ejs/ejs.min.js"></script>
+<script src="<%=basePath  %>/js/admin.js"></script>
+ 
 </body>
 </html>
