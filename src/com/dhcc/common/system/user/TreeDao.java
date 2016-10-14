@@ -1,11 +1,15 @@
 package com.dhcc.common.system.user;
 
+import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.json.JSONArray;
+
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 import com.dhcc.common.database.DBManager;
 import com.dhcc.common.system.page.PageFactory;
@@ -107,6 +111,95 @@ public class TreeDao {
 		}
 		
 		return pm;
+	}
+	
+	/**
+	 * @param ids 查询过滤 的人员的id字符串 用“，”分割
+	 * @return
+	 */
+	
+	public  List<Tsuser> userAllQueryList(String corpid,String username,String ids,String sortname,String sortorder,String showsubdivision){
+		List<Tsuser> list = null;
+		DBManager dbm=new DBManager();
+		try {
+			String querysql = "SELECT DISTINCT tu.* FROM tsuser tu LEFT JOIN tslusercorp tuc ON tuc.userid = tu.id ";
+			String userid = (String)ActionContext.getContext().getSession().get("userid");
+			String superUserId = new CommDao().queryConfigSuperUserID();//获取最大权限id
+			if(userid.equals(superUserId)){//数据权限控制
+				querysql += " where 1 = 1 ";
+			}else{
+				String topcorpid = (String)ActionContext.getContext().getSession().get("topcorpid");
+				querysql += " where 1 = 1 and topcorpid='"+topcorpid+"' ";
+			}
+			if("true".equals(showsubdivision)){
+				if(!StringUtil.isNullOrEmpty(corpid) && !corpid.equals("null")){
+					List<Tscorp> listcorp = dbm.getObjectList(Tscorp.class, "select * from tscorp where 1=1");
+					Set<String> setlist = havaCorpid(corpid, listcorp, new HashSet<String>());//循环获取所选部门的所有子部门集合
+					Iterator<String> it = setlist.iterator();
+					String corpids = "";
+					int i = 0;
+					while(it.hasNext()){
+						corpids += "'"+it.next()+"'";
+						if(i<setlist.size()-1){
+							corpids +=",";
+						}
+						i++;
+					}
+					querysql += " and tuc.corpid in ("+corpids+") ";
+				}
+			}else{
+				if(!StringUtil.isNullOrEmpty(corpid) && !corpid.equals("null")){
+					querysql += " and tuc.corpid = '"+corpid+"' ";
+				}
+			}
+			if(!StringUtil.isNullOrEmpty(username)){
+				String queryname = username.trim();
+				querysql += " and (tu.username like '%"+queryname+"%' or tu.loginname like '%"+queryname+"%' " +
+						" or tu.mobileprivate like'%"+queryname+"%' or tu.emailprivate like '%"+queryname+"%' or tu.remark like '%"+queryname+"%') ";
+			}
+			
+			if (!StringUtil.isNullOrEmpty(ids) && !ids.equals("null")) {
+				String[] useridArr = ids.split(",");
+				String temp = "";
+				for(int i=0;i<useridArr.length;i++){
+					temp = temp +"'"+ useridArr[i] + "'";
+					if(i<useridArr.length-1){
+						temp +=  ",";
+					}
+				}
+				querysql += " and id not in (" + temp + ")";
+			}
+			
+			querysql += " order by tu."+sortname+" "+sortorder+" ";
+			
+			String countsql = "select count(*) from (" + querysql + ") t";
+
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createSQL(querysql);
+			pageFactory = null;
+			list=dbm.getObjectList(Tsuser.class, sql);
+			PrintWriter pw = null;
+			try {
+				JSONArray json = JSONArray.fromObject(list);
+				ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+				pw = ServletActionContext.getResponse().getWriter();
+				pw.print(json);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				pw.flush();
+				pw.close();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("查询组织架构的用户列表时候出错！"+e.getMessage());
+		}finally{
+			dbm.close();
+		}
+		
+		return list;
+		
 	}
 	/**
 	 * @描述：递归方法把给定部门的子部门都装到setlist里面（包括当前部门）

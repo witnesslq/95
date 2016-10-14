@@ -9,7 +9,6 @@ import com.dhcc.modal.system.PageModel;
  */
 public class OracleFactory implements PageInter{
 
-	@Override
 	public String createSql(String querysql, PageModel pm) {
 	String sql = "SELECT * FROM " +
 			     "(SELECT a.*,ROWNUM  rn from ("+querysql+")a " +
@@ -19,4 +18,10 @@ public class OracleFactory implements PageInter{
 	}
 
 
+	
+	public String createAllSql(String querysql) {
+		String sql = "SELECT * FROM " +
+				     "(SELECT a.*,ROWNUM  rn from ("+querysql+")a " ;
+			return sql;
+		}
 }

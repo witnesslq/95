@@ -46,14 +46,14 @@ String username=(String)request.getSession().getAttribute("username");//用户�
  
  <form class="form-horizontal" role="form">
   <div class="form-group form-group-sm ">
-    <label for="loginUser" class="col-xs-2 control-label nopadding">登录账号
+    <label for="loginUser" class="col-xs-2 control-label nopadding ">登录账号
     </label>
     <div class="col-xs-4 nopadding">
-  	 <input type="text" class="form-control" id="loginUser" >
+  	 <input type="text" class="form-control"  id="loginUser" readonly>
    </div>
     <label for="userName" class="col-xs-2 control-label nopadding1">用户姓名</label>
    	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control" id="userName">
+   	 <input type="text" class="form-control " id="userName" readonly>
    	</div> 
   </div>
 
@@ -62,11 +62,11 @@ String username=(String)request.getSession().getAttribute("username");//用户�
     <label for="userPassword" class="col-xs-2 control-label nopadding">用户密码
     </label>
     <div class="col-xs-4 nopadding">
-  	 <input type="text" class="form-control" id="userPassword" >
+  	 <input type="text" class="form-control" id="userPassword" readonly>
    </div>
     <label for="confirmPwd" class="col-xs-2 control-label nopadding1">确认密码</label>
    	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control" id="confirmPwd">
+   	 <input type="text" class="form-control" id="confirmPwd" readonly>
    	</div> 
   </div>
   
@@ -77,44 +77,38 @@ String username=(String)request.getSession().getAttribute("username");//用户�
    <div class="form-group form-group-sm ">
       <label for="sex" class="col-xs-2 control-label nopadding">用户性别</label>
 	    
-			<select class="col-xs-4 input-sm nopadding" id="sex">
-				<option value="">男</option>
-				<option value="">女</option>
-			</select>
-		
-	
+	    <div class="col-xs-4 nopadding">
+  	     <input type="text" class="form-control" id="sex" readonly>
+      </div>
        <label for="datepicker" class="col-xs-2 control-label nopadding1">出生年月</label>
-           <div class="col-xs-4 nopadding">
-		   <div class="input-group date ">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  <input type="text" class="form-control pull-right" id="datepicker">
-                </div>
-	       </div>
+         <div class="col-xs-4 nopadding">
+  	     <input type="text" class="form-control" id="datepicker" readonly>
+      </div>
+		
   </div>
   
   
    <div class="form-group form-group-sm ">
     <label for="department" class="col-xs-2 control-label nopadding">所属部门
     </label>
-        <select class="col-xs-4 input-sm nopadding" id="department">
-        </select>
-	
+     <div class="col-xs-4 nopadding">
+       <input type="text" class="form-control" id="department" readonly>
+	</div>
     <label for="job" class="col-xs-2 control-label nopadding1">岗位</label>
-   	    <select class="col-xs-4 input-sm nopadding" id="job">
-        </select>
+     <div class="col-xs-4 nopadding">
+   	     <input type="text" class="form-control" id="job" readonly>
+   	     </div>
   </div>
   
    <div class="form-group form-group-sm ">
-    <label for="role" class="col-xs-2 control-label nopadding">用户角色
-    </label>
-        <select class="col-xs-4 input-sm nopadding" id="role">
-        </select>
-	
+    <label for="role" class="col-xs-2 control-label nopadding">用户角色</label>
+     <div class="col-xs-4 nopadding">
+        <input type="text" class="form-control" id="role" readonly>
+	</div>
     <label for="post" class="col-xs-2 control-label nopadding1">职务</label>
-   	    <select class="col-xs-4 input-sm nopadding" id="post">
-        </select>
+     <div class="col-xs-4 nopadding">
+   	  <input type="text" class="form-control" id="post" readonly>
+   	  </div>
   </div>
     
     
@@ -122,11 +116,13 @@ String username=(String)request.getSession().getAttribute("username");//用户�
    <div class="form-group form-group-sm ">
     <label for="area" class="col-xs-2 control-label nopadding">所属区域
     </label>
-        <select class="col-xs-4 input-sm nopadding" id="area">
-        </select>
+     <div class="col-xs-4 nopadding">
+        <input type="text" class="form-control" id="area" readonly>
+        </div>
     <label for="dataCenter" class="col-xs-2 control-label nopadding1">所属数据中心</label>
-   	    <select class="col-xs-4 input-sm nopadding" id="dataCenter">
-        </select>
+   	    <div class="col-xs-4 nopadding">
+   	    <input type="text" class="form-control" id="dataCenter" readonly>
+   	    </div>
   </div>
     
     
@@ -135,11 +131,11 @@ String username=(String)request.getSession().getAttribute("username");//用户�
     <label for="companyPhone" class="col-xs-2 control-label nopadding">公司座机
     </label>
     <div class="col-xs-4 nopadding">
-  	 <input type="text" class="form-control" id="companyPhone" >
+  	 <input type="text" class="form-control" id="companyPhone" readonly>
    </div>
     <label for="homePhone" class="col-xs-2 control-label nopadding1">家庭座机</label>
    	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control" id="homePhone">
+   	 <input type="text" class="form-control" id="homePhone" readonly>
    	</div> 
   </div>
     
@@ -150,11 +146,11 @@ String username=(String)request.getSession().getAttribute("username");//用户�
     <label for="companyMobPhone" class="col-xs-2 control-label nopadding">公司手机
     </label>
     <div class="col-xs-4 nopadding">
-  	 <input type="text" class="form-control" id="companyMobPhone" >
+  	 <input type="text" class="form-control" id="companyMobPhone" readonly>
    </div>
     <label for="PersonPhone" class="col-xs-2 control-label nopadding1">私人手机</label>
    	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control" id="PersonPhone">
+   	 <input type="text" class="form-control" id="PersonPhone" readonly>
    	</div> 
   </div>
   
@@ -162,17 +158,17 @@ String username=(String)request.getSession().getAttribute("username");//用户�
     <label for="companyMail" class="col-xs-2 control-label nopadding">公司邮箱
     </label>
     <div class="col-xs-4 nopadding">
-  	 <input type="text" class="form-control" id="companyMail" >
+  	 <input type="text" class="form-control" id="companyMail" readonly>
    </div>
     <label for="PersonMail" class="col-xs-2 control-label nopadding1">私人邮箱</label>
    	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control" id="PersonMail">
+   	 <input type="text" class="form-control" id="PersonMail" readonly>
    	</div> 
   </div>
     <div class="form-group form-group-sm">
     <label for="description" class="col-xs-2 control-label nopadding">用户描述</label>
     <div class="col-xs-10 form-group">
-	<textarea class="form-control" rows="3"  id="description"></textarea>
+	<textarea class="form-control" rows="3"  id="description" readonly></textarea>
 	</div>
     </div>
 </form>

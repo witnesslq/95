@@ -2,287 +2,217 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
 %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-	<base href="<%=basePath %>"/>
-    <title>用户列表页面</title>
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/reportMain.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>include/LigerUI/skins/Aqua/css/ligerui-all.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>include/LigerUI/skins/ligerui-icons.css" />
-    <script type="text/javascript" src="<%=basePath  %>include/jQuery/jquery-1.3.2.min.js"></script>    
-    <script type="text/javascript" src="<%=basePath  %>include/LigerUI/js/ligerui.all.js" ></script> 
-  	<script type="text/javascript">
-		var treemanager;
-		var manager = "";
-		$(function () {
-        	$("#layout").ligerLayout({ leftWidth: 250, allowLeftResize: false, allowLeftCollapse: true, space: 2 });
-			$("#tree").ligerTree({
-                url: "cropDeptTreeQuery.action",
-                onSelect: onSelect,
-                idFieldName: 'id',
-                parentIDFieldName: 'pid',
-                checkbox: false,
-                itemopen: false
-            });
-			treemanager = $("#tree").ligerGetTreeManager();
-			
-			window['g'] = $("#maingrid").ligerGrid({
-				url: "UserQueryList.action",
-				parms: [{ name: 'showsubdivision', value: $("#chk1").ligerCheckBox().getValue() }],
-				checkbox:true,
-				frozenCheckbox:false,//放置拖拽表格变形
-				columns: [
-				{ display: 'ID', name: 'id', align: 'left',minWidth: 10,width: 10,hide:true,isAllowHide:false},
-				//{ display: '序号', width: 50, 
-					//render: function (rowData, rowindex, value, column, rowid, page, pagesize) { 
-					//render: function (page, pagesize) { 
-					//	return pagesize + 1; 
-					//} 
-				//},
-				{ display: '登陆名', name: 'loginname', minWidth:30 ,width:100,isSort:true},
-				{ display: '用户姓名', name: 'username', minWidth: 30 ,width:100,isSort:true},
-				{ display: '性别', name: 'sex', minWidth: 20 ,width:80,
-					render: function (item){
-				    	if (item.sex == 'M') return '男';
-				        return '女';
-		        	}
-				},
-				{ display: '手机', name: 'mobileprivate', minWidth: 110 ,width:100,isSort:true},
-				{ display: '邮箱', name: 'emailprivate', minWidth: 120 ,width:200,isSort:true},
-				{ display: '备注', name: 'remark', minWidth: 150,width:200 }
-				],
-				pageSize:10,
-				rownumbers:true,
-				width: '100%',
-                height: '100%',
-                heightDiff:-8,
-				root:"listmodal",
-				record:"record",
-				alternatingRow:true,
-				toolbar: { 
-					items: [
-						{ text: '增加', click: itemclick, icon: 'add' },
-						{ text: '修改', click: itemedit, icon: 'modify' },
-						{ text: '删除', click: itemdelete, icon: 'delete'},
-						{ text: '详细', click: itemmess, icon: 'bookpen'}
-					]
-				}
-			});
-			
-			$("#serchform").ligerForm();
-			
-			$("#username").keyup(function(event){
-				if(event.keyCode == 13){
-					var username = $("#username").val();
-					var showsubdivision =  $("#chk1").ligerCheckBox().getValue();
-					g.setOptions({newPage:1});
-					g.setOptions({
-						parms: [
-							{ name: 'username', value: username },
-							{ name: 'showsubdivision', value: showsubdivision }
-						]
-					});
-					g.loadData();
-				}
-			});
-			
-			$("#searchBtn").click(function(){
-				var username = $("#username").val();
-				var showsubdivision =  $("#chk1").ligerCheckBox().getValue();
-				g.setOptions({newPage:1});
-				g.setOptions({
-					parms: [
-						{ name: 'username', value: username },
-						{ name: 'showsubdivision', value: showsubdivision }
-					]
-				});
-				g.loadData();
-			});
-			$("#clearBtn").click(function(){
-				$("#username").val("");
-				var showsubdivision =  $("#chk1").ligerCheckBox().getValue();
-				g.setOptions({newPage:1});
-				g.setOptions({
-					parms: [
-						{ name: 'username', value: "" },
-						{ name: 'showsubdivision', value: showsubdivision }
-					]
-				});
-				g.loadData();
-			});
-			
-			$("#chk1").change(function () {
-				var username = $("#username").val();
-				var showsubdivision = $("#chk1").ligerCheckBox().getValue();
-				g.setOptions({newPage:1});
-				g.setOptions({
-					parms: [
-						{ name: 'username', value: username },
-						{ name: 'showsubdivision', value: showsubdivision }
-					]
-				});
-				g.loadData();
-			});
-				
-		});
-		
-		function onSelect(note) {
-            //alert("选择的是:" + note.data.text +"; id是:"+ note.data.id);
-            var url = "UserQueryList.action?corpid="+note.data.id;
-            g.set('url',url);
-        }
-		/**
-		  打开添加信息窗口的方法
-		*/
-		function  itemclick(){
-			var note = treemanager.getSelected(); 
-			//alert("选择的是:" + note.data.text +"; id是:"+ note.data.id);
-			var url = "";
-			if(note==null){
-				url = "system/user/UserAdd.jsp";
-			}else{
-				url = "system/user/UserAdd.jsp?corpid="+note.data.id;
-			}
-			winOpen(url,'添加用户信息',800,500,'添加','取消',function(data){
-				$.ajax({
-					url:"treeAdduser.action", 
-					data:data,
-					dataType:"json",
-					async:false, 
-					type:"post",
-					success:function (mm) {
-						if("error"==mm.result){
-							top.my_alert("添加用户信息失败!");
-						}else{
-							g.addRow(mm);
-							top.my_alert("添加用户信息成功！","success");
-						}
-					}, 
-					error:function (error) {
-						top.my_alert("添加用户信息失败！" + error.status);
-				}});
-			});
-		}
-	   
-		/**
-		  打开修改信息窗口的方法
-		*/
-		function  itemedit(){
-			var selected = g.getSelected();
-			if (!selected) { top.my_alert('请选择行',"warn"); return; }
-			var id = (g.getSelectedRow()).id; 
-			var url = "system/user/UserEdit.jsp?id="+id;
-			winOpen(url,'修改用户信息',700,420,'修改','取消',function(data){
-				$.ajax({
-					url:"treeAdduser.action", 
-					data:data,
-					dataType:"json",
-					async:false, 
-					type:"post",
-					success:function (mm) {
-						if("error"==mm.result){
-							top.my_alert("修改用户信息失败!");
-						}else{
-							g.updateRow(selected,mm);
-							top.my_alert("修改用户信息成功！","success");
-						}
-					}, 
-					error:function (error) {
-						top.my_alert("修改用户信息失败！" + error.status);
-				}});
-			});
-		}
-		/**
-		  打开详细信息窗口的方法
-		*/
-		function  itemmess(){
-			var selected = g.getSelected();
-			if (!selected) { top.my_alert('请选择行',"warn"); return; }
-			var id = (g.getSelectedRow()).id; 
-			window.top.my_openwindow("useredit","system/user/UserMess.jsp?id="+id,700,480,"用户详细信息");
-		}
-	   
-		/**
-		 删除信息的方法
-		*/
-		function  itemdelete(){
-			var selected = g.getSelected();
-			if (!selected) {  top.my_alert('请选择要删除的数据行!','warn'); return; }
-			window.top.$.ligerDialog.confirm("确定删除选择的数据", "提示", function (ok) {
-				if (ok) {
-					g.deleteSelectedRow();
-					var selecteds = g.getSelecteds();
-					var idstr="";//所有选择行的id
-					for(var i=0;i<selecteds.length;i++){
-						idstr = idstr + selecteds[i].id;
-						if(i!=(selecteds.length-1)){
-							idstr = idstr + ",";
-						}
-					}
-					/**
-					   删除数据库数据
-					*/
-					$.post("treeuserDel.action", { ids: idstr},
-						function(){
-							top.my_alert("删除数据成功!","success");
-						}
-					);
-				}
-			});
-		}
-		function winOpen(url,title,width,height,button1,button2,callback){
-			window.top.$.ligerDialog.open({
-				width: width, height: height, url: url, title: title, buttons: [{
-					text: button1, onclick: function (item, dialog) {
-						var fn = dialog.frame.f_validate || dialog.frame.window.f_validate;
-						var data = fn();
-						if(data){
-							callback(data);
-							dialog.close();
-						}
-					}
-				},{
-					text: button2, onclick: function (item, dialog) {
-						dialog.close();
-					}
-				}]
-		     });
-		}
-  	</script>
-  	<style type="text/css">
-    	.l-layout-left{
-			overflow: auto !important;
-		}
-		.l-tree{
-  			width:230px !important;
-  		}
-    </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>IDC／ISP流量统计与质量监测系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
 </head>
-<body style="padding: 0px;overflow:hidden;">
-        <div id="layout" style="margin-top: -1px; margin-left: -1px">
-            <div position="left" title="组织架构">
-                <div id="treediv" style="width: 250px; height: 100%; margin: -1px; float: left; border: 1px solid #ccc; overflow: auto;">
-                    <ul id="tree"></ul>
-                </div>
+<body class="hold-transition">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+ 
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        用户管理
+      
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+        <li class="active"><a href="#">用户管理</a></li>   
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+            <button type="button" class="btn btn-default btn-sm" id="add_user" >
+              <span class="fa fa-user-plus"></span> 新增
+            </button>
+            <button type="button" class="btn btn-default btn-sm" id="edit_user">
+              <span class="fa fa-edit"></span> 修改
+            </button>
+            <button type="button" class="btn btn-default btn-sm" id="detele_user">
+              <span class="fa fa-user-times"></span> 删除
+            </button>
+            <button type="button" class="btn btn-default btn-sm" id="detail_user">
+              <span class="fa fa-file-text-o"></span> 详情
+            </button>
             </div>
-            <div position="center" title="人员信息">
-            	<div id="toolbar" class="searchDiv">
-            		<form id="serchform" onsubmit="return false;">
-	            		<table>
-	            			<tr>
-	            				<td class="ser_cont"><input type="text" id="username" value=""/></td>
-	            				<td class="ser_cont"><input type="button" id="searchBtn" value="查询" class="btn"/></td>
-	            				<td class="ser_cont"><input type="button" id="clearBtn" value="清空" class="btn"/></td>
-	            				&nbsp;<td><input type="checkbox" name="chk1" id="chk1" checked="checked" /></td><td>是否显示子部门人员</td>
-	            			</tr>
-	            		</table>
-            		</form>
-            	</div>
-                <div id="maingrid" style="margin-top: -1px; margin-left: -1px"></div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-striped">
+           
+              </table>
             </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
         </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- 模态框（Modal） -->
+<!-- 添加-->
+<div class="modal fade" name="myModal" id="adduser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>添加用户信息</b></h4>
+            </div>
+            <div class="modal-body" >
+            <iframe src="UserAdd.jsp" class="add-user" frameborder="0" scrolling="no"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="a()">添加</button> 
+                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<!-- 修改-->
+<div class="modal fade" name="myModal" id="editUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>修改用户信息</b></h4>
+            </div>
+            <div class="modal-body" >
+            <iframe src="UserEdit.jsp" class="add-user" frameborder="0" scrolling="no"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">修改</button> 
+                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<!-- 详情-->
+<div class="modal fade" name="myModal" id="detailUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>用户信息详情</b></h4>
+            </div>
+            <div class="modal-body" >
+            <iframe src="UserDetail.jsp" class="add-user" frameborder="0" scrolling="no"></iframe>
+            </div>
+            <div class="modal-footer">
+                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<div class="modal fade" id="myModal" name="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" id="tipContent">请选择要数据</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<div class="modal fade" name="myModal" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">确定要删除选中的数据</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="detletedate()">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="modal fade" name="myModal" id="deleteSucess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">删除数据成功</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">确定</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+
+<!-- page script -->
+
+<script src="<%=basePath  %>/js/userList.js"></script>
+
+
 </body>
 </html>

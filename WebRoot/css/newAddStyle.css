@@ -1,0 +1,12 @@
+@charset "utf-8";
+/* CSS Document */
+.add-user{
+ width:100%;
+ min-height:490px;
+}
+.nopadding{
+padding:0px;
+}
+.nopadding1{
+padding:0px 0px 0px 5px;
+}

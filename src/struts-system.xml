@@ -186,6 +186,10 @@
 		<action name="UserQueryList" class="com.dhcc.common.system.user.TreeManageAction">
 			<result type="json"></result>
 		</action>
+		<!-- 所有用户列表查询 -->
+		<action name="UserAllQueryList" class="com.dhcc.common.system.user.TreeManageAction" method="UserQueryList">
+			<result type="json"></result>
+		</action>
 		<!-- 通过单位id查询topcorpid -->
 		<action name="QueryTopCorpId" class="com.dhcc.common.system.user.TreeManageAction" method="QueryTopCorpId">
 			<result type="json"></result>

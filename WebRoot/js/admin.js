@@ -9,7 +9,6 @@ $(function() {
 		type: "post",
 		dataType: 'json',
 		success: function(data) {
-			console.log(data+"");
 			var menu = [];
 			for(var i = 0;i<data.length;i++){
 				var item = data[i];

@@ -44,6 +44,11 @@ public class TreeManageAction extends ActionSupport{
 		listmodal = pm.getList();
 		return SUCCESS;
 	}
+	
+	public String UserQueryList(){
+		dao.userAllQueryList(corpid, username,ids,sortname,sortorder,showsubdivision);
+		return SUCCESS;
+	}
 	/**
 	 * 通过单位id查询对应职务信息
 	 * @作者 SZ

@@ -2,378 +2,205 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String id = request.getParameter("id");
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
 %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-  	<base href="<%=basePath %>"/>
-    <title>用户修改页面</title>
-    <link    rel="stylesheet" type="text/css" href="<%=basePath %>css/reportMain.css"/>
-    <link    rel="stylesheet" type="text/css" href="<%=basePath %>include/LigerUI/skins/Aqua/css/ligerui-all.css"/>
-    <link    rel="stylesheet" type="text/css"  href="<%=basePath %>include/LigerUI/skins/ligerui-icons.css" /> 
-    <script  type="text/javascript"  src="<%=basePath  %>include/jQuery/jquery-1.3.2.min.js"></script>    
-    <script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/js/ligerui.all.js" ></script>
-    <script  src="<%=basePath  %>include/LigerUI/jquery-validation/jquery.validate.min.js"></script>
-    <script  src="<%=basePath  %>include/LigerUI/jquery-validation/jquery.metadata.js" type="text/javascript"></script>
-    <script  src="<%=basePath  %>include/LigerUI/jquery-validation/messages_cn.js" type="text/javascript"></script>
-	<script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script> 
-	<style type="text/css">
-        body{ font-size:14px;}
-        .liger-button {
-        	float:left;margin-left:20px;
-       	}
-    </style>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>IDC／ISP流量统计与质量监测系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+   <!-- bootstrap datepicker -->
+   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/datepicker3.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 </head>
-<body style="padding:10px">   
-	<form id="form2"></form> 
+<body class="hold-transition">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+ 
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+ 
+ <form class="form-horizontal" role="form">
+  <div class="form-group form-group-sm ">
+    <label for="loginUser" class="col-xs-2 control-label nopadding">登录账号
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="loginUser" >
+   </div>
+    <label for="userName" class="col-xs-2 control-label nopadding1">用户姓名</label>
+   	<div class="col-xs-4 nopadding">
+   	 <input type="text" class="form-control" id="userName">
+   	</div> 
+  </div>
+
+  
+   <div class="form-group form-group-sm ">
+    <label for="userPassword" class="col-xs-2 control-label nopadding">用户密码
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="userPassword" >
+   </div>
+    <label for="confirmPwd" class="col-xs-2 control-label nopadding1">确认密码</label>
+   	<div class="col-xs-4 nopadding">
+   	 <input type="text" class="form-control" id="confirmPwd">
+   	</div> 
+  </div>
+  
+  
+  
+  
+  
+   <div class="form-group form-group-sm ">
+      <label for="sex" class="col-xs-2 control-label nopadding">用户性别</label>
+	    
+			<select class="col-xs-4 input-sm nopadding" id="sex">
+				<option value="">男</option>
+				<option value="">女</option>
+			</select>
+		
+	
+       <label for="datepicker" class="col-xs-2 control-label nopadding1">出生年月</label>
+           <div class="col-xs-4 nopadding">
+		   <div class="input-group date ">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input type="text" class="form-control pull-right" id="datepicker">
+                </div>
+	       </div>
+  </div>
+  
+  
+   <div class="form-group form-group-sm ">
+    <label for="department" class="col-xs-2 control-label nopadding">所属部门
+    </label>
+        <select class="col-xs-4 input-sm nopadding" id="department">
+        </select>
+	
+    <label for="job" class="col-xs-2 control-label nopadding1">岗位</label>
+   	    <select class="col-xs-4 input-sm nopadding" id="job">
+        </select>
+  </div>
+  
+   <div class="form-group form-group-sm ">
+    <label for="role" class="col-xs-2 control-label nopadding">用户角色
+    </label>
+        <select class="col-xs-4 input-sm nopadding" id="role">
+        </select>
+	
+    <label for="post" class="col-xs-2 control-label nopadding1">职务</label>
+   	    <select class="col-xs-4 input-sm nopadding" id="post">
+        </select>
+  </div>
+    
+    
+    
+   <div class="form-group form-group-sm ">
+    <label for="area" class="col-xs-2 control-label nopadding">所属区域
+    </label>
+        <select class="col-xs-4 input-sm nopadding" id="area">
+        </select>
+    <label for="dataCenter" class="col-xs-2 control-label nopadding1">所属数据中心</label>
+   	    <select class="col-xs-4 input-sm nopadding" id="dataCenter">
+        </select>
+  </div>
+    
+    
+    
+     <div class="form-group form-group-sm ">
+    <label for="companyPhone" class="col-xs-2 control-label nopadding">公司座机
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="companyPhone" >
+   </div>
+    <label for="homePhone" class="col-xs-2 control-label nopadding1">家庭座机</label>
+   	<div class="col-xs-4 nopadding">
+   	 <input type="text" class="form-control" id="homePhone">
+   	</div> 
+  </div>
+    
+    
+  
+    
+     <div class="form-group form-group-sm ">
+    <label for="companyMobPhone" class="col-xs-2 control-label nopadding">公司手机
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="companyMobPhone" >
+   </div>
+    <label for="PersonPhone" class="col-xs-2 control-label nopadding1">私人手机</label>
+   	<div class="col-xs-4 nopadding">
+   	 <input type="text" class="form-control" id="PersonPhone">
+   	</div> 
+  </div>
+  
+   <div class="form-group form-group-sm ">
+    <label for="companyMail" class="col-xs-2 control-label nopadding">公司邮箱
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="companyMail" >
+   </div>
+    <label for="PersonMail" class="col-xs-2 control-label nopadding1">私人邮箱</label>
+   	<div class="col-xs-4 nopadding">
+   	 <input type="text" class="form-control" id="PersonMail">
+   	</div> 
+  </div>
+    <div class="form-group form-group-sm">
+    <label for="description" class="col-xs-2 control-label nopadding">用户描述</label>
+    <div class="col-xs-10 form-group">
+	<textarea class="form-control" rows="3"  id="description"></textarea>
+	</div>
+    </div>
+</form>
+    
+    </section>
+  <div class="control-sidebar-bg"></div>
+</div>
+
+
+<!-- jQuery 2.2.3 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+ <!-- bootstrap datepicker -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="<%=basePath  %>/js/userAdd.js"></script>
+<!-- page script -->
+
 </body>
-	<script type="text/javascript">
-		var form;
-		//var type = true;
-        $(function (){
-        	form = $("#form2").ligerForm({
-                inputWidth: 170, 
-                labelWidth: 100, 
-                space: 40,
-				validate : true,
-                fields: [ 
-                	{ name: "id",type: "hidden"},
-                	{ name: "sex",type: "hidden"},
-                	{ name: "postid", type: "hidden" },
-                	{ name: "deptid", type: "hidden" },
-                	{ name: "roleid", type: "hidden" },
-                	{ name: "stationid", type: "hidden" },
-                	{ name: "birth", type: "hidden" },
-                	{ name: "area",type: "hidden"},
-                	{ name: "dcid",type: "hidden"},
-                    { label: "登陆账号", name: "loginname", newline: true, type: "text" },
-                    { label: "用户姓名", name: "username", newline: false, type: "text", validate: { required: true,maxlength: 8 } },
-       				{ label: "用户性别", name: "sexModel", newline: true, type: "select", validate: { required: true }, dictionary: '男|女',
-                    	editor: {
-							onSelected: function(e){
-								if (e=="男"){
-					            	$("[name=sex]").val("M");
-					            }else if(e=="女"){
-					            	$("[name=sex]").val("W");
-					            }
-							}
-	                    }
-                    },
-                    { label: "出生年月", name: "birthday", newline: false, type: "date", validate: { required: true},
-                   		editor:{
-	                   		onChangeDate:checkdate
-                   		} 
-                	},
-                    { label: "所属单位", name: "dept", newline: true, type: "select", validate: { required: true},
-	                    editor: {
-	                        width : 180, 
-				            selectBoxWidth: 200,
-				            selectBoxHeight: 200, 
-				            valueField: 'id',
-				            treeLeafOnly: false,//只能选中子节点的属性
-	                        tree: { 
-								url:"cropDeptTreeQuery.action", 
-								ajaxType:'post',
-								idFieldName: 'id',
-                				parentIDFieldName: 'pid',
-                				autoCheckboxEven:false,
-                				checkbox: true
-							},
-							onSelected: function(id,value){
-								if(''!=id && '' != value && "null" != value && (value.indexOf("null") < 0)){
-										$("[name=deptid]").val(id);
-										var topcorpid = "";
-										$.ajax({
-											url:"QueryTopCorpId.action?corpid="+id, 
-											async:false,
-											type:"post",
-											success:function (data) {
-												topcorpid = data;
-											}, 
-											error:function (error) {
-												top.my_alert("获取信息失败！" + error.status);
-											}
-										});
-										liger.get("role").treeManager.set("url","QueryRoleByDept.action?corpid="+topcorpid);
-										liger.get("station").treeManager.set("url","QueryStationByDept.action?corpid="+topcorpid);
-										liger.get("post").treeManager.set("url","QueryPostByDept.action?corpid="+topcorpid);
-										liger.get("areaid").treeManager.set("url","QueryAreaByDept.action?corpid="+topcorpid);
-								}
-							}
-	                    }
-                    },
-                    { label: "用户角色", name: "role", newline: false, type: "select", validate: { required: true},
-                    	editor: {
-	                        width : 180, 
-				            selectBoxWidth: 200,
-				            selectBoxHeight: 200, 
-				            valueField: 'id',
-				            treeLeafOnly: true,
-	                        tree: { 
-								ajaxType:'post',
-								idFieldName: 'id',
-                				parentIDFieldName: 'pid',
-                				onSuccess:function(){
-                					clearNullValue(liger.get("role"));
-                				},
-                				checkbox: true
-							},
-							onSelected: function(id,value){
-								if(''!=id&&''!=value&&"null"!=value){
-									$("[name=roleid]").val(id);
-								}
-							}
-	                    }
-                    },
-                    { label: "岗位",id:'station', name: "station", newline: true, type: "select",
-                    	editor: {
-	                        width : 180, 
-				            selectBoxWidth: 200,
-				            selectBoxHeight: 200, 
-				            valueField: 'id',
-				            treeLeafOnly: true,
-	                        tree: { 
-								ajaxType:'post',
-								idFieldName: 'id',
-                				parentIDFieldName: 'pid',
-                				onSuccess:function(){
-                					clearNullValue(liger.get("station"));
-                				},
-                				checkbox: true
-							},
-							onSelected: function(id,value){
-							    $("[name=stationid]").val("");
-								if(''!=id&&''!=value&&"null"!=value){
-									$("[name=stationid]").val(id);
-								}
-							}
-	                    }
-                    },
-                    { label: "职务", name: "post", newline: false, type: "select", validate: { required: true},
-                    	editor: {
-	                        width : 180, 
-				            selectBoxWidth: 200,
-				            selectBoxHeight: 200, 
-				            valueField: 'id',
-				            treeLeafOnly: true,
-	                        tree: { 
-								ajaxType:'post',
-								idFieldName: 'id',
-                				parentIDFieldName: 'pid',
-                				onSuccess:function(){
-                					clearNullValue(liger.get("post"));
-                				},
-                				checkbox: true
-							},
-							onSelected: function(id,value){
-								if(''!=id&&''!=value&&"null"!=value){
-									$("[name=postid]").val(id);
-								}
-							}
-	                    }
-                    },
-                    { label: "所属区域", name: "areaid", newline: true, type: "select", validate: { required: true},
-                    	editor: {
-	                        width : 180, 
-				            selectBoxWidth: 200,
-				            selectBoxHeight: 200, 
-				            valueField: 'id',
-				            treeLeafOnly: true,
-	                        tree: { 
-								ajaxType:'post',
-								idFieldName: 'id',
-	            				parentIDFieldName: 'pid',
-	            				onSuccess:function(){
-	            					clearNullValue(liger.get("areaid"));
-	            				},
-	            				checkbox: false
-							},
-							onSelected: function(id,value){
-								if(''!=id&&''!=value&&"null"!=value){
-									$("[name=area]").val(id);
-								}
-							}
-	                    }
-                    },
-                    { label: "所属数据中心", name: "dcidid", newline: false, type: "select", validate: { required: true},
-                    	editor:{
-	               			url:"dcidTreeQuery.action",
-							isMultiSelect:false,
-							valueField: 'id',
-							onSelected: function(id,value){
-								if(''!=id&&''!=value&&"null"!=value){
-									$("[name=dcid]").val(id);
-								}
-							}
-	                	} 
-                    },
-                    { label: "公司座机", name: "phonepublic", newline: true, type: "text" },
-                    { label: "家庭座机", name: "phoneprivate", newline: false, type: "text" },
-                    { label: "公司手机", name: "mobilepublic", newline: true, type: "digits", validate: { required: false,minlength: 11,maxlength: 11 },editor: { onChangeValue: getmobilepublic }  },
-                    { label: "私人手机", name: "mobileprivate", newline: false, type: "digits", validate: { required: true,minlength: 11,maxlength: 11 },editor: { onChangeValue: getmobileprivate }  },
-                    { label: "公司邮箱", name: "emailpublic", newline: true, type: "text",editor: { onChangeValue: getemailpublic } },
-                    { label: "私人邮箱", name: "emailprivate", newline: false, type: "text", validate: { required: true },editor: { onChangeValue: getemailprivate } },
-                    { label: "用户描述", name: "remark", newline: true, type: "textarea",width:470 , validate: { required: false,maxlength:200} }
-                ]
-            });
-            getMess("<%=id%>");
-        });
-
-        /**登录名验证*/
-        function getloginname(){
-        	var data = form.getData();
-        	var datas = {"loginname":data.loginname};
-           	$.ajax({
-				url:"treeuserExist.action", 
-				data:datas, 
-				type:"post",
-				success:function (mm) {
-					if(mm == "EXIST"){
-						//top.my_alert("该登录名已经存在，请更换登录名称！","warn");
-						form.showFieldError("loginname","该登录名已经存在，请更换登录名称！");
-						$("[name=loginname]").val("");
-					}
-				}, 
-				error:function (error) {
-					top.my_alert("该登录名已存在" + error.status);
-			}});
-        }
-        function getmobilepublic(){
-        	var data = form.getData();
-        	if(""!=data.mobilepublic){
-	        	if(!checkPhoneNum(data.mobilepublic)){
-	        		form.showFieldError("mobilepublic","请正确输入手机号！");
-	           		$("[name=mobilepublic]").val(data.mobilepublic);
-	        	}
-        	}
-        }
-        function getmobileprivate(){
-       		var data = form.getData();
-       		if(!checkPhoneNum(data.mobileprivate)){
-        		form.showFieldError("mobileprivate","请正确输入手机号！");
-           		$("[name=mobileprivate]").val(data.mobileprivate);
-        	}
-        }
-        function getemailpublic(){
-        	var data = form.getData();
-        	if(""!=data.emailpublic){
-	        	if(!checkEmail(data.emailpublic)){
-	        		form.showFieldError("emailpublic","请正确输入邮箱地址！");
-	           		$("[name=emailpublic]").val(data.emailpublic);
-	        	}
-        	}
-        }
-        function getemailprivate(){
-       		var data = form.getData();
-       		if(!checkEmail(data.emailprivate)){
-        		form.showFieldError("emailprivate","请正确输入邮箱地址！");
-           		$("[name=emailprivate]").val(data.emailprivate);
-        	}
-        }
-        /**手机验证*/
-        function checkPhoneNum(value){
-			var tel=/^1[3|5|8][0-9]\d{8}$/;
-			if(!tel.test(value)){
-				return false;
-			}
-			return true;
-		}
-
-		/**验证邮箱*/
-		function checkEmail(value){
-			var email = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-			if(!email.test(value)){
-				return false;
-			}
-			return true;
-		}
-		 /**出生年月日*/
-		function checkdate(value){
-	   		var bdate = value;
-	   		var currentDate = getFormatDate(new Date());
-		   	if(bdate > currentDate){
-		   		form.showFieldError("birth","出生年月不能大于今天！");
-           		$("[name=birth]").val("");
-		   	}else{
-		   		form.hideFieldError("birth");
-		   	}
-	   }
-		function  getMess(mid){
-			$.ajax({
-				url:"treeuserGetById.action", 
-				data:"id="+mid, 
-				dataType:"json", 
-				async:false,
-				type:"post",
-				success:function (mm) {
-					var dd = "";
-					if(mm.sex=="M"){
-						dd = "男";
-					}else if(mm.sex=="W"){
-						dd = "女";
-					}
-					form.setEnabled(["loginname"], false);
-					form.setData({
-						id: "<%=id%>",
-						sex: mm.sex,
-						loginname: mm.loginname,
-						username: mm.username,
-						sexModel: dd,
-						birthday: getFormatDate(mm.birth),
-						areaid: mm.area,
-						dept: mm.deptid,
-						role: mm.roleid,
-						station: mm.stationid,
-						post: mm.postid,
-						dcidid:mm.dcid
-		            });
-		            $("[name=mobilepublic]").val(mm.mobilepublic);
-		            $("[name=mobileprivate]").val(mm.mobileprivate);
-		            $("[name=phonepublic]").val(mm.phonepublic);
-		            $("[name=phoneprivate]").val(mm.phoneprivate);
-					$("[name=emailpublic]").val(mm.emailpublic);
-					$("[name=emailprivate]").val(mm.emailprivate);
-					$("[name=remark]").val(mm.remark);
-				}, 
-				error:function (error) {
-					alert("获取单个信息失败****" + error.status);
-				}
-			});
-		}
-		/**提交验证*/
-        function f_validate() { 
-            if (form.valid()) {
-               var birthday = $("[name=birthday]").val();
-               $("[name=birth]").val(birthday);
-              return form.getData();
-            }else {
-                form.showInvalid();
-            }
-            return null;
-        }
-        
-    function clearNullValue(obj){//当前下拉框的ligerui对象。liger.get("id");
-		var ids = obj.getValue();
-		var tempArr = new Array();
-		if(ids != "" && ids != "null"){
-			var idArr = ids.split(";");
-			for(var i=0;i<idArr.length;i++){
-				var id = idArr[i];
-				if(id != "" && id != "null"){
-					var t = obj.treeManager.getTextByID(id);//
-					if(t != null && t != "" && t != "null"){
-						tempArr.push(id);
-					}
-				}
-			}
-		}
-		obj.setValue(tempArr.join(";"));
-		if(!tempArr.join(";")){
-			obj.setText("");
-		}
-		return tempArr.join(";");
-	}
-</script>
 </html>
