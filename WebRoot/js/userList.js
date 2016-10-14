@@ -50,10 +50,12 @@ $(function () {
                  "sPrevious": "前一页",
                  "sNext": "后一页",
                  "sLast": "尾页"
-             }},
-             "sZeroRecords": "没有检索到数据",
-             "sProcessing": "<img src='' />",
-             "sSearch": "搜索"
+             },
+		    "sZeroRecords": "没有检索到数据",
+            "sProcessing": "<img src='' />",
+            "sSearch": "搜索"
+		 },
+             
 		 });
 			/**点击复选框，行选中*/
 		 $('#example1').on('click', 'input[name="checked_info"]', function (event) {
