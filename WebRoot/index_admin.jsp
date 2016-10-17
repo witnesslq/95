@@ -36,6 +36,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <link rel="stylesheet" href="<%=basePath  %>/css/template.css">
+
   </head>
   <!--
   BODY TAG OPTIONS:
@@ -57,40 +59,48 @@ scratch. This page gets rid of all links and provides the needed markup only.
   |               | sidebar-mini                            |
   |---------------------------------------------------------|
   -->
-  <body class="hold-transition skin-blue sidebar-mini">
- 
-
-
-<!-- Content Wrapper. Contains page content -->
-
-<!-- Content Header (Page header) -->
-<section class="content-header">
-  <h1>
-  Page Header
-  <small>Optional description</small>
-  </h1>
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-    <li class="active">Here</li>
-  </ol>
-</section>
-<!-- Main content -->
-<section class="content">
-  <!-- Your Page Content Here -->
-</section>
-<!-- /.content -->
-
-<!-- REQUIRED JS SCRIPTS -->
-<!-- jQuery 2.2.3 -->
-<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<!-- Bootstrap 3.3.6 -->
-<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
-<!-- AdminLTE App -->
-<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
-
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-Both of these plugins are recommended to enhance the
-user experience. Slimscroll is required when using the
-fixed layout. -->
-</body>
-</html>
+  <body class="hold-transition skin-blue layout-top-nav">
+    
+    <div class="wrapper">
+      <div class="content-wrapper">
+        <!-- Content Wrapper. Contains page content -->
+        
+        <div class="container-fluid"><!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+          Page Header
+          <small>Optional description</small>
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+            <li class="active">Here</li>
+          </ol>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+          <!-- Your Page Content Here -->
+           <div class="box box-default">
+          <div class="box-header with-border">
+            <h3 class="box-title">Blank Box</h3>
+          </div>
+          <div class="box-body">
+            The great content goes here
+          </div>
+          <!-- /.box-body -->
+        </div>
+        </section>
+        <!-- /.content --></div></div>
+      </div>
+      <!-- REQUIRED JS SCRIPTS -->
+      <!-- jQuery 2.2.3 -->
+      <script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+      <!-- Bootstrap 3.3.6 -->
+      <script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+      <!-- AdminLTE App -->
+      <script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+      <!-- Optionally, you can add Slimscroll and FastClick plugins.
+      Both of these plugins are recommended to enhance the
+      user experience. Slimscroll is required when using the
+      fixed layout. -->
+    </body>
+  </html>

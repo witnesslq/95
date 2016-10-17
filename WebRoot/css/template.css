@@ -1,0 +1,9 @@
+@charset "UTF-8";
+.sidebar-mini>.wrapper>.content-wrapper>.content{
+	padding:0;
+}
+.layout-top-nav>.wrapper>.content-wrapper>.container-fluid{
+	padding-left: 0;
+	padding-right: 0;
+}
+
