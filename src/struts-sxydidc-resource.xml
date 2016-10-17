@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="ip" extends="json-default">
+		<!-- IP信息查询 -->
+		<action name="queryIP" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="queryIP">
+			<result type="json"></result>
+		</action>	
+		
+		<!-- 资源调度IP信息查询 -->
+		<action name="queryFreeIP" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="queryFreeIP">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 删除IP信息 -->
+		<action name="deleteIPByIds" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="deleteIPByIds">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 查询单个IP信息 -->
+		<action name="queryIPById" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="queryIPById">
+			<result type="json"></result>
+		</action>
+				
+		<!-- 编辑IP信息 -->
+		<action name="updateIP" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="updateIP">
+			<result type="json"></result>
+		</action>
+		<!-- 查询IP段属性信息 -->
+		<action name="queryIPProperty" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="queryIPProperty">
+			<result type="json"></result>
+		</action>
+		<!-- 添加IP信息 -->
+		<action name="saveIP" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="saveIP">
+			<result type="json"></result>
+		</action>							
+	</package>
+	
+	<package name="ipseg" extends="json-default">
+		<!-- IP段信息查询 -->
+		<action name="queryIPSeg" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="queryIPSeg">
+			<result type="json"></result>
+		</action>	
+		<!-- IP段资源调度信息查询 -->
+		<action name="queryFreeIPSeg" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="queryFreeIPSeg">
+			<result type="json"></result>
+		</action>	
+		
+		
+		<!-- 删除IP段信息 -->
+		<action name="deleteIPSegByIds" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="deleteIPSegByIds">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 查询单个IP段信息 -->
+		<action name="queryIPSegById" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="queryIPSegById">
+			<result type="json"></result>
+		</action>
+				
+		<!-- 编辑IP段信息 -->
+		<action name="updateIPSeg" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="updateIPSeg">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 添加IP段信息 -->
+		<action name="saveIPSeg" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="saveIPSeg">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 查询IP段属性信息 -->
+		<action name="queryIPSegProperty" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="queryIPSegProperty">
+			<result type="json"></result>
+		</action>
+				
+		<!-- 合并IP段信息 -->
+		<action name="mergeIPSegByIds" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="mergeIPSegByIds">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 拆分IP段信息 -->
+		<action name="addBatchIPSeg" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="addBatchIPSeg">
+			<result type="json"></result>
+		</action>				
+									
+	</package>	
+	
+	
+	
+	
+	<package name="useat" extends="json-default">
+		<!-- U位信息查询 -->
+		<action name="queryUSeat" class="com.dhcc.bussiness.sxydidc.useat.USeatAction" method="queryUSeat">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 资源调度U位信息查询 -->
+		<action name="queryFreeUSeat" class="com.dhcc.bussiness.sxydidc.useat.USeatAction" method="queryFreeUSeat">
+			<result type="json"></result>
+		</action>
+		
+		<!-- U位信息查询 -->
+		<action name="queryUSeatById" class="com.dhcc.bussiness.sxydidc.useat.USeatAction" method="queryUSeatById">
+			<result type="json"></result>
+		</action>
+		
+		<!-- U位信息删除 -->
+		<action name="deleteUSeatByIds" class="com.dhcc.bussiness.sxydidc.useat.USeatAction" method="deleteUSeatByIds">
+			<result type="json"></result>
+		</action>				
+
+		<!-- U位信息添加 -->
+		<action name="saveUSeat" class="com.dhcc.bussiness.sxydidc.useat.USeatAction" method="saveUSeat">
+			<result type="json"></result>
+		</action>
+		
+		<!-- U位信息更新 -->
+		<action name="updateUSeat" class="com.dhcc.bussiness.sxydidc.useat.USeatAction" method="updateUSeat">
+			<result type="json"></result>
+		</action>					
+
+	</package>
+		<package name="device" extends="json-default">
+		<!-- 设备信息查询 -->
+		<action name="queryDevice" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryDevice">
+			<result type="json"></result>
+		</action>
+		<!-- 设备属性信息查询 -->
+		<action name="queryDeviceProperty" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryDeviceProperty">
+			<result type="json"></result>
+		</action>
+				
+		<action name="querypackDeviceById" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="querypackDeviceById">
+			<result type="json"></result>
+		</action>
+		
+		<action name="queryDevicePackById" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryDevicePackById">
+			<result type="json"></result>
+		</action>
+		
+		<action name="updateDevicePack" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="updateDevicePack">
+			<result type="json"></result>
+		</action>		
+		
+		<action name="queryportDeviceById" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryportDeviceById">
+			<result type="json"></result>
+		</action>	
+		<!-- 资源调度查询空闲端口 -->	
+		<action name="queryFreeport" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryFreeport">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 根据板卡ID查询端口信息 -->
+		<action name="queryportByDevpackId" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryportByDevpackId">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 根据ID查询端口信息 -->
+		<action name="queryPortById" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryPortById">
+			<result type="json"></result>
+		</action>
+
+		<!-- 更新端口信息 -->
+		<action name="updateDevicePort" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="updateDevicePort">
+			<result type="json"></result>
+		</action>	
+		
+
+		<!-- 删除端口信息 -->
+		<action name="deleteDeviceportByIds" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="deleteDeviceportByIds">
+			<result type="json"></result>
+		</action>		
+		<!-- 删除设备信息 -->
+		<action name="deleteDeviceByIds" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="deleteDeviceByIds">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 删除设备板卡信息 -->
+		<action name="deleteDevicepackByIds" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="deleteDevicepackByIds">
+			<result type="json"></result>
+		</action>		
+		
+		<action name="deletepackDeviceByIds" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="deletepackDeviceByIds">
+			<result type="json"></result>
+		</action>
+		<action name="deleteportDeviceByIds" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="deleteportDeviceByIds">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 查询单个设备信息 -->
+		<action name="queryDeviceById" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryDeviceById">
+			<result type="json"></result>
+		</action>
+				
+		<!-- 编辑设备信息 -->
+		<action name="updateDevice" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="updateDevice">
+			<result type="json"></result>
+		</action>
+		<action name="devicepack"
+			class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="devicepack">
+			<result type="json" >
+				
+			</result> 
+		</action>
+		<action name="deviceport"
+			class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="deviceport">
+			<result type="json" >
+				
+			</result> 
+		</action>
+		<!-- 添加设备信息 -->
+		<action name="saveDevice" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="saveDevice">
+			<result type="json"></result>
+		</action>
+		<action name="savepackDevice" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="savepackDevice">
+			<result type="json"></result>
+		</action>
+		<action name="saveportDevice" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="saveportDevice">
+			<result type="json"></result>
+		</action>
+		<action name="createDeviceNo" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="createDeviceNo">
+			<result type="json"></result>
+		</action>
+		<action name="createpackDeviceNo" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="createpackDeviceNo">
+			<result type="json"></result>
+		</action>
+		<action name="createportDeviceNo" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="createportDeviceNo">
+			<result type="json"></result>
+		</action>								
+	</package>			
+
+
+	<package name="rack" extends="json-default">
+		<!-- 机柜信息查询 -->
+		<action name="queryRack" class="com.dhcc.bussiness.sxydidc.rack.RackAction" method="queryRack">
+			<result type="json"></result>
+		</action>
+		<!-- 资源调度查询空闲机柜 -->
+		<action name="queryFreeRack" class="com.dhcc.bussiness.sxydidc.rack.RackAction" method="queryFreeRack">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 机柜属性查询 -->
+		<action name="queryRackProperty" class="com.dhcc.bussiness.sxydidc.rack.RackAction" method="queryRackProperty">
+			<result type="json"></result>
+		</action>		
+		
+		<!-- 机柜信息查询 -->
+		<action name="queryRackById" class="com.dhcc.bussiness.sxydidc.rack.RackAction" method="queryRackById">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 机柜信息删除 -->
+		<action name="deleteRackByIds" class="com.dhcc.bussiness.sxydidc.rack.RackAction" method="deleteRackByIds">
+			<result type="json"></result>
+		</action>				
+
+		<!-- 机柜信息添加 -->
+		<action name="saveRack" class="com.dhcc.bussiness.sxydidc.rack.RackAction" method="saveRack">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 机柜信息更新 -->
+		<action name="updateRack" class="com.dhcc.bussiness.sxydidc.rack.RackAction" method="updateRack">
+			<result type="json"></result>
+		</action>
+		
+					
+	</package>	
+	
+	<package name="rsserver"  extends="json-default">
+		<!-- 服务器查询 -->
+		<action name="queryServer" class="com.dhcc.bussiness.sxydidc.rsserver.RsserverAction" method="queryServer">
+			<result type="json"></result>
+		</action>
+		<action name="queryFreeServer" class="com.dhcc.bussiness.sxydidc.rsserver.RsserverAction" method="queryFreeServer">
+			<result type="json"></result>
+		</action>
+		<!-- 查询订单中的服务器 -->
+		<action name="queryServerbyFlownum" class="com.dhcc.bussiness.sxydidc.rsserver.RsserverAction" method="queryServerbyFlownum">
+			<result type="json"></result>
+		</action>
+		<!-- 服务器新增 -->
+		<action name="saveServer" class="com.dhcc.bussiness.sxydidc.rsserver.RsserverAction" method="saveServer">
+			<result type="json"></result>
+		</action>
+		<!-- 服务器编辑 -->
+		<action name="updateServer" class="com.dhcc.bussiness.sxydidc.rsserver.RsserverAction" method="updateServer">
+			<result type="json"></result>
+		</action>
+		<!-- 查询服务器 -->
+		<action name="queryServerById" class="com.dhcc.bussiness.sxydidc.rsserver.RsserverAction" method="queryServerById">
+			<result type="json"></result>
+		</action>
+		<!-- 服务器删除 -->
+		<action name="deleteServerByIds" class="com.dhcc.bussiness.sxydidc.rsserver.RsserverAction" method="deleteServerByIds">
+			<result type="json"></result>
+		</action>	
+	
+	
+	</package>
+	
+	<package name="rsdatacenter" extends="json-default">
+	<!-- 数据中心查询 -->
+	<action name="queryRsdatacenter" class="com.dhcc.bussiness.sxydidc.rsdatacenter.RsdatacenterAction" method="queryRsdatacenter">
+		<result type="json"></result>
+	</action>
+	<!-- 数据中心增加 -->
+	<action name="saveRsdatacenter" class="com.dhcc.bussiness.sxydidc.rsdatacenter.RsdatacenterAction" method="saveRsdatacenter">
+		<result type="json"></result>
+	</action>
+	
+	<!-- 数据中心删除 -->
+	<action name="deleteRsdatacenterByIds" class="com.dhcc.bussiness.sxydidc.rsdatacenter.RsdatacenterAction" method="deleteRsdatacenterByIds">
+		<result type="json"></result>
+	</action>
+	<!-- 数据中心根据id查询 -->
+	<action name="queryRsdatacenterById" class="com.dhcc.bussiness.sxydidc.rsdatacenter.RsdatacenterAction" method="queryRsdatacenterById">
+		<result type="json"></result>
+	</action>
+	<!-- 数据中心编辑 -->
+	<action name="updateRsdatacenterByIds" class="com.dhcc.bussiness.sxydidc.rsdatacenter.RsdatacenterAction" method="updateRsdatacenterByIds">
+		<result type="json"></result>
+	</action>
+	<!-- 数据中心查询树 -->
+	<action name="queryRsdatacenterTree" class="com.dhcc.bussiness.sxydidc.rsdatacenter.RsdatacenterAction" method="queryRsdatacenterTree">
+		<result type="json"></result>
+	</action>
+	<!-- 查询用户所属的数据中心 -->
+	<action name="queryUserRsDC" class="com.dhcc.bussiness.sxydidc.rsdatacenter.RsdatacenterAction" method="queryUserRsDC">
+		<result type="json"></result>
+	</action>
+	
+	
+	
+	</package>
+	
+	
+					
+
+</struts>

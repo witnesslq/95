@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="customer" extends="json-default">
+		<!-- 客户密钥查询 --> 
+		<action name="customerKey" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="queryCustomerKey">
+			<result type="json"></result>
+		</action>
+
+		<!-- 客户密钥修改 --> 
+		<action name="editCustomerKey" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="editCustomerKey">
+			<result type="json"></result>
+		</action>		
+		
+		<!-- 客户信息查询 -->
+		<action name="queryCustomer" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="queryCustomer">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 客户信息查询 -->
+		<action name="queryAllCustomer" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="queryAllCustomer">
+			<result type="json"></result>
+		</action>		
+		
+		<!-- 客户信息属性 -->
+		<action name="queryCustomerProperty" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="queryCustomerProperty">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 根据条件筛选客户信息 -->
+		<action name="queryCustomerByUser" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="queryCustomerByUser">
+			<result type="json"></result>
+		</action>		
+		
+				
+		
+		<!-- 代办中详情页面查询客户信息 -->
+		<action name="queryCusByflownum" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="queryCusByflownum">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 单个客户信息展示 -->
+		<action name="queryCustomerById" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="queryCustomerById">
+			<result type="json"></result>
+		</action>		
+		
+		<!-- 删除客户信息 -->
+		<action name="deleteCustomerByIds" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="deleteCustomerByIds">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 编辑客户信息 -->
+		<action name="updateCustomer" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="updateCustomer">
+			<result type="json"></result>
+		</action>	
+		
+		<!-- 保存客户信息 -->
+		<action name="saveCustomer" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="saveCustomer">
+			<result type="json"></result>
+		</action>	
+		
+		<!-- 重新生成客户编号 -->
+		<action name="createCustNo" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="createCustNo">
+			<result type="json"></result>
+		</action>
+	</package>
+	<package name="contract" extends="json-default">
+		<!-- 合同信息查询 -->
+		<action name="queryContract" class="com.dhcc.bussiness.sxydidc.contract.ContractAction" method="queryContract">
+			<result type="json"></result>
+		</action>
+
+		<!-- 根据客户ID查询合同信息 -->
+		<action name="queryContractByCustomer" class="com.dhcc.bussiness.sxydidc.contract.ContractAction" method="queryContractByCustomer">
+			<result type="json"></result>
+		</action>		
+		
+
+		<!-- 单个合同信息查询 -->
+		<action name="queryContractById" class="com.dhcc.bussiness.sxydidc.contract.ContractAction" method="queryContractById">
+			<result type="json"></result>
+		</action>
+		<action name="queryContractByflownum" class="com.dhcc.bussiness.sxydidc.contract.ContractAction" method="queryContractByflownum">
+			<result type="json"></result>
+		</action>	
+		
+			
+		
+		<!-- 合同信息添加 -->
+		<action name="saveContract" class="com.dhcc.bussiness.sxydidc.contract.ContractAction" method="saveContract">
+			<result type="json"></result>
+		</action>	
+		
+		<!-- 合同信息编辑 -->
+		<action name="updateContract" class="com.dhcc.bussiness.sxydidc.contract.ContractAction" method="updateContract">
+			<result type="json"></result>
+		</action>		
+		
+		<!-- 合同信息删除 -->
+		<action name="deleteContractByIds" class="com.dhcc.bussiness.sxydidc.contract.ContractAction" method="deleteContractByIds">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 生成合同编号 -->
+		<action name="createCode" class="com.dhcc.bussiness.sxydidc.contract.ContractAction" method="createCode">
+			<result type="json"></result>
+		</action>			
+	</package>
+	
+		
+		
+	
+	
+	<package name="product" extends="json-default">
+		<!-- 产品信息查询 -->
+		<action name="queryProduct" class="com.dhcc.bussiness.sxydidc.product.ProductAction" method="queryProduct">
+			<result type="json"></result>
+		</action>
+		<!-- 产品信息查询(根据数据中心id查询) -->
+		<action name="queryProductbyDcid" class="com.dhcc.bussiness.sxydidc.product.ProductAction" method="queryProductbyDcid">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 工单产品查询 -->
+		<action name="queryProByflownum" class="com.dhcc.bussiness.sxydidc.product.ProductAction" method="queryProByflownum">
+			<result type="json"></result>
+		</action>
+		
+		
+		
+		<!-- 单个产品信息查询 -->
+		<action name="queryProductById" class="com.dhcc.bussiness.sxydidc.product.ProductAction" method="queryProductById">
+			<result type="json"></result>
+		</action>		
+		
+		<!-- 产品信息添加 -->
+		<action name="saveProduct" class="com.dhcc.bussiness.sxydidc.product.ProductAction" method="saveProduct">
+			<result type="json"></result>
+		</action>	
+		<action name="queryProBytypeid" class="com.dhcc.bussiness.sxydidc.product.ProductAction" method="queryProBytypeid">
+			<result type="json"></result>
+		</action>
+		<!-- 产品信息编辑 -->
+		<action name="updateProduct" class="com.dhcc.bussiness.sxydidc.product.ProductAction" method="updateProduct">
+			<result type="json"></result>
+		</action>		
+		
+		<!-- 产品信息删除 -->
+		<action name="deleteProductByIds" class="com.dhcc.bussiness.sxydidc.product.ProductAction" method="deleteProductByIds">
+			<result type="json"></result>
+		</action>	
+	</package>
+	<package name="productType" extends="json-default">
+		<!-- 产品类型信息查询 -->
+		<action name="queryProductType" class="com.dhcc.bussiness.sxydidc.prodtype.ProductTypeAction" method="queryProductType">
+			<result type="json"></result>
+		</action>
+		<action name="queryAllProductType" class="com.dhcc.bussiness.sxydidc.prodtype.ProductTypeAction" method="queryAllProductType">
+			<result type="json"></result>
+		</action>
+
+		<!-- 产品类型信息添加 -->
+		<action name="saveProductType" class="com.dhcc.bussiness.sxydidc.prodtype.ProductTypeAction" method="saveProductType">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 产品类型信息查询 -->
+		<action name="queryProductTypeById" class="com.dhcc.bussiness.sxydidc.prodtype.ProductTypeAction" method="queryProductTypeById">
+			<result type="json"></result>
+		</action>
+		<action name="queryPro" class="com.dhcc.bussiness.sxydidc.product.ProductAction" method="queryPro">
+			<result type="json"></result>
+		</action>
+		<action name="SelectedProductType" class="com.dhcc.bussiness.sxydidc.prodtype.ProductTypeAction" method="SelectedProductType">
+			<result type="json"></result>
+		</action>
+		<action name="SelectedProductBigType" class="com.dhcc.bussiness.sxydidc.prodtype.ProductTypeAction" method="SelectedProductBigType">
+			<result type="json"></result>
+		</action>
+		<action name="SelectedProductSmallType" class="com.dhcc.bussiness.sxydidc.prodtype.ProductTypeAction" method="SelectedProductSmallType">
+			<result type="json"></result>
+		</action>
+		<!-- 产品类型信息编辑 -->
+		<action name="updateProductType" class="com.dhcc.bussiness.sxydidc.prodtype.ProductTypeAction" method="updateProductType">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 产品类型信息删除 -->
+		<action name="deleteProductTypeByIds" class="com.dhcc.bussiness.sxydidc.prodtype.ProductTypeAction" method="deleteProductTypeByIds">
+			<result type="json"></result>
+		</action>										
+	
+	</package>				
+</struts>

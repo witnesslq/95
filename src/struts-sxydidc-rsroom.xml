@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rsroom" extends="json-default">
+		<!-- 机房信息查询 -->
+		<action name="queryRoom" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomAction" method="queryRoom">
+			<result type="json"></result>
+		</action>
+		<!-- 根据id查机房 -->
+		<action name="queryRoomById" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomAction" method="queryRoomById">
+			<result type="json"></result>
+		</action>
+		<!-- 机房属性查询 -->
+		<action name="queryRoomProperty" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomAction" method="queryRoomProperty">
+			<result type="json"></result>
+		</action>
+		<!-- 删除机房信息 -->
+		<action name="deleteRoomByIds" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomAction" method="deleteRoomByIds">
+			<result type="json"></result>
+		</action>
+		
+		<!-- 编辑机房信息 -->
+		<action name="updateRoom" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomAction" method="updateRoom">
+			<result type="json"></result>
+		</action>	
+		
+		<!-- 保存机房信息 -->
+		<action name="saveRoom" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomAction" method="saveRoom">
+			<result type="json"></result>
+		</action>	
+			
+		<!-- 查看机房信息 -->
+		<action name="checkoutRoom" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="checkoutRoom">
+		<result name="success">
+					bussiness/sxydidc/rsroom/rsroomCheckout.jsp
+				 </result>
+		</action>
+		<!-- 查看机柜位信息  -->
+		<action name="queryUInfo" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="queryUInfo">
+			<result type="json"></result>
+		</action>	
+		
+			<!-- 查看机房信息设备信息 -->
+		<action name="rsroomDevice" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="rsroomDevice">
+		<result name="success">
+					bussiness/sxydidc/rsroom/rsroomdevice.jsp
+				 </result>
+		</action>	
+			<!-- 机柜信息 -->
+		<action name="queryRackInfo" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="queryRackInfo">
+		<result name="success">
+					bussiness/sxydidc/rsroom/rackInfoUpdate.jsp
+				 </result>	
+		</action>	
+			<!-- 查询机房最大行和列 -->
+		<action name="queryrowno" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="queryrowno">
+	      <result type="json"></result>
+		</action>	
+			<!-- 批量添加机架 -->
+		<action name="saveSomeRack" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="saveSomeRack">
+	      <result type="json"></result>
+		</action>	
+		   <!-- 查询机柜房间信息 -->
+		<action name="roomAndrackInfo" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="roomAndrackInfo">
+	      <result type="json"></result>
+		</action>
+		  <!-- 添加柱子 -->
+		<action name="savePillar" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="savePillar">
+	      <result type="json"></result>
+		</action>
+		<!-- 机房信息编辑 -->
+		<action name="rsroomEditorView" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="checkoutRoom">
+		<result name="success">
+					bussiness/sxydidc/rsroom/rsroomViewEditor.jsp
+				 </result>
+		</action>
+		<!-- 拖动保存 -->
+		<action name="drag" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="drag">
+		<result type="json"></result>
+		</action>
+		
+			<!-- 拖动保存 -->
+		<action name="deleteOneRack" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="deleteOneRack">
+		<result type="json"></result>
+		</action>
+			<!-- 删除机柜 -->
+		<action name="deleteSomeRack" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="deletesomeRack">
+		<result type="json"></result>
+		</action>
+	</package>
+</struts>

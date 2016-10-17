@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="bussiness" extends="json-default">
+		<!-- 编码模块start -->
+		<!-- 编码模块列表查询 -->
+		<action name="codeQueryList" class="com.dhcc.bussiness.sxydidc.opcode.OpcodeQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 编码信息添加 -->
+		<action name="codeAdd" class="com.dhcc.bussiness.sxydidc.opcode.OpcodeManagerAction" method="codeAdd">
+			<result type="json"></result>
+		</action>
+		<!-- 编码信息修改 -->
+		<action name="codeModify" class="com.dhcc.bussiness.sxydidc.opcode.OpcodeManagerAction" method="codeUpdate">
+			<result type="json"></result>
+		</action>
+		<!-- 编码信息删除 -->
+		<action name="codeDelete" class="com.dhcc.bussiness.sxydidc.opcode.OpcodeManagerAction" method="codeDel">
+			<result type="json"></result>
+		</action>
+		<!-- 编码信息查询 -->
+		<action name="codeQueryById" class="com.dhcc.bussiness.sxydidc.opcode.OpcodeManagerAction" method="codeQueryById">
+			<result type="json"></result>
+		</action>
+		<!-- 编码模块end -->
+		<!-- 配置表下拉框信息查询 -->
+		<action name="queryConfigSelected" class="com.dhcc.bussiness.sxydidc.opcode.OpcodeManagerAction" method="queryConfigSelected">
+			<result type="json"></result>
+		</action>
+		
+		<!--文件管理模块 start-->
+		
+		
+		
+		
+		
+		
+		
+		
+			
+	
+		
+		<!-- 网络设备端口可视化管理start -->
+		<!-- 网络设备插槽板卡查询 -->
+		<action name="deviceSlotQueryListByDevId" class="com.dhcc.bussiness.sxydidc.netdevpack.DevPackAction" method="deviceSlotQueryListByDevId">
+			<result type="json"></result>
+		</action>	
+		<!-- 网络设备端口查询 -->
+		<action name="packPortQueryListByPackId" class="com.dhcc.bussiness.sxydidc.netdevpack.DevPackAction" method="packPortQueryListByPackId">
+			<result type="json"></result>
+		</action>
+		<!-- 网络设备插槽添加 -->
+		<action name="addSlotInfo" class="com.dhcc.bussiness.sxydidc.netdevpack.DevPackAction" method="addSlotInfo">
+			<result type="json"></result>
+		</action>
+		<!-- 网络设备插槽是否存在 -->
+		<action name="querySlotIfExit" class="com.dhcc.bussiness.sxydidc.netdevpack.DevPackAction" method="querySlotIfExit">
+			<result type="json"></result>
+		</action>	
+		<!-- 网络设备插槽删除 -->
+		<action name="deleteSlotInfo" class="com.dhcc.bussiness.sxydidc.netdevpack.DevPackAction" method="deleteSlotInfo">
+			<result type="json"></result>
+		</action>	
+		<!-- 网络设备板卡删除 -->
+		<action name="deletePackInfo" class="com.dhcc.bussiness.sxydidc.netdevpack.DevPackAction" method="deletePackInfo">
+			<result type="json"></result>
+		</action>
+		<!-- 网络设备板卡添加 -->
+		<action name="addPackInfo" class="com.dhcc.bussiness.sxydidc.netdevpack.DevPackAction" method="addPackInfo">
+			<result type="json"></result>
+		</action>
+		<!-- 网络端口是否占用检查 -->
+		<action name="checkSlotPortInfo" class="com.dhcc.bussiness.sxydidc.netdevpack.DevPackAction" method="checkSlotPortInfo">
+			<result type="json"></result>
+		</action>
+		<!-- 网络端口是否占用检查 -->
+		<action name="checkPackPortInfo" class="com.dhcc.bussiness.sxydidc.netdevpack.DevPackAction" method="checkPackPortInfo">
+			<result type="json"></result>
+		</action>		
+		<!-- 网络设备端口可视化管理end -->
+		
+		<!-- 设备上架模块start -->
+		
+		
+		<!-- 用户业务登录start -->
+		<action name="queryLoginUserByUserId" class="com.dhcc.bussiness.sxydidc.busslogin.BussLoginAction" method="queryUserByUserId">
+			<result name="success"  type="redirect">
+				index.jsp
+			</result>
+			<result name="error"  type="redirect">
+				noauthority.jsp
+			</result>
+		</action>
+		<!-- 用户业务登录end -->
+		
+		
+		
+	</package>
+</struts>
