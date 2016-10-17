@@ -24,7 +24,8 @@
     "font-awesome": "^4.6.3",
     "highcharts": "^5.0.0",
     "ionicons": "^3.0.0",
-    "jquery": "^1.12.4"
+    "jquery": "^1.12.4",
+    "validator": "^6.1.0"
   },
   "devDependencies": {
     "admin-lte": "^2.3.6"
