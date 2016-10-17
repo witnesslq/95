@@ -15,7 +15,7 @@ $(function() {
 
 				//顶层菜单项
 				if(item.pid == "0"){
-					data.splice(i,1);
+					data.splice(i--,1);
 					menu.push(item);
 				}
 			}
@@ -28,7 +28,7 @@ $(function() {
 				for(var j = 0;j<data.length;j++){
 					var secondItem = data[j];
 					if(item.id == secondItem.pid){
-						data.splice(j,1);
+						data.splice(j--,1);
 						secondMenu.push(secondItem);
 					}
 				}
