@@ -62,7 +62,7 @@ desired effect
 |---------------------------------------------------------|
 -->
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue fixed sidebar-mini">
 <div class="wrapper">
 
   <!-- Main Header -->
@@ -260,7 +260,7 @@ desired effect
 
     <!-- Main content -->
     <section class="content" >
-                <iframe  frameborder="0"  class="iframe-style" name="content"></iframe>
+                <iframe  frameborder="0" class="iframe-style" name="content"></iframe>
       <!-- Your Page Content Here -->
 
     </section>
@@ -363,8 +363,11 @@ desired effect
 <script src="<%=basePath %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="<%=basePath %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+
 <!-- AdminLTE App -->
-<script src="<%=basePath %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<script src="<%=basePath %>/node_modules/admin-lte/dist/js/app.js"></script>
 <script type="text/x-ejs-template" id="menuTmpl">
 <\%
 if(menu && menu.length>0){
@@ -402,6 +405,5 @@ for(var i=0,size=menu.length;i<menu.length;i++){
 </script>
 <script src="<%=basePath  %>/node_modules/ejs/ejs.min.js"></script>
 <script src="<%=basePath  %>/js/admin.js"></script>
- 
 </body>
 </html>
