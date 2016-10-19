@@ -1,0 +1,37 @@
+@charset "utf-8";
+
+/*门限阀值等表格，根据要显示内容的宽窄来设置列宽度*/
+table .col-sm{
+	width: 30%;
+}
+table .col-md{
+	width:40%;
+}
+table .col-half{
+	width: 50%;
+}
+table .col-lg{
+	width:60%;
+}
+
+/*告警等級的顏色*/
+ .panic{
+	color:red;
+}
+
+.crit{
+	color:orange;
+}
+
+ .warn{
+	color:yellow;
+}
+
+ .notice{
+	color:blue;
+}
+
+/* 正常字体显示 */
+.normal{
+	font-weight: 400;
+}
