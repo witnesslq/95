@@ -36,7 +36,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" href="<%=basePath  %>/css/template.css">
 
   </head>
   <!--
@@ -65,7 +64,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="content-wrapper">
         <!-- Content Wrapper. Contains page content -->
         
-        <div class="container-fluid"><!-- Content Header (Page header) -->
+        <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
           Page Header
@@ -89,7 +88,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- /.box-body -->
         </div>
         </section>
-        <!-- /.content --></div></div>
+        <!-- /.content --></div>
       </div>
       <!-- REQUIRED JS SCRIPTS -->
       <!-- jQuery 2.2.3 -->
