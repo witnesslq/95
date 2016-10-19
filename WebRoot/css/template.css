@@ -1,6 +1,10 @@
 @charset "UTF-8";
-.sidebar-mini>.wrapper>.content-wrapper>.content{
+
+/* 内容区始终撑满外围wrapper */
+body.fixed>.wrapper>.content-wrapper>.content,body.fixed>.wrapper>.content-wrapper>.content>iframe{
 	padding:0;
+	height: 100%;
+	width: 100%;
 }
 
 

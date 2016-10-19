@@ -260,7 +260,7 @@ desired effect
 
     <!-- Main content -->
     <section class="content" >
-                <iframe  frameborder="0" class="iframe-style" name="content"></iframe>
+                <iframe  frameborder="0" name="content"></iframe>
       <!-- Your Page Content Here -->
 
     </section>
