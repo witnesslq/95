@@ -3,19 +3,30 @@ $(function () {
 	/**
 	 加载数据
 	*/
+var id=$("#hidden_id").val();
   $.ajax({
-		url: "deptInfoQueryList.action",
+		url: "stationHaveUserList.action",
 		type: "post",
+		data:{id:id},
 		dataType: 'json',
 		success: function(data) {
-	    var dataSet = [];
-	   
-		for(var i=0;i<data.length;i++){
+	    var dataSet = []; 
+		for(var i=0;i<data.listmodal.length;i++){
 		var menu = [];
-		var item = data[i];
+		var item = data.listmodal[i];
+		var sex="";
+		if(item.sex=="W"){
+			sex="女";
+		}else{
+			sex="男";
+		}
 		menu.push("<input name=\"checked_info\" type=\"checkbox\" value=\""+item.id+"\">");   
-		menu.push(item.corpname);
-		menu.push(item.epid);
+		menu.push(item.loginname);
+		menu.push(item.username);
+		
+		menu.push(sex);
+		menu.push(item.mobileprivate);
+		menu.push(item.emailprivate);
 		menu.push(item.remark);
 		dataSet.push(menu);
 		}		
@@ -23,9 +34,12 @@ $(function () {
 			 "data": dataSet,//数据源
 			 "columns": [
 		                    { "title": "<input name=\"checked_all_info\" type=\"checkbox\" value=\"\">" },
-		                    { "title": "部门名称" },
-		                    { "title": "部门编码" },
-		                    { "title": "备注"}
+		                    { "title": "登录名" },
+		                    { "title": "用户姓名" },
+		                    { "title": "性别" },
+		                    { "title": "电话" },
+		                    { "title": "邮箱" },
+		                    { "title": "备注" }
 		                ],
 			 "oLanguage": {//插件的汉化
              "sLengthMenu": "每页显示 _MENU_ 条记录",
@@ -86,25 +100,20 @@ $(function () {
 
   
 	/**
-	 添加信息
+	 撤销关联
 	*/
-$("#add_user").click(function(){ 
-	     $("#adduser").modal('show');   
+    $("#add_user").click(function(){ 
+    	 var id=getselectinfo();
+         if(id==""){
+        	 $("#tipContent").html("请选择要撤销关联的数据")
+        	 $('#myModal').modal('show');
+         }else{	 
+        		 $('#confirm').modal('show'); 
+          }
 		});
 	
-	/**
-	 删除信息
-	*/
-  $("#detele_user").click(function(){
-	     var id=getselectinfo();
-             if(id==""){
-            	 $("#tipContent").html("请选择要删除的数据")
-            	 $('#myModal').modal('show');
-             }else{
-            	 $('#confirm').modal('show');          	 
-             }
-		});
-	
+
+
 	/**
 	 获取选中项
 	*/
@@ -122,25 +131,6 @@ $("#add_user").click(function(){
        }
       return id;
   }
-  
-	/**
-	 修改信息
-	*/
-$("#edit_user").click(function(){ 
-	     var id=getselectinfo();
-	     if(id==""){
-	    	 $("#tipContent").html("请选择要修改的数据")
-	    	 $("#myModal").modal('show');	 
-	     }else if(id.indexOf(",") > 0){
-	    	 $("#tipContent").html("只能修改一条数据");
-	    	 $("#myModal").modal('show');	 
-	     }else{
-	    	 $("iframe[name='editUser_content']").get(0).contentWindow.loadInfo(id);    	 
-	     }
-	      
-		});
-	
-
 
 
  $("button[name='adduser']").click(function(){
@@ -150,37 +140,7 @@ $("#edit_user").click(function(){
 	 $("iframe[name='editUser_content']").get(0).contentWindow.submit();
  });
   });
-/**
-删除选中项
-*/
-function detletedate(){
-	var idstr=getselectinfo();
-	var counr=idstr.split(",").length;
-	var Dtable = $('#example1').DataTable();
 
-	$.ajax({
-		url:"ifDelCorp.action?ids="+idstr, 
-		type:"post",
-		success:function (mm) {
-     		if("error"==mm){
-     			$("#tipContent").html("所选部门中有未选中的子部门，请重新勾选");
-	 			$("#myModal").modal('show');
-   				
-   			}else{
-   				$.post("corpDel.action", { ids: idstr},
-						function(datamm){
-   				    Dtable.rows('.selected').remove().draw(false);
-   					$("#tipContent").html("您删除了"+counr+"条数据");
-		 			$("#myModal").modal('show');
-		       		});
-   			}
-		}, 
-		error:function (error) {
-			$("#tipContent").html("删除部门信息失败");
- 			$("#myModal").modal('show');
-		}
-	});	  
-}
 /**
 获取选中项
 */
@@ -197,4 +157,18 @@ function getselectinfo(){
      }  
   }
  return id;
+}
+
+function detletedate(){
+	var idstr=getselectinfo();
+	var id=$("#hidden_id").val();
+	var Dtable = $('#example1').DataTable();
+	$.post("stationDelUser.action", { ids: idstr,id: id},
+			function(data){
+		 Dtable.rows('.selected').remove().draw(false);
+		 $("#tipContent").html("您撤销了"+count+"条关联")
+    	 $('#myModal').modal('show');
+		 
+			}
+		);
 }

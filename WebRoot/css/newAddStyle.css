@@ -10,3 +10,24 @@ padding:0px;
 .nopadding1{
 padding:0px 0px 0px 5px;
 }
+.smallModel{
+ width:100%;
+ min-height:300px;
+}
+.small-amsllModel{
+ width:100%;
+ min-height:200px;
+}
+.padding-size{
+padding:0px 15px 15px 15px;
+}
+.muststyle{
+color:red;
+font-size:10px;
+}
+.mymodal-width{
+  min-width:700px;
+}
+.font-size{
+   font-weight:normal;
+}

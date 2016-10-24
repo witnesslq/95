@@ -2,6 +2,7 @@ package com.dhcc.common.system.corp;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.json.JSONArray;
@@ -200,7 +201,54 @@ public class CorpManagerAction extends ActionSupport implements ModelDriven<Tsco
 		pw.close();
 		return SUCCESS;
 	}
-
+	/**
+	 * @描述：所属部门
+	 * @return
+	 */
+	public String cropDeptQuery(){
+		List<TreeModal> list = dao.QueryCropDeptAll();
+		List<Tsconfig> list1 = dao.ConfigQueryByType("TREEICON");
+		String CORPICON = "";
+		String DEPTICON = "";
+		if(list1 != null){
+			for(Tsconfig temp:list1){
+				if(temp.getDkey().equals("1")){
+					CORPICON = temp.getDvalue();
+				}else if(temp.getDkey().equals("2")){
+					DEPTICON = temp.getDvalue();
+				}
+			}
+		}
+		if(list != null){
+			for(TreeModal temp:list){
+				if(temp.getUrl().equals("1")){
+					temp.setIcon(CORPICON);
+				}else if(temp.getUrl().equals("2")){
+					temp.setIcon(DEPTICON);
+				}
+			}
+		}
+		List<TreeModal> result = new ArrayList<TreeModal>();
+		for(int i=0;i<list.size();i++){
+			if(	(list.get(i).getPid()).equals("EA372C026B154662ACE10F66F5409D4C")){
+				result.add(list.get(i));
+			}	
+		}
+		
+		JSONArray  json = JSONArray.fromObject(result);
+		ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+		PrintWriter pw = null;
+		try {
+			pw = ServletActionContext.getResponse().getWriter();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		pw.print(json);
+		pw.flush();
+		pw.close();
+		return SUCCESS;
+		
+	}
 	public Tscorp getModel() {
 		return model;
 	}

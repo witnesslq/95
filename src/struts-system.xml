@@ -57,6 +57,11 @@
 		<action name="deptQueryList" class="com.dhcc.common.system.corp.CorpQueryListAction" method="deptQueryList">
 			<result type="json"></result>
 		</action>
+			<!-- 部门列表查询 -->
+		<action name="deptInfoQueryList" class="com.dhcc.common.system.corp.CorpQueryListAction" method="deptInfoQueryList">
+			<result type="json"></result>
+		</action>
+		
 		<!-- 公司删除 -->
 		<action name="corpDel" class="com.dhcc.common.system.corp.CorpManagerAction"  method="corpDel">
 			<result type="json"></result>
@@ -81,6 +86,10 @@
 		<action name="cropDeptTreeQuery" class="com.dhcc.common.system.corp.CorpManagerAction" method="QueryCropDeptAll">
 			<result type="json"></result>
 		</action>
+			<!-- 所属部门-->
+		<action name="cropDeptQuery" class="com.dhcc.common.system.corp.CorpManagerAction" method="cropDeptQuery">
+			<result type="json"></result>
+		</action>
 		<!-- 是否可以删除所选择的单位id -->
 		<action name="ifDelCorp" class="com.dhcc.common.system.corp.CorpManagerAction" method="ifDelCorp">
 			<result type="json"></result>
@@ -90,8 +99,16 @@
 		<action name="stationQueryList" class="com.dhcc.common.system.station.StationQueryListAction">
 			<result type="json"></result>
 		</action>
+			<!-- 岗位列表查询 -->
+		<action name="stationInfoQueryList" class="com.dhcc.common.system.station.StationQueryListAction" method="stationInfoQueryList">
+			<result type="json"></result>
+		</action>
 		<!-- 岗位所拥有的用户列表 -->
 		<action name="stationHaveUserList" class="com.dhcc.common.system.station.StationQueryListAction" method="stationHaveUserList">
+			<result type="json"></result>
+		</action>
+				<!-- 岗位所拥有的用户列表 -->
+		<action name="stationHaveUserInfoList" class="com.dhcc.common.system.station.StationQueryListAction" method="stationHaveUserInfoList">
 			<result type="json"></result>
 		</action>
 		<!-- 删除岗位和用户列表的关联关系 -->
@@ -121,6 +138,10 @@
 		
 		<!-- 职务列表查询 -->
 		<action name="postQueryList" class="com.dhcc.common.system.post.PostQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 职务列表查询(不分页) -->
+		<action name="postQueryUnList" class="com.dhcc.common.system.post.PostQueryListAction" method="postQueryUnList">
 			<result type="json"></result>
 		</action>
 		<!-- 职务的添加 -->

@@ -2,217 +2,192 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
 %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-	<base href="<%=basePath %>"/>
-    <title>职务列表页面</title>
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/reportMain.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>include/LigerUI/skins/Aqua/css/ligerui-all.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>include/LigerUI/skins/ligerui-icons.css" />
-    <script type="text/javascript" src="<%=basePath  %>include/jQuery/jquery-1.3.2.min.js"></script>    
-    <script type="text/javascript" src="<%=basePath  %>include/LigerUI/js/ligerui.all.js" ></script> 
-  	<script type="text/javascript">
-		$(function () {
-			window['g'] = $("#maingrid").ligerGrid({
-				checkbox:true,
-				url: "postQueryList.action",
-				columns: [
-				{ display: '职务名称', name: 'postname', minWidth:30 ,width:"30%",isSort:true},
-				{ display: '职务排序', name: 'ordernum', minWidth:30 ,width:"15%",isSort:true},
-				{ display: '备注', name: 'remark', minWidth: 30 ,width:"50%",isSort:true}
-				],
-				rownumbers:true,
-				pageSize:10,
-				width: '100%',
-                height: '100%',
-				root:"listmodal",
-				record:"record",
-				alternatingRow:true,
-				frozenCheckbox:false,
-				heightDiff:-8,
-				title:"职务信息",
-				toolbar: { 
-					items: [
-						{ text: '增加', click: itemclick, icon: 'add' },
-						{ line: true },
-						{ text: '修改', click: itemedit, icon: 'modify' },
-						{ line: true },
-						{ text: '删除', click: itemdelete, icon: 'delete'}
-					]
-				}
-			});
-
-			$("#serchform").ligerForm();
-			$("#searchBtn").click(function(){
-				var name = $("#name").val();
-				g.setOptions({newPage:1});
-				g.setOptions({
-				       parms: [
-				       		{ name: 'name', value: name }
-				      		]
-				});
-				g.loadData();
-			});
-			$("#clearBtn").click(function(){
-				$("#name").val("");
-				g.setOptions({newPage:1});
-				g.setOptions({
-				       parms: [
-				       		{ name: 'name', value: "" }
-				      		]
-						 });
-				g.loadData();
-			});
-		});
-		
-		
-		function onSelect(note) {
-            var url = "postQueryList.action?cdid="+note.data.id;
-            g.set('url',url);
-        }
-		/**
-		  打开添加信息窗口的方法
-		*/
-		function  itemclick(){
-			var url = "system/post/postAdd.jsp";
-			winOpen(url,'添加职务信息',490,300,'添加','取消',function(data){
-				$.ajax({
-				url:"postAdd.action", 
-				data:data, 
-				async:false,
-				dataType:"json", 
-				type:"post",
-				success:function (mm) {
-					if("error"==mm.result){
-	       				top.my_alert("添加职务信息失败!");
-	       			}else{
-	       				g.addRow(mm);
-	       				top.my_alert("添加职务信息成功！");
-	       			}
-				}, 
-				error:function (error) {
-					top.my_alert("添加职务信息失败！" + error.status);
-				}
-			});
-			});
-		}
-	   
-		/**
-		  打开修改信息窗口的方法
-		*/
-		function  itemedit(){
-			var selected = g.getSelected();
-			if (!selected) { window.top.my_alert('请选择行',"warn"); return; }
-			var id = (g.getSelectedRow()).id; 
-			var url = "system/post/postEdit.jsp?id="+id;
-			winOpen(url,'修改职务信息',490,300,'保存','取消',function(data){
-				$.ajax({
-				url:"postUpdate.action", 
-				data:data, 
-				async:false,
-				dataType:"json", 
-				type:"post",
-				success:function (mm) {
-					if("error"==mm.result){
-	       				top.my_alert("修改职务信息失败!");
-	       			}else{
-	       				g.updateRow(selected,mm);
-	       				top.my_alert("修改职务信息成功！");
-	       			}
-				}, 
-				error:function (error) {
-					alert("修改职务信息失败！" + error.status);
-			}});
-			});
-		}
-		
-		/**
-		 删除信息的方法
-		*/
-		function  itemdelete(){
-			var selected = g.getSelected();
-			if (!selected) {  top.my_alert('请选择要删除的数据行!',"warn"); return; }
-			window.top.$.ligerDialog.confirm("确定删除选择的数据", "提示", function (ok) {
-				if (ok) {
-					var selecteds = g.getSelecteds();
-					var idstr="";//所有选择行的id
-					for(var i=0;i<selecteds.length;i++){
-						idstr = idstr + selecteds[i].id;
-						if(i!=(selecteds.length-1)){
-							idstr = idstr + ",";
-						}
-					}
-					if(QueryIsDelete("post",idstr)=="false"){
-						top.my_alert("删除数据失败，已分配人员的职务不能删除！","error");
-					}else{
-						g.deleteSelectedRow();
-							  /**
-							      删除数据库数据
-							    */
-						$.post("postDel.action", { ids: idstr},
-							function(){
-							       top.my_alert("删除数据成功!","success");
-							});
-					}
-				}
-			});
-		}
-		/**
-			是否可以删除信息
-		*/
-		function  QueryIsDelete(type,id){
-		   	var dataPost = {"type":type,"ids":id};
-		   	var dataMM;
-			$.ajax({
-				url:"QueryIsDelete.action", 
-				data:dataPost, 
-				async:false,
-				dataType:"json", 
-				type:"post",
-				success:function (mm) {
-					dataMM = mm; 
-				}, 
-				error:function (error) {
-					dataMM = false;
-				}
-			});
-			return dataMM;
-		}
-		function winOpen(url,title,width,height,button1,button2,callback){
-			window.top.$.ligerDialog.open({
-				width: width, height: height, url: url, title: title, buttons: [{
-					text: button1, onclick: function (item, dialog) {
-						var fn = dialog.frame.f_validate || dialog.frame.window.f_validate;
-						var data = fn();
-						if(data){
-							callback(data);
-							dialog.close();
-						}
-					}
-				},{
-					text: button2, onclick: function (item, dialog) {
-						dialog.close();
-					}
-				}]
-		     });
-		}
-  	</script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>IDC／ISP流量统计与质量监测系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
 </head>
-<body style="padding: 0px;overflow:hidden;">
-	<div id="toolbar" class="searchDiv">
-   		<form id="serchform">
-    		<table>
-    			<tr>
-    				<td class="ser_cont"><input type="text" id="name" value=""/></td>
-    				<td class="ser_cont"><input type="button" id="searchBtn" value="查询" class="btn"/></td>
-    				<td class="ser_cont"><input type="button" id="clearBtn" value="清空" class="btn"/></td>
-    			</tr>
-    		</table>
-   		</form>
-   	</div>
-    <div id="maingrid" style="margin-top: -1px; margin-left: -1px"></div>
+<body class="hold-transition">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+ 
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+       职务管理
+      
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+        <li class="active"><a href="#">职务管理</a></li>   
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+            <button type="button" class="btn btn-default btn-sm" id="add_user" >
+              <span class="fa fa-user-plus"></span> 新增
+            </button>
+            <button type="button" class="btn btn-default btn-sm" id="edit_user">
+              <span class="fa fa-edit"></span> 修改
+            </button>
+            <button type="button" class="btn btn-default btn-sm" id="detele_user">
+              <span class="fa fa-user-times"></span> 删除
+            </button> 
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-striped">
+           
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- 模态框（Modal） -->
+<!-- 添加-->
+<div class="modal fade" name="myModal" id="adduser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>职务信息添加</b></h4>
+            </div>
+            <div class="modal-body" >
+            <iframe src="postAdd.jsp" class="smallModel" frameborder="0" scrolling="no" name="adduser_content"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" name="adduser">添加</button> 
+                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<!-- 修改-->
+<div class="modal fade" name="myModal" id="editUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>修改职务信息</b></h4>
+            </div>
+            <div class="modal-body" >
+            <iframe src="postEdit.jsp" class="postAdd" frameborder="0" scrolling="no" name="editUser_content"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" name="editUser">修改</button> 
+                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<div class="modal fade" id="myModal" name="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" id="tipContent">请选择要数据</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<div class="modal fade" name="myModal" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">确定要删除选中的数据</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="detletedate()">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="modal fade" name="myModal" id="deleteSucess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">删除数据成功</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">确定</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+
+<!-- page script -->   
+<script src="<%=basePath  %>/system/post/postList.js"></script> 
 </body>
 </html>

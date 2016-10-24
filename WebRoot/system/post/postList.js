@@ -4,18 +4,17 @@ $(function () {
 	 加载数据
 	*/
   $.ajax({
-		url: "deptInfoQueryList.action",
+		url: "postQueryUnList",
 		type: "post",
 		dataType: 'json',
 		success: function(data) {
-	    var dataSet = [];
-	   
+	    var dataSet = []; 
 		for(var i=0;i<data.length;i++){
 		var menu = [];
 		var item = data[i];
 		menu.push("<input name=\"checked_info\" type=\"checkbox\" value=\""+item.id+"\">");   
-		menu.push(item.corpname);
-		menu.push(item.epid);
+		menu.push(item.postname);
+		menu.push(item.ordernum);
 		menu.push(item.remark);
 		dataSet.push(menu);
 		}		
@@ -23,8 +22,8 @@ $(function () {
 			 "data": dataSet,//数据源
 			 "columns": [
 		                    { "title": "<input name=\"checked_all_info\" type=\"checkbox\" value=\"\">" },
-		                    { "title": "部门名称" },
-		                    { "title": "部门编码" },
+		                    { "title": "职务名称" },
+		                    { "title": "职务排序" },
 		                    { "title": "备注"}
 		                ],
 			 "oLanguage": {//插件的汉化
@@ -101,10 +100,37 @@ $("#add_user").click(function(){
             	 $("#tipContent").html("请选择要删除的数据")
             	 $('#myModal').modal('show');
              }else{
-            	 $('#confirm').modal('show');          	 
+            	 if(QueryIsDelete("post",id)=="false"){        		 
+            		 $("#tipContent").html("删除数据失败，已分配人员的职务不能删除")
+                	 $('#myModal').modal('show');
+            	 }
+            	 else{
+            		 $('#confirm').modal('show'); 
+            	 }
+            	          	 
              }
 		});
-	
+  /**
+	验证是否可以删除信息
+*/
+function  QueryIsDelete(type,id){
+ 	var dataPost = {"type":type,"ids":id};
+ 	var dataMM;
+	$.ajax({
+		url:"QueryIsDelete.action", 
+		data:dataPost, 
+		async:false,
+		dataType:"json", 
+		type:"post",
+		success:function (mm) {
+			dataMM = mm; 
+		}, 
+		error:function (error) {
+			dataMM = false;
+		}
+	});
+	return dataMM;
+}
 	/**
 	 获取选中项
 	*/
@@ -141,8 +167,6 @@ $("#edit_user").click(function(){
 		});
 	
 
-
-
  $("button[name='adduser']").click(function(){
 	 $("iframe[name='adduser_content']").get(0).contentWindow.submit();
  });
@@ -154,32 +178,17 @@ $("#edit_user").click(function(){
 删除选中项
 */
 function detletedate(){
+
 	var idstr=getselectinfo();
 	var counr=idstr.split(",").length;
 	var Dtable = $('#example1').DataTable();
-
-	$.ajax({
-		url:"ifDelCorp.action?ids="+idstr, 
-		type:"post",
-		success:function (mm) {
-     		if("error"==mm){
-     			$("#tipContent").html("所选部门中有未选中的子部门，请重新勾选");
-	 			$("#myModal").modal('show');
-   				
-   			}else{
-   				$.post("corpDel.action", { ids: idstr},
-						function(datamm){
-   				    Dtable.rows('.selected').remove().draw(false);
-   					$("#tipContent").html("您删除了"+counr+"条数据");
+	 Dtable.rows('.selected').remove().draw(false);
+	 $.post("postDel.action", { ids: idstr},
+				function(){
+		 			$("#tipContent").html("您删除了"+counr+"条数据");
 		 			$("#myModal").modal('show');
-		       		});
-   			}
-		}, 
-		error:function (error) {
-			$("#tipContent").html("删除部门信息失败");
- 			$("#myModal").modal('show');
-		}
-	});	  
+				});
+	  
 }
 /**
 获取选中项

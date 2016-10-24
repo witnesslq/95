@@ -80,7 +80,58 @@ public class StationDao {
 		
 	}
 	
-	 
+	 /**
+	  * 岗位列表查询 
+	  * 不带分页
+    */
+	public List<Tsstation> stationQueryList(String sortname,String sortorder){
+		DBManager dbm=new DBManager();
+		List<Tsstation> list = new ArrayList<Tsstation>();
+		try {
+			String querysql = "select DISTINCT tp.id,tp.stationname,tp.remark,tcp.corpname as topcorpid  from tsstation tp left join tscorp tcp on tcp.id = tp.topcorpid ";
+			String userid = (String)ActionContext.getContext().getSession().get("userid");
+			String superUserId = new CommDao().queryConfigSuperUserID();//获取最大权限id
+			boolean type = userid.equals(superUserId);
+			if(type){//数据权限控制
+				querysql += " where 1 = 1 ";
+			}else{
+				String topcorpid = (String)ActionContext.getContext().getSession().get("topcorpid");
+				querysql += " where 1 = 1 and tp.topcorpid='"+topcorpid+"' ";
+			}
+			querysql += " order by tp."+sortname+" "+sortorder+" ";
+			String countsql = "select count(*) from (" + querysql + ") t";
+
+			/**
+			 * 分页sql构造
+			 */
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querysql);
+			pageFactory = null;
+			
+		
+			List<Tsstation> list1= dbm.getObjectList(Tsstation.class, sql);
+			if(type){
+				Tsstation modelnew;
+				for(Tsstation model:list1){
+					modelnew = new Tsstation();
+					modelnew.setId(model.getId());
+					modelnew.setStationname(model.getStationname()+"("+model.getTopcorpid()+")");
+					modelnew.setRemark(model.getRemark());
+					list.add(modelnew);
+				}
+			}else{
+				list = list1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("查询岗位列表时候出错！"+e.getMessage());
+		}finally{
+			dbm.close();
+		}
+		
+		return list;
+		
+	} 
     /**
      * 添加一个新的岗位信息
      * @作者 SZ
@@ -234,7 +285,6 @@ public class StationDao {
 		List<UserQueryModel> list = new ArrayList<UserQueryModel>();
 		String querysql = "SELECT * FROM tsuser tu LEFT JOIN tsluserstation tus ON tus.userid=tu.id WHERE tus.stationid='"+stationid+"'";
 		list = dbm.getObjectList(UserQueryModel.class,querysql);
-		System.out.println(list);
 		dbm.close();
 		return list;
 	}

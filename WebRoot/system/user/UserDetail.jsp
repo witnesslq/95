@@ -46,96 +46,81 @@ String username=(String)request.getSession().getAttribute("username");//用户�
  
  <form class="form-horizontal" role="form">
   <div class="form-group form-group-sm ">
-    <label for="loginUser" class="col-xs-2 control-label nopadding ">登录账号
+    <label for="detail_loginUser" class="col-xs-2 control-label nopadding font-size">登录账号
     </label>
-    <div class="col-xs-4 nopadding">
-  	 <input type="text" class="form-control"  id="loginUser" readonly>
+    <div class="col-xs-4 nopadding" >
+  	 <input type="text" class="form-control"  title="000" id="detail_loginUser" value="" readonly>
    </div>
-    <label for="userName" class="col-xs-2 control-label nopadding1">用户姓名</label>
+    <label for="detail_userName" class="col-xs-2 control-label nopadding1 font-size">用户姓名</label>
    	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control " id="userName" readonly>
+   	 <input type="text" class="form-control " id="detail_userName" readonly>
    	</div> 
   </div>
 
   
-   <div class="form-group form-group-sm ">
-    <label for="userPassword" class="col-xs-2 control-label nopadding">用户密码
-    </label>
-    <div class="col-xs-4 nopadding">
-  	 <input type="text" class="form-control" id="userPassword" readonly>
-   </div>
-    <label for="confirmPwd" class="col-xs-2 control-label nopadding1">确认密码</label>
-   	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control" id="confirmPwd" readonly>
-   	</div> 
-  </div>
-  
-  
-  
-  
   
    <div class="form-group form-group-sm ">
-      <label for="sex" class="col-xs-2 control-label nopadding">用户性别</label>
+      <label for="sex" class="col-xs-2 control-label nopadding font-size">用户性别</label>
 	    
 	    <div class="col-xs-4 nopadding">
-  	     <input type="text" class="form-control" id="sex" readonly>
+  	     <input type="text" class="form-control" id="detail_sex" readonly>
       </div>
-       <label for="datepicker" class="col-xs-2 control-label nopadding1">出生年月</label>
+       <label for="datepicker" class="col-xs-2 control-label nopadding1 font-size">出生年月</label>
          <div class="col-xs-4 nopadding">
-  	     <input type="text" class="form-control" id="datepicker" readonly>
+  	     <input type="text" class="form-control" id="detail_datepicker" readonly>
       </div>
 		
   </div>
   
   
    <div class="form-group form-group-sm ">
-    <label for="department" class="col-xs-2 control-label nopadding">所属部门
+    <label for="department" class="col-xs-2 control-label nopadding font-size">所属部门
     </label>
      <div class="col-xs-4 nopadding">
-       <input type="text" class="form-control" id="department" readonly>
+       <input type="text" class="form-control" id="detail_department" readonly>
 	</div>
-    <label for="job" class="col-xs-2 control-label nopadding1">岗位</label>
+    <label for="job" class="col-xs-2 control-label nopadding1 font-size">岗位</label>
      <div class="col-xs-4 nopadding">
-   	     <input type="text" class="form-control" id="job" readonly>
+   	     <input type="text" class="form-control" id="detail_job" readonly>
    	     </div>
   </div>
   
    <div class="form-group form-group-sm ">
-    <label for="role" class="col-xs-2 control-label nopadding">用户角色</label>
+    <label for="role" class="col-xs-2 control-label nopadding font-size">用户角色</label>
      <div class="col-xs-4 nopadding">
-        <input type="text" class="form-control" id="role" readonly>
+        <input type="text" class="form-control" id="detail_role" readonly>
 	</div>
-    <label for="post" class="col-xs-2 control-label nopadding1">职务</label>
+    <label for="post" class="col-xs-2 control-label nopadding1 font-size">职务</label>
      <div class="col-xs-4 nopadding">
-   	  <input type="text" class="form-control" id="post" readonly>
+   	  <input type="text" class="form-control" id="detail_post" readonly>
    	  </div>
   </div>
     
     
     
    <div class="form-group form-group-sm ">
-    <label for="area" class="col-xs-2 control-label nopadding">所属区域
+    <label for="area" class="col-xs-2 control-label nopadding font-size" >所属区域
     </label>
      <div class="col-xs-4 nopadding">
-        <input type="text" class="form-control" id="area" readonly>
+        <input type="text" class="form-control" id="detail_area" readonly>
         </div>
-    <label for="dataCenter" class="col-xs-2 control-label nopadding1">所属数据中心</label>
+    <label for="dataCenter" class="col-xs-2 control-label nopadding1 font-size">数据中心</label>
    	    <div class="col-xs-4 nopadding">
-   	    <input type="text" class="form-control" id="dataCenter" readonly>
+   	    <input type="text" class="form-control" id="detail_dataCenter" readonly>
    	    </div>
   </div>
     
     
     
      <div class="form-group form-group-sm ">
-    <label for="companyPhone" class="col-xs-2 control-label nopadding">公司座机
+    <label for="companyPhone" class="col-xs-2 control-label nopadding font-size">公司座机
     </label>
     <div class="col-xs-4 nopadding">
-  	 <input type="text" class="form-control" id="companyPhone" readonly>
+  	 <input type="text" class="form-control" id="detail_companyPhone" readonly>
    </div>
-    <label for="homePhone" class="col-xs-2 control-label nopadding1">家庭座机</label>
+    <label for="homePhone" class="col-xs-2 control-label nopadding1 font-size">家庭座机</label>
    	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control" id="homePhone" readonly>
+   	 <input type="text" class="form-control" id="detail_homePhone" readonly>
    	</div> 
   </div>
     
@@ -143,32 +128,32 @@ String username=(String)request.getSession().getAttribute("username");//用户�
   
     
      <div class="form-group form-group-sm ">
-    <label for="companyMobPhone" class="col-xs-2 control-label nopadding">公司手机
+    <label for="companyMobPhone" class="col-xs-2 control-label nopadding font-size">公司手机
     </label>
     <div class="col-xs-4 nopadding">
-  	 <input type="text" class="form-control" id="companyMobPhone" readonly>
+  	 <input type="text" class="form-control" id="detail_companyMobPhone" readonly>
    </div>
-    <label for="PersonPhone" class="col-xs-2 control-label nopadding1">私人手机</label>
+    <label for="PersonPhone" class="col-xs-2 control-label nopadding1 font-size">私人手机</label>
    	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control" id="PersonPhone" readonly>
+   	 <input type="text" class="form-control" id="detail_PersonPhone" readonly>
    	</div> 
   </div>
   
    <div class="form-group form-group-sm ">
-    <label for="companyMail" class="col-xs-2 control-label nopadding">公司邮箱
+    <label for="companyMail" class="col-xs-2 control-label nopadding font-size">公司邮箱
     </label>
     <div class="col-xs-4 nopadding">
-  	 <input type="text" class="form-control" id="companyMail" readonly>
+  	 <input type="text" class="form-control" id="detail_companyMail" readonly>
    </div>
-    <label for="PersonMail" class="col-xs-2 control-label nopadding1">私人邮箱</label>
+    <label for="PersonMail" class="col-xs-2 control-label nopadding1 font-size">私人邮箱</label>
    	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control" id="PersonMail" readonly>
+   	 <input type="text" class="form-control" id="detail_PersonMail" readonly>
    	</div> 
   </div>
     <div class="form-group form-group-sm">
-    <label for="description" class="col-xs-2 control-label nopadding">用户描述</label>
-    <div class="col-xs-10 form-group">
-	<textarea class="form-control" rows="3"  id="description" readonly></textarea>
+    <label for="description" class="col-xs-2 control-label nopadding font-size">用户描述</label>
+    <div class="col-xs-10 nopadding">
+	<textarea class="form-control" rows="3"  id="detail_description" readonly></textarea>
 	</div>
     </div>
 </form>
@@ -195,7 +180,9 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 <script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
  <!-- bootstrap datepicker -->
 <script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
-<script src="<%=basePath  %>/js/userAdd.js"></script>
+<script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script>   
+
+<script src="<%=basePath  %>/js/userDetail.js"></script>
 <!-- page script -->
 
 </body>

@@ -113,6 +113,92 @@ public class PostDao {
 	}
 	
 	 
+	
+	
+	public List<Tspost> postQueryList(String queryname,String sortname,String sortorder){
+		DBManager dbm = new DBManager();
+		List<Tspost> list = new ArrayList<Tspost>();
+		try {
+			String querysql = "select tp.id,tp.postname,tp.remark,tp.ordernum,tcp.corpname as topcorpid  from tspost tp left join tscorp tcp on tcp.id = tp.topcorpid ";
+			String userid = (String)ActionContext.getContext().getSession().get("userid");
+			String superUserId = new CommDao().queryConfigSuperUserID();//获取最大权限id
+			boolean type = userid.equals(superUserId);
+			if(type){//数据权限控制
+				querysql += " where 1 = 1 ";
+			}else{
+				String topcorpid = (String)ActionContext.getContext().getSession().get("topcorpid");
+				querysql += " where tp.topcorpid='"+topcorpid+"' ";
+			}
+			if(!StringUtil.isNullOrEmpty(queryname)){
+				String nameall = queryname.trim();
+				String [] names =  nameall.trim().split(" ");
+				if(names.length>1){
+					querysql += " and ";
+					for(int i=0;i<names.length;i++){
+						if(!StringUtil.isNullOrEmpty(names[i])){
+							querysql += " tp.postname like '%"+names[i]+"%' ";
+							if(i<names.length-2){
+								querysql += " and ";
+							}
+						}
+						
+					}
+					querysql += " or ";
+					for(int i=0;i<names.length;i++){
+						if(!StringUtil.isNullOrEmpty(names[i])){
+							querysql += " tp.ordernum like '%"+names[i]+"%' ";
+							if(i<names.length-2){
+								querysql += " and ";
+							}
+						}
+						
+					}
+					querysql += " or ";
+					for(int i=0;i<names.length;i++){
+						if(!StringUtil.isNullOrEmpty(names[i])){
+							querysql += " tp.remark like '%"+names[i]+"%' ";
+							if(i<names.length-2){
+								querysql += " and ";
+							}
+						}
+						
+					}
+				}else{
+					querysql += " and tp.postname like '%"+nameall+"%' or tp.remark like '%"+nameall+"%' or tp.ordernum like '%"+nameall+"%' ";
+				}
+			}
+			querysql += " order by tp."+sortname+" "+sortorder+" ";
+			
+			/**
+			 * 分页sql构造
+			 */
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querysql);
+			pageFactory = null;
+			
+			List<Tspost> list1= dbm.getObjectList(Tspost.class, sql);
+			if(type){
+				Tspost modelnew;
+				for(Tspost model:list1){
+					modelnew = new Tspost();
+					modelnew.setId(model.getId());
+					modelnew.setOrdernum(model.getOrdernum());
+					modelnew.setPostname(model.getPostname()+"("+model.getTopcorpid()+")");
+					modelnew.setRemark(model.getRemark());
+					list.add(modelnew);
+				}
+			}else{
+				list = list1;
+			}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("查询岗位列表时候出错！"+e.getMessage());
+		}finally{
+			dbm.close();
+		}
+		return list;
+	}
     /**
      * 添加一个新的职务信息
      * @param menu

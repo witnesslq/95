@@ -89,16 +89,16 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 <!-- 添加-->
 <div class="modal fade" name="myModal" id="adduser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content mymodal-width">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel"><b>添加用户信息</b></h4>
             </div>
             <div class="modal-body" >
-            <iframe src="UserAdd.jsp" class="add-user" frameborder="0" scrolling="no"></iframe>
+            <iframe src="UserAdd.jsp" class="add-user" frameborder="0" scrolling="no" name="adduser_content"></iframe>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="a()">添加</button> 
+                <button type="button" class="btn btn-default" name="adduser">添加</button> 
                  <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
             </div>
         </div><!-- /.modal-content -->
@@ -109,16 +109,16 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 <!-- 修改-->
 <div class="modal fade" name="myModal" id="editUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content mymodal-width">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel"><b>修改用户信息</b></h4>
             </div>
             <div class="modal-body" >
-            <iframe src="UserEdit.jsp" class="add-user" frameborder="0" scrolling="no"></iframe>
+            <iframe src="UserEdit.jsp" class="add-user" frameborder="0" scrolling="no" name="editUser_content"></iframe>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">修改</button> 
+                <button type="button" class="btn btn-default" name="editUser">修改</button> 
                  <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
             </div>
         </div><!-- /.modal-content -->
@@ -129,13 +129,13 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 <!-- 详情-->
 <div class="modal fade" name="myModal" id="detailUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content mymodal-width">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel"><b>用户信息详情</b></h4>
             </div>
             <div class="modal-body" >
-            <iframe src="UserDetail.jsp" class="add-user" frameborder="0" scrolling="no"></iframe>
+            <iframe src="UserDetail.jsp" class="add-user" frameborder="0" scrolling="no" name="content_info"></iframe>
             </div>
             <div class="modal-footer">
                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> 
@@ -209,8 +209,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 <!-- AdminLTE for demo purposes -->
 <script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
 
-<!-- page script -->
-
+<!-- page script -->   
 <script src="<%=basePath  %>/js/userList.js"></script>
 
 

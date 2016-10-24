@@ -106,6 +106,42 @@ public class CorpDao {
 		
 	}
 	
+	/**
+	 * @描述：单位中部门的列表查询
+	 * @作者：SZ
+	 * @时间：2014-10-14 上午09:54:19
+	 * @param pm
+	 * @return
+	 */
+	public List<Tscorp> deptInfoQueryList(String sortname,String sortorder){
+		DBManager dbm=new DBManager();
+		List<Tscorp> list=null;
+		try {
+			String querysql = "select * from tscorp ";
+			String userid = (String)ActionContext.getContext().getSession().get("userid");
+			String superUserId = new CommDao().queryConfigSuperUserID();//获取最大权限id
+			if(userid.equals(superUserId)){//数据权限控制
+				querysql += " where type='2' ";
+			}else{
+				String topcorpid = (String)ActionContext.getContext().getSession().get("topcorpid");
+				querysql += " where type='2' and topcorpid='"+topcorpid+"' ";
+			}
+			querysql +="and pid='EA372C026B154662ACE10F66F5409D4C'";
+			querysql += " order by "+sortname+" "+sortorder+" ";
+			String countsql = "select count(*) from (" + querysql + ") t";
+			list = dbm.getObjectList(Tscorp.class, querysql);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("查询公司列表时候出错！"+e.getMessage());
+		}finally{
+			dbm.close();
+		}
+		
+		return list;
+		
+	}
+	
 	
 	public PageModel testAndroid(PageModel pm,String sortname,String sortorder){
 		DBManager dbm=new DBManager();
