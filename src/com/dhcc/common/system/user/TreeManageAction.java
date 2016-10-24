@@ -57,6 +57,7 @@ public class TreeManageAction extends ActionSupport{
 	 */
 	
 	public String QueryPostByDept(){
+		System.out.println(corpid);
 		JSONArray  json=JSONArray.fromObject(dao.queryPostByCDid(corpid));
 		ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
 		PrintWriter pw = null;

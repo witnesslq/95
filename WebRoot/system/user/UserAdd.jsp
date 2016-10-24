@@ -46,25 +46,26 @@ String username=(String)request.getSession().getAttribute("username");//用户�
  
  <form class="form-horizontal" role="form">
   <div class="form-group form-group-sm ">
-    <label for="loginUser" class="col-xs-2 control-label nopadding">登录账号
+    <label for="loginUser" class="col-xs-2 control-label nopadding font-size">登录账号<font class="muststyle">(必填)</font>
     </label>
     <div class="col-xs-4 nopadding">
   	 <input type="text" class="form-control" id="loginUser" >
    </div>
-    <label for="userName" class="col-xs-2 control-label nopadding1">用户姓名</label>
-   	<div class="col-xs-4 nopadding">
+   
+    <label for="userName" class="col-xs-2 control-label nopadding1 font-size">用户姓名<font class="muststyle">(必填)</font></label>
+   	<div class="col-xs-4 nopadding"> 
    	 <input type="text" class="form-control" id="userName">
    	</div> 
   </div>
 
   
    <div class="form-group form-group-sm ">
-    <label for="userPassword" class="col-xs-2 control-label nopadding">用户密码
+    <label for="userPassword" class="col-xs-2 control-label nopadding font-size">用户密码<font class="muststyle">(必填)</font>
     </label>
     <div class="col-xs-4 nopadding">
   	 <input type="text" class="form-control" id="userPassword" >
    </div>
-    <label for="confirmPwd" class="col-xs-2 control-label nopadding1">确认密码</label>
+    <label for="confirmPwd" class="col-xs-2 control-label nopadding1 font-size">确认密码<font class="muststyle">(必填)</font></label>
    	<div class="col-xs-4 nopadding">
    	 <input type="text" class="form-control" id="confirmPwd">
    	</div> 
@@ -75,15 +76,16 @@ String username=(String)request.getSession().getAttribute("username");//用户�
   
   
    <div class="form-group form-group-sm ">
-      <label for="sex" class="col-xs-2 control-label nopadding">用户性别</label>
-	    
-			<select class="col-xs-4 input-sm nopadding" id="sex">
-				<option value="">男</option>
-				<option value="">女</option>
+      <label for="sex" class="col-xs-2 control-label nopadding font-size">用户性别<font class="muststyle">(必填)</font></label>
+	    <div  class="col-xs-4 input-sm nopadding ">
+			<select class="form-control" id="sex">
+		        <option value=""></option>
+				<option value="M">男</option>
+				<option value="F">女</option>
 			</select>
-		
+		</div>
 	
-       <label for="datepicker" class="col-xs-2 control-label nopadding1">出生年月</label>
+       <label for="datepicker" class="col-xs-2 control-label nopadding1 font-size">出生年月<font class="muststyle">(必填)</font></label>
            <div class="col-xs-4 nopadding">
 		   <div class="input-group date ">
                   <div class="input-group-addon">
@@ -96,48 +98,58 @@ String username=(String)request.getSession().getAttribute("username");//用户�
   
   
    <div class="form-group form-group-sm ">
-    <label for="department" class="col-xs-2 control-label nopadding">所属部门
+    <label for="department" class="col-xs-2 control-label nopadding font-size">所属部门<font class="muststyle">(必填)</font>
     </label>
-        <select class="col-xs-4 input-sm nopadding" id="department">
+    <div  class="col-xs-4 input-sm nopadding ">
+        <select class="form-control" id="department">
         </select>
-	
-    <label for="job" class="col-xs-2 control-label nopadding1">岗位</label>
-   	    <select class="col-xs-4 input-sm nopadding" id="job">
+	</div>
+    <label for="job" class="col-xs-2 control-label nopadding1 font-size">岗位<font class="muststyle">(必填)</font></label>
+    <div  class="col-xs-4 input-sm nopadding ">
+   	    <select class="form-control" id="job">
         </select>
+        </div>
   </div>
   
    <div class="form-group form-group-sm ">
-    <label for="role" class="col-xs-2 control-label nopadding">用户角色
+    <label for="role" class="col-xs-2 control-label nopadding font-size">用户角色<font class="muststyle">(必填)</font>
     </label>
-        <select class="col-xs-4 input-sm nopadding" id="role">
+    <div  class="col-xs-4 input-sm nopadding ">
+        <select class="form-control" id="role">
         </select>
-	
-    <label for="post" class="col-xs-2 control-label nopadding1">职务</label>
-   	    <select class="col-xs-4 input-sm nopadding" id="post">
+	</div>
+    <label for="post" class="col-xs-2 control-label nopadding1 font-size">职务<font class="muststyle">(必填)</font></label>
+   	    <div  class="col-xs-4 input-sm nopadding ">
+   	    <select class="form-control" id="post">
         </select>
+        </div>
   </div>
     
     
     
    <div class="form-group form-group-sm ">
-    <label for="area" class="col-xs-2 control-label nopadding">所属区域
+    <label for="area" class="col-xs-2 control-label nopadding font-size">所属区域<font class="muststyle">(必填)</font>
     </label>
-        <select class="col-xs-4 input-sm nopadding" id="area">
+     <div  class="col-xs-4 input-sm nopadding ">
+        <select class="form-control" id="area">
         </select>
-    <label for="dataCenter" class="col-xs-2 control-label nopadding1">所属数据中心</label>
-   	    <select class="col-xs-4 input-sm nopadding" id="dataCenter">
+        </div>
+    <label for="dataCenter" class="col-xs-2 control-label nopadding1 font-size">数据中心<font class="muststyle">(必填)</font></label>
+   	   <div  class="col-xs-4 input-sm nopadding ">
+   	    <select class="form-control" id="dataCenter">
         </select>
+        </div>
   </div>
     
     
     
      <div class="form-group form-group-sm ">
-    <label for="companyPhone" class="col-xs-2 control-label nopadding">公司座机
+    <label for="companyPhone" class="col-xs-2 control-label nopadding font-size">公司座机
     </label>
     <div class="col-xs-4 nopadding">
   	 <input type="text" class="form-control" id="companyPhone" >
    </div>
-    <label for="homePhone" class="col-xs-2 control-label nopadding1">家庭座机</label>
+    <label for="homePhone" class="col-xs-2 control-label nopadding1 font-size">家庭座机</label>
    	<div class="col-xs-4 nopadding">
    	 <input type="text" class="form-control" id="homePhone">
    	</div> 
@@ -147,31 +159,33 @@ String username=(String)request.getSession().getAttribute("username");//用户�
   
     
      <div class="form-group form-group-sm ">
-    <label for="companyMobPhone" class="col-xs-2 control-label nopadding">公司手机
+    <label for="companyMobPhone" class="col-xs-2 control-label nopadding font-size">公司手机
     </label>
     <div class="col-xs-4 nopadding">
   	 <input type="text" class="form-control" id="companyMobPhone" >
    </div>
-    <label for="PersonPhone" class="col-xs-2 control-label nopadding1">私人手机</label>
-   	<div class="col-xs-4 nopadding">
-   	 <input type="text" class="form-control" id="PersonPhone">
-   	</div> 
-  </div>
-  
-   <div class="form-group form-group-sm ">
-    <label for="companyMail" class="col-xs-2 control-label nopadding">公司邮箱
+    <label for="companyMail" class="col-xs-2 control-label nopadding1 font-size">公司邮箱
     </label>
     <div class="col-xs-4 nopadding">
   	 <input type="text" class="form-control" id="companyMail" >
    </div>
-    <label for="PersonMail" class="col-xs-2 control-label nopadding1">私人邮箱</label>
+    
+  </div>
+  
+   <div class="form-group form-group-sm ">
+   <label for="PersonPhone" class="col-xs-2 control-label nopadding font-size">私人手机<font class="muststyle">(必填)</font></label>
+   	<div class="col-xs-4 nopadding">
+   	 <input type="text" class="form-control" id="PersonPhone">
+   	</div> 
+    <label for="PersonMail" class="col-xs-2 control-label nopadding1 font-size">私人邮箱<font class="muststyle">(必填)</font></label>
    	<div class="col-xs-4 nopadding">
    	 <input type="text" class="form-control" id="PersonMail">
+   
    	</div> 
   </div>
     <div class="form-group form-group-sm">
-    <label for="description" class="col-xs-2 control-label nopadding">用户描述</label>
-    <div class="col-xs-10 form-group">
+    <label for="description" class="col-xs-2 control-label nopadding font-size">用户描述</label>
+    <div class="col-xs-10 nopadding">
 	<textarea class="form-control" rows="3"  id="description"></textarea>
 	</div>
     </div>
@@ -199,6 +213,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 <script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
  <!-- bootstrap datepicker -->
 <script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script> 
 <script src="<%=basePath  %>/js/userAdd.js"></script>
 <!-- page script -->
 

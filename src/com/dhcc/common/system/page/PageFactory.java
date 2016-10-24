@@ -26,7 +26,20 @@ public class PageFactory {
 		return sql;
 	}
 
-	
+	public  String createPageSQL(String querysql){
+		String sql  = "";
+		if(DATABASE_TYPE.equals("ORACLE")){
+			OracleFactory temp = new  OracleFactory();
+			sql = temp.createAllSql(querysql);
+			temp = null;
+		}else if(DATABASE_TYPE.equals("MYSQL")){
+			MySqlFactory temp = new MySqlFactory();
+			sql = temp.createAllSql(querysql);
+		    temp = null;
+		}
+		return sql;
+	}
+
 	public  String createSQL(String querysql){
 		String sql  = "";
 		if(DATABASE_TYPE.equals("ORACLE")){

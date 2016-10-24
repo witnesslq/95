@@ -1,9 +1,16 @@
 package com.dhcc.common.system.station;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.struts2.ServletActionContext;
+
 import com.dhcc.modal.system.PageModel;
+import com.dhcc.modal.system.Tsstation;
 import com.opensymphony.xwork2.ActionSupport;
 
 
@@ -41,11 +48,47 @@ public class StationQueryListAction extends ActionSupport {
 		listmodal = pm.getList();
 		return SUCCESS;
 	}
+	public String stationInfoQueryList(){
+		StationDao md = new StationDao();
+		List<Tsstation> list = new ArrayList<Tsstation>();
+		list=md.stationQueryList(sortname, sortorder);
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(list);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+
+		return SUCCESS;
+	}
 	
 	private String id;
 	public String stationHaveUserList() throws Exception {
 		StationDao dao = new StationDao();
 		listmodal = dao.queryStationHaveUserList(id);
+		return SUCCESS;
+	}
+	public String stationHaveUserInfoList() throws Exception {
+		StationDao dao = new StationDao();
+		listmodal = dao.queryStationHaveUserList(id);
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(listmodal);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
 		return SUCCESS;
 	}
 	

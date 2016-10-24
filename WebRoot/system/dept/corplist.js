@@ -1,155 +1,200 @@
-jQuery(function($){
-    my_initGrid();
-});
-/**
-初始化表格
-CustomersData：要填充的数据
-*/
-function my_initGrid(){
-	window['g']=$("#maingrid").ligerGrid({
-		checkbox: true,
-		rowHeight:22,
-		url:"deptQueryList.action",
-		columns: [
-		{ display: '部门名称', name: 'corpname', width:"30%",isSort:true},
-		{ display: '部门编码', name: 'epid', width:"30%",isSort:true},
-		{ display: '备注', name: 'remark',width:"35%" }
-		],
-		pageSize:10,
-		root:"listmodal",
-		sortname:"corpname",
-		record:"record",
-		tree: { 
-			columnName: 'corpname', 
-			idField: 'id',
-			parentIDField: 'pid'
-		},
-	 	rownumbers:true,
-	 	title:"部门列表",
-	 	onSuccess:function(data){
-			
-		},
-		toolbar: { items: [
-   			{ text: '增加', click: itemclick, icon: 'add' },
-  			{ line: true },
-  			{ text: '修改', click: itemedit, icon: 'modify' },
-  			{ line: true },
-  			{ text: '删除', click: itemdelete, icon: 'delete'},
-  		]}
-       });
-   }
-   
-   /**
-     打开添加信息窗口的方法
-   */
-   function  itemclick(){
-      var url = "system/dept/CorpAdd.jsp?pid=0";
-      winOpen(url,"添加部门信息",500,300,'添加','取消',function(data){
-	       	$.ajax({
-				url:"corpAdd.action", 
-				data:data, 
-				dataType:"json", 
-				type:"post",
-				success:function (mm) {
-	       			if("error"==mm.result){
-	       				top.my_alert("添加部门信息失败！");
-	       			}else{
-	       				g.addRow(mm);
-						top.$.ligerDialog.success("添加部门信息成功！");
-	       			}
-				}, 
-				error:function (error) {
-					top.my_alert("添加部门信息失败！" + error.status,"error");
-				}
+$(function () {
+	
+	/**
+	 加载数据
+	*/
+  $.ajax({
+		url: "deptInfoQueryList.action",
+		type: "post",
+		dataType: 'json',
+		success: function(data) {
+	    var dataSet = [];
+	   
+		for(var i=0;i<data.length;i++){
+		var menu = [];
+		var item = data[i];
+		menu.push("<input name=\"checked_info\" type=\"checkbox\" value=\""+item.id+"\">");   
+		menu.push(item.corpname);
+		menu.push(item.epid);
+		menu.push(item.remark);
+		dataSet.push(menu);
+		}		
+		 $("#example1").DataTable({
+			 "data": dataSet,//数据源
+			 "columns": [
+		                    { "title": "<input name=\"checked_all_info\" type=\"checkbox\" value=\"\">" },
+		                    { "title": "部门名称" },
+		                    { "title": "部门编码" },
+		                    { "title": "备注"}
+		                ],
+			 "oLanguage": {//插件的汉化
+             "sLengthMenu": "每页显示 _MENU_ 条记录",
+             "sZeroRecords": "抱歉， 没有找到",
+             "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+             "sInfoEmpty": "没有数据",
+             "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+             "oPaginate": {
+                 "sFirst": "首页",
+                 "sPrevious": "前一页",
+                 "sNext": "后一页",
+                 "sLast": "尾页"
+             },
+		    "sZeroRecords": "没有检索到数据",
+            "sProcessing": "<img src='' />",
+            "sSearch": "搜索"
+		 },
+             
+		 });
+			/**点击复选框，行选中*/
+		 $('#example1').on('click', 'input[name="checked_info"]', function (event) {
+			  if($(this).is(':checked')){
+				  $(this).parent().parent().addClass('selected');  
+			  }else{	
+				  $(this).parent().parent().removeClass('selected');
+			  }
+			  event.stopPropagation();
+		  });
+			/**
+			 全选 或取消
+			*/
+		  $("input[name='checked_all_info']").click(function(event){
+			  if($(this).is(':checked')){
+				  $("input[name='checked_info']").parent().parent().addClass('selected');  
+				  $("input[name='checked_info']").prop("checked",true);
+				  
+			  }else{
+				  $("input[name='checked_info']").prop("checked",false);
+				  $("input[name='checked_info']").parent().parent().removeClass('selected');  
+			  }
+			  event.stopPropagation();
+		  });
+			/**点击行事件*/
+		 $('#example1').on('click', 'tr', function (event) {
+			 console.log("11111");
+			  if($(this).find("input[name='checked_info']").is(':checked')){
+				  $(this).removeClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",false);
+			  }else{
+				  $(this).addClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",true);
+			  } 
+			  event.stopPropagation();
 			});
- 		});
-   
-   }
-   
-    /**
-     打开修改信息窗口的方法
-   */
-   function  itemedit(){
-		var selected = g.getSelected();
-		if (!selected) { top.my_alert('请选择数据行',"warn"); return; }
-		var id = (g.getSelectedRow()).id; 
-		var url = "system/dept/CorpEdit.jsp?id="+id;
-		winOpen(url,"修改部门信息",500,300,'修改','取消',function(data){
-	     	$.ajax({
-				url:"corpEdit.action", 
-				data:data, 
-				dataType:"json", 
-				type:"post",
-				success:function (mm) {
-		     		if("error"==mm.result){
-	       				top.my_alert("修改部门信息失败！");
-	       			}else{
-	       				g.updateRow(selected,mm);
-						top.$.ligerDialog.success("修改部门信息成功！");
-	       			}
-				}, 
-				error:function (error) {
-					top.$.ligerDialog.error("修改部门信息失败！");
-				}
-			});
+		}
 		});
-   }
-   
-   
-   /**
-    删除信息的方法
-   */
-	function  itemdelete(){
-		var selected = g.getSelected();
-		if (!selected) {  top.my_alert('请选择要删除的数据行!',"warn"); return; }
-		window.top.$.ligerDialog.confirm("确定删除选择的数据", "提示", function (ok) {
-			if (ok) {
-				var selecteds = g.getSelecteds();
-				var idstr="";//所有选择行的id
-				for(var i=0;i<selecteds.length;i++){
-					idstr = idstr + selecteds[i].id;
-					if(i!=(selecteds.length-1)){
-						idstr = idstr + ",";
-					}
-				}
-				/**是否含有未选中的子菜单*/
-				$.ajax({
-					url:"ifDelCorp.action?ids="+idstr, 
-					type:"post",
-					success:function (mm) {
-			     		if("error"==mm){
-		       				top.my_alert("所选部门中有未选中的子部门，请重新勾选！");
-		       			}else{
-		       				$.post("corpDel.action", { ids: idstr},
-   								function(datamm){
-   									g.deleteSelectedRow();
-       								top.$.ligerDialog.success("删除数据成功！");
-   				       		});
-		       			}
-					}, 
-					error:function (error) {
-						top.$.ligerDialog.error("删除部门信息失败！");
-					}
-				});
-			}
-		});
-	}
 
-	function winOpen(url,title,width,height,button1,button2,callback){
-		window.top.$.ligerDialog.open({
-			width: width, height: height, url: url, title: title, buttons: [{
-				text: button1, onclick: function (item, dialog) {
-					var fn = dialog.frame.f_validate || dialog.frame.window.f_validate;
-					var data = fn();
-					if(data){
-						callback(data);
-						dialog.close();
-					}
-				}
-			},{
-				text: button2, onclick: function (item, dialog) {
-					dialog.close();
-				}
-			}]
-	     });
-	}
+
+  
+	/**
+	 添加信息
+	*/
+$("#add_user").click(function(){ 
+	     $("#adduser").modal('show');   
+		});
+	
+	/**
+	 删除信息
+	*/
+  $("#detele_user").click(function(){
+	     var id=getselectinfo();
+             if(id==""){
+            	 $("#tipContent").html("请选择要删除的数据")
+            	 $('#myModal').modal('show');
+             }else{
+            	 $('#confirm').modal('show');          	 
+             }
+		});
+	
+	/**
+	 获取选中项
+	*/
+  function getselectinfo(){
+	  var checkboxval=$("input[name='checked_info']"); 
+      var id="";   
+      for (var i=0;i<checkboxval.length;i++ ){       
+          if(checkboxval[i].checked){ 
+              if(id=="") {
+              id=id+checkboxval[i].value; 
+               }else{
+                 id=id+","+checkboxval[i].value;   
+               }
+          }  
+       }
+      return id;
+  }
+  
+	/**
+	 修改信息
+	*/
+$("#edit_user").click(function(){ 
+	     var id=getselectinfo();
+	     if(id==""){
+	    	 $("#tipContent").html("请选择要修改的数据")
+	    	 $("#myModal").modal('show');	 
+	     }else if(id.indexOf(",") > 0){
+	    	 $("#tipContent").html("只能修改一条数据");
+	    	 $("#myModal").modal('show');	 
+	     }else{
+	    	 $("iframe[name='editUser_content']").get(0).contentWindow.loadInfo(id);    	 
+	     }
+	      
+		});
+	
+
+
+
+ $("button[name='adduser']").click(function(){
+	 $("iframe[name='adduser_content']").get(0).contentWindow.submit();
+ });
+ $("button[name='editUser']").click(function(){ 
+	 $("iframe[name='editUser_content']").get(0).contentWindow.submit();
+ });
+  });
+/**
+删除选中项
+*/
+function detletedate(){
+	var idstr=getselectinfo();
+	var counr=idstr.split(",").length;
+	var Dtable = $('#example1').DataTable();
+
+	$.ajax({
+		url:"ifDelCorp.action?ids="+idstr, 
+		type:"post",
+		success:function (mm) {
+     		if("error"==mm){
+     			$("#tipContent").html("所选部门中有未选中的子部门，请重新勾选");
+	 			$("#myModal").modal('show');
+   				
+   			}else{
+   				$.post("corpDel.action", { ids: idstr},
+						function(datamm){
+   				    Dtable.rows('.selected').remove().draw(false);
+   					$("#tipContent").html("您删除了"+counr+"条数据");
+		 			$("#myModal").modal('show');
+		       		});
+   			}
+		}, 
+		error:function (error) {
+			$("#tipContent").html("删除部门信息失败");
+ 			$("#myModal").modal('show');
+		}
+	});	  
+}
+/**
+获取选中项
+*/
+function getselectinfo(){
+ var checkboxval=$("input[name='checked_info']"); 
+ var id="";   
+ for (var i=0;i<checkboxval.length;i++ ){       
+     if(checkboxval[i].checked){ 
+         if(id=="") {
+         id=id+checkboxval[i].value; 
+          }else{
+            id=id+","+checkboxval[i].value;   
+          }
+     }  
+  }
+ return id;
+}

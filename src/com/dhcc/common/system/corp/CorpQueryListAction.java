@@ -1,9 +1,16 @@
 package com.dhcc.common.system.corp;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.sf.json.JSONArray;
+
+import org.apache.struts2.ServletActionContext;
+
 import com.dhcc.modal.system.PageModel;
 import com.dhcc.modal.system.Tscorp;
+import com.dhcc.modal.system.Tspost;
 import com.opensymphony.xwork2.ActionSupport;
 
 
@@ -51,6 +58,27 @@ public class CorpQueryListAction extends ActionSupport {
 		listmodal = pm.getList();
 		return SUCCESS;
 	}
+	
+	public String deptInfoQueryList() throws Exception {
+		CorpDao md = new CorpDao();
+		List<Tscorp> list = new ArrayList<Tscorp>();
+		list=md.deptInfoQueryList(sortname,sortorder);
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(list);//鎶妉ist杞崲鎴恓son
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+	}
+	
+	
 	
 	
 	public String testAndroid() throws Exception {

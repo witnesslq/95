@@ -147,7 +147,7 @@ $("#edit_user").click(function(){
 	    	 $("#tipContent").html("只能修改一条数据");
 	    	 $("#myModal").modal('show');	 
 	     }else{
-	    	 $("#editUser").modal('show');  
+	    	 $("iframe[name='editUser_content']").get(0).contentWindow.loadInfo(id);    	 
 	     }
 	      
 		});
@@ -165,11 +165,16 @@ $("#detail_user").click(function(){
     	 $("#tipContent").html("只能查看一条数据详情");
     	 $("#myModal").modal('show');	 
      }else{
-    	 $("#detailUser").modal('show');   
+    	$("iframe[name='content_info']").get(0).contentWindow.loadInfo(id);
      }
-   
 	});
 
+ $("button[name='adduser']").click(function(){
+	 $("iframe[name='adduser_content']").get(0).contentWindow.submit();
+ });
+ $("button[name='editUser']").click(function(){ 
+	 $("iframe[name='editUser_content']").get(0).contentWindow.submit();
+ });
   });
 /**
 删除选中项

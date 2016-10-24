@@ -1,9 +1,15 @@
 package com.dhcc.common.system.post;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.json.JSONArray;
+
+import org.apache.struts2.ServletActionContext;
+
 import com.dhcc.modal.system.PageModel;
+import com.dhcc.modal.system.Tspost;
 import com.opensymphony.xwork2.ActionSupport;
 
 
@@ -39,7 +45,26 @@ public class PostQueryListAction extends ActionSupport {
 		listmodal = pm.getList();
 		return SUCCESS;
 	}
-
+    public String postQueryUnList() throws Exception {
+    	PostDao md = new PostDao();
+		PageModel pm = new PageModel();
+		List<Tspost> list = new ArrayList<Tspost>();
+		list = md.postQueryList(name,sortname,sortorder);
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(list);//鎶妉ist杞崲鎴恓son
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+    	
+    }
 	public List getListmodal() {
 		return listmodal;
 	}

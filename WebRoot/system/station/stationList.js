@@ -1,176 +1,202 @@
-	jQuery(function($){
-		window['g']=$("#maingrid").ligerGrid({
-		    checkbox: true,
-		    url:"stationQueryList.action",
-		    columns: [
-			    { display: '岗位名称', name: 'stationname', width:"40%",isSort:true},
-			    { display: '岗位描述', name: 'remark', width:"50%",isSort:true}
-		    ],
-		    pageSize:10,
-		    rownumbers:true,
-		    root:"listmodal",
-		    sortname:"stationname",
-		    record:"record",
-		    width: '100%',
-			height: '100%',
-			heightDiff:-8,
-			title:"岗位管理",
-		    toolbar: getBtnReourceByUrl()	
-		    //{ items: [
-			//    { text: '增加', click: itemclick, icon: 'add' },
-			//    { line: true },
-			//    { text: '修改', click: itemedit, icon: 'modify' },
-			//    { line: true },
-			//    { text: '删除', click: itemdelete, icon: 'delete'}
-		    //]}
-		});
-	});
+$(function () {
 	
-	/*
-	 * 查询岗位下的用户
-	 */
-	function itemquery(){
-		var selected = g.getSelected();
-		if (!selected) { top.my_alert('请选择岗位',"warn"); return; }
-		if (g.getSelecteds().length>1) { top.my_alert('请选择唯一的岗位',"warn"); return; }
-		var id = (g.getSelectedRow()).id;
-		var stationname = (g.getSelectedRow()).stationname;
-		var url = "system/station/stationHaveUserList.jsp?id="+id;
-		winOpen1(url,stationname+'岗位下拥有用户列表',900,600,"关闭页面");
-	}
-	function winOpen1(url,title,width,height,button2){
-		window.top.$.ligerDialog.open({
-			width: width, height: height, url: url, title: title, buttons: [{
-				text: button2, onclick: function (item, dialog) {
-					dialog.close();
-				}
-			}]
-	     });
-	}
 	/**
-     打开添加信息窗口的方法
+	 加载数据
 	*/
-	function  itemclick(){
-		var url = "system/station/stationAdd.jsp";
-		winOpen(url,'添加岗位信息',490,300,'添加','取消',function(data){
-			$.ajax({
-				url:"stationAdd.action", 
-				data:data, 
-				dataType:"json", 
-				async:false,
-				type:"post",
-				success:function (mm) {
-					if("error"==mm.result){
-	       				top.my_alert("添加岗位信息失败!");
-	       			}else{
-	       				g.addRow(mm);
-		       			top.$.ligerDialog.success("添加岗位信息成功!","success");
-	       			}
-				}, 
-				error:function (error) {
-					top.my_alert("添加岗位信息失败！" + error.status);
-			}});
+  $.ajax({
+		url: "stationInfoQueryList",
+		type: "post",
+		dataType: 'json',
+		success: function(data) {
+	    var dataSet = []; 
+		for(var i=0;i<data.length;i++){
+		var menu = [];
+		var item = data[i];
+		menu.push("<input name=\"checked_info\" type=\"checkbox\" value=\""+item.id+"\">");   
+		menu.push(item.stationname);
+		menu.push(item.remark);
+		dataSet.push(menu);
+		}		
+		 $("#example1").DataTable({
+			 "data": dataSet,//数据源
+			 "columns": [
+		                    { "title": "<input name=\"checked_all_info\" type=\"checkbox\" value=\"\">" },
+		                    { "title": "岗位名称" },
+		                    { "title": "岗位描述" }
+		                ],
+			 "oLanguage": {//插件的汉化
+             "sLengthMenu": "每页显示 _MENU_ 条记录",
+             "sZeroRecords": "抱歉， 没有找到",
+             "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+             "sInfoEmpty": "没有数据",
+             "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+             "oPaginate": {
+                 "sFirst": "首页",
+                 "sPrevious": "前一页",
+                 "sNext": "后一页",
+                 "sLast": "尾页"
+             },
+		    "sZeroRecords": "没有检索到数据",
+            "sProcessing": "<img src='' />",
+            "sSearch": "搜索"
+		 },
+             
+		 });
+			/**点击复选框，行选中*/
+		 $('#example1').on('click', 'input[name="checked_info"]', function (event) {
+			  if($(this).is(':checked')){
+				  $(this).parent().parent().addClass('selected');  
+			  }else{	
+				  $(this).parent().parent().removeClass('selected');
+			  }
+			  event.stopPropagation();
+		  });
+			/**
+			 全选 或取消
+			*/
+		  $("input[name='checked_all_info']").click(function(event){
+			  if($(this).is(':checked')){
+				  $("input[name='checked_info']").parent().parent().addClass('selected');  
+				  $("input[name='checked_info']").prop("checked",true);
+				  
+			  }else{
+				  $("input[name='checked_info']").prop("checked",false);
+				  $("input[name='checked_info']").parent().parent().removeClass('selected');  
+			  }
+			  event.stopPropagation();
+		  });
+			/**点击行事件*/
+		 $('#example1').on('click', 'tr', function (event) {
+			 console.log("11111");
+			  if($(this).find("input[name='checked_info']").is(':checked')){
+				  $(this).removeClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",false);
+			  }else{
+				  $(this).addClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",true);
+			  } 
+			  event.stopPropagation();
+			});
+		}
 		});
-	}
-   
-    /**
-     打开修改信息窗口的方法
-   */
-	function  itemedit(){
-		var selected = g.getSelected();
-		if (!selected) { top.my_alert('请选择数据行',"warn"); return; }
-		var id = (g.getSelectedRow()).id; 
-		var url = "system/station/stationEdit.jsp?id="+id;
-		winOpen(url,'修改岗位信息',490,300,'保存','取消',function(data){
-			$.ajax({
-				url:"stationUpdate.action", 
-				data:data,
-				async:false,  
-				dataType:"json", 
-				type:"post",
-				success:function (mm) {
-					if("error"==mm.result){
-	       				top.my_alert("修改岗位信息失败!");
-	       			}else{
-	       				g.updateRow(selected,mm);
-	       				top.my_alert("修改岗位信息成功！");
-	       			}
-				}, 
-				error:function (error) {
-					top.my_alert("修改岗位信息失败！" + error.status);
-			}});
-      });
-   }
-   
-   
-   /**
-    删除信息的方法
-   */
-	function  itemdelete(){
-		var selected = g.getSelected();
-	    if (!selected) {  window.top.my_alert('请选择要删除的数据行!'); return; }
-	    window.top.$.ligerDialog.confirm("确定删除选择的数据", "提示", function (ok) {
-	    	if (ok) {
-				var selecteds = g.getSelecteds();
-				var idstr="";//所有选择行的id
-				for(var i=0;i<selecteds.length;i++){
-					idstr = idstr + selecteds[i].id;
-					if(i!=(selecteds.length-1)){
-						idstr = idstr + ",";
-					}
-				}
-				if(QueryIsDelete("station",idstr)=="false"){
-					top.my_alert("删除数据失败，已分配人员的岗位不能删除！","error");
-				}else{
-					g.deleteSelectedRow();
-					/**
-					删除数据库数据
-					*/
-					$.post("stationDel.action", { ids: idstr},
-					function(){
-						top.my_alert("删除数据成功!","success");
-					});
-		 		}
-	    	}
-	    });
-	}
-   /**
-		是否可以删除信息
+
+
+  
+	/**
+	 添加信息
 	*/
-	function  QueryIsDelete(type,id){
-	   	var dataPost = {"type":type,"ids":id};
-	   	var dataMM;
-		$.ajax({
-			url:"QueryIsDelete.action", 
-			data:dataPost, 
-			async:false,
-			dataType:"json", 
-			type:"post",
-			success:function (mm) {
-				dataMM = mm; 
-			}, 
-			error:function (error) {
-				dataMM = false;
-			}
+$("#add_user").click(function(){ 
+	     $("#adduser").modal('show');   
 		});
-		return dataMM;
-	}
 	
-	function winOpen(url,title,width,height,button1,button2,callback){
-		window.top.$.ligerDialog.open({
-			width: width, height: height, url: url, title: title, buttons: [{
-				text: button1, onclick: function (item, dialog) {
-					var fn = dialog.frame.f_validate || dialog.frame.window.f_validate;
-					var data = fn();
-					if(data){
-						callback(data);
-						dialog.close();
-					}
-				}
-			},{
-				text: button2, onclick: function (item, dialog) {
-					dialog.close();
-				}
-			}]
-	     });
-	}
+	/**
+	 删除信息
+	*/
+  $("#detele_user").click(function(){
+	     var id=getselectinfo();
+             if(id==""){
+            	 $("#tipContent").html("请选择要删除的数据")
+            	 $('#myModal').modal('show');
+             }else{
+            	 if(QueryIsDelete("post",id)=="false"){        		 
+            		 $("#tipContent").html("删除数据失败，已分配人员的岗位不能删除")
+                	 $('#myModal').modal('show');
+            	 }
+            	 else{
+            		 $('#confirm').modal('show'); 
+            	 }
+            	          	 
+             }
+		});
+  /**
+	验证是否可以删除信息
+*/
+function  QueryIsDelete(type,id){
+ 	var dataPost = {"type":type,"ids":id};
+ 	var dataMM;
+	$.ajax({
+		url:"QueryIsDelete.action", 
+		data:dataPost, 
+		async:false,
+		dataType:"json", 
+		type:"post",
+		success:function (mm) {
+			dataMM = mm; 
+		}, 
+		error:function (error) {
+			dataMM = false;
+		}
+	});
+	return dataMM;
+}
+	/**
+	 获取选中项
+	*/
+  function getselectinfo(){
+	  var checkboxval=$("input[name='checked_info']"); 
+      var id="";   
+      for (var i=0;i<checkboxval.length;i++ ){       
+          if(checkboxval[i].checked){ 
+              if(id=="") {
+              id=id+checkboxval[i].value; 
+               }else{
+                 id=id+","+checkboxval[i].value;   
+               }
+          }  
+       }
+      return id;
+  }
+
+
+ $("button[name='adduser']").click(function(){
+	 $("iframe[name='adduser_content']").get(0).contentWindow.submit();
+ });
+ $("button[name='editUser']").click(function(){ 
+	 $("iframe[name='editUser_content']").get(0).contentWindow.submit();
+ });
+  });
+/**
+删除选中项
+*/
+function detletedate(){
+
+	var idstr=getselectinfo();
+	var count=idstr.split(",").length;
+	var Dtable = $('#example1').DataTable();
+	 Dtable.rows('.selected').remove().draw(false);
+	 $.post("stationDel.action", { ids: idstr},
+				function(){
+		 			$("#tipContent").html("您删除了"+count+"条数据");
+		 			$("#myModal").modal('show');
+				});
+	  
+}
+/**
+获取选中项
+*/
+function getselectinfo(){
+ var checkboxval=$("input[name='checked_info']"); 
+ var id="";   
+ for (var i=0;i<checkboxval.length;i++ ){       
+     if(checkboxval[i].checked){ 
+         if(id=="") {
+         id=id+checkboxval[i].value; 
+          }else{
+            id=id+","+checkboxval[i].value;   
+          }
+     }  
+  }
+ return id;
+}
+$("#own_user").click(function(){
+	 var id=getselectinfo();
+	    if(id==""){
+	   	 $("#tipContent").html("请选择岗位")
+	   	 $("#myModal").modal('show');	 
+	    }else if(id.indexOf(",") > 0){
+	   	 $("#tipContent").html("同时只能查看一个岗位关联用户");
+	   	 $("#myModal").modal('show');	 
+	    }else{
+	       location.href="stationHaveUserList.jsp?id="+id;
+	    }
+}); 
