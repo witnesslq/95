@@ -2,62 +2,108 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
 %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-    <title>数据字典添加</title>
-    <link    rel="stylesheet" type="text/css" href="<%=basePath %>css/reportMain.css"/>
-    <link    rel="stylesheet" type="text/css" href="<%=basePath %>include/LigerUI/skins/Aqua/css/ligerui-all.css"/>
-    <link    rel="stylesheet" type="text/css"  href="<%=basePath %>include/LigerUI/skins/ligerui-icons.css" /> 
-    <script  type="text/javascript"  src="<%=basePath  %>include/jQuery/jquery-1.3.2.min.js"></script>    
-    <script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/js/ligerui.all.js" ></script>
-    <script src="<%=basePath  %>include/LigerUI/jquery-validation/jquery.validate.min.js"></script>
-    <script src="<%=basePath  %>include/LigerUI/jquery-validation/jquery.metadata.js" type="text/javascript"></script>
-    <script src="<%=basePath  %>include/LigerUI/jquery-validation/messages_cn.js" type="text/javascript"></script>
-    <script src="<%=basePath  %>js/valform.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        var form;
-        $(function (){
-        	form = $("#form2").ligerForm({
-                inputWidth: 170, 
-                labelWidth: 90, 
-                space: 40,
-				validate : true,
-                fields: [ 
-                    { label: "类别", name: "dtype", newline: true, type: "text", validate: { required: true},editor: { onChangeValue: letter }  },
-                    { label: "代码", name: "dkey", newline: true, type: "text", validate: { required: true}},
-                    { label: "值", name: "dvalue", newline: true, type: "text", validate: { required: true,maxlength: 32} },
-                    { label: "备注", name: "remark", newline: true, type: "textarea" , validate: { maxlength: 64 }}
-                ]
-            }); 
-        });
-		function letter(){
-			var data = form.getData();
-			var str = /^[A-Z]+$/;
-			if (!str.test(data.dtype)){
-				//top.my_alert("类别必须由大写字母组成！");
-				form.showFieldError("dtype","类别必须由大写字母组成！");
-				$("[name=dtype]").val("");
-			}
-		}
-        function f_validate(){ 
-			if(form.valid()){
-				return form.getData();
-			}else{
-			    form.showInvalid();
-			}
-		}
-    </script>
-    <style type="text/css">
-        body{ font-size:14px;}
-        .liger-button {
-        	float:left;margin-left:20px;
-       	}
-    </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>IDC／ISP流量统计与质量监测系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+   <!-- bootstrap datepicker -->
+   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/datepicker3.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 </head>
-<body style="padding:10px">   
-	<form id="form2"></form> 
+<body class="hold-transition">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+ 
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+ 
+ <form class="form-horizontal" role="form">
+  <div class="form-group form-group-sm ">
+    <label for="dtype" class="col-xs-2 control-label nopadding font-size">类别<font class="muststyle">(必填)</font>
+    </label>
+    <div class="col-xs-9 nopadding">
+  	 <input type="text" class="form-control" id="dtype" >
+   </div>
+  </div>
+
+  
+   <div class="form-group form-group-sm ">
+    <label for="dkey" class="col-xs-2 control-label nopadding font-size">代码<font class="muststyle">(必填)</font>
+    </label>
+      <div class="col-xs-9 nopadding">
+  	     <input type="text" class="form-control" id="dkey" >
+      </div>
+  </div>
+  
+   <div class="form-group form-group-sm ">
+    <label for="dvalue" class="col-xs-2 control-label nopadding font-size">值<font class="muststyle">(必填)</font>
+    </label>
+      <div class="col-xs-9 nopadding">
+  	    <input type="text" class="form-control" id="dvalue" >
+      </div>
+  </div>
+  
+   <div class="form-group form-group-sm">
+      <label for="remark" class="col-xs-2 control-label nopadding font-size">备注</label>
+       <div class="col-xs-9 nopadding">
+	      <textarea class="form-control" rows="3"  id="remark"></textarea>
+	   </div>
+    </div>
+    <input type="hidden" id="dept" value=""></div>
+</form>
+    
+    </section>
+  <div class="control-sidebar-bg"></div>
+</div>
+
+
+<!-- jQuery 2.2.3 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+ <!-- bootstrap datepicker -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script> 
+<script src="dataDictionaryAdd.js"></script>
+<!-- page script -->
+
 </body>
 </html>

@@ -108,6 +108,22 @@ $("#add_user").click(function(){
             	          	 
              }
 		});
+	/**
+	 修改信息
+	*/
+$("#edit_user").click(function(){ 
+	     var id=getselectinfo();
+	     if(id==""){
+	    	 $("#tipContent").html("请选择要修改的数据")
+	    	 $("#myModal").modal('show');	 
+	     }else if(id.indexOf(",") > 0){
+	    	 $("#tipContent").html("只能修改一条数据");
+	    	 $("#myModal").modal('show');	 
+	     }else{
+	    	 $("iframe[name='editUser_content']").get(0).contentWindow.loadInfo(id);    	 
+	     }
+	      
+		});
   /**
 	验证是否可以删除信息
 */

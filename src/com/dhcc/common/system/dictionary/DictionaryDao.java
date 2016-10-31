@@ -64,6 +64,50 @@ public class DictionaryDao {
 	}
 	
 	 
+	
+	 /**
+	  * @描述：查询数据字典列表(不分页)
+	  * @作者：SZ
+	  * @时间：2014-10-11 下午02:37:47
+	  * @param pm
+	  * @param sortname
+	  * @param sortorder
+	  * @param dtype
+	  * @param dvalue
+	  * @return
+	  */
+	public List<Tsdict> dictQueryList(String sortname,String sortorder,String dtype,String dvalue){
+		DBManager dbm=new DBManager();
+		List<Tsdict> list=null;
+		try {
+			String querysql = "select * from tsdict where 1=1";
+			
+			if (!StringUtil.isNullOrEmpty(dtype)) {
+				querysql += " and dtype like '%" + dtype + "%'";
+			}
+			if (!StringUtil.isNullOrEmpty(dvalue)) {
+				querysql += " and dvalue like '%" + dvalue + "%'";
+			}
+			querysql += " order by "+sortname+" "+sortorder+" ";
+			String countsql = "select count(*) from (" + querysql + ") t";
+
+			/**
+			 * 分页sql构造
+			 */
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querysql);
+			pageFactory = null;
+			list = dbm.getObjectList(Tsdict.class, sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("查询数据字典列表时候出错！"+e.getMessage());
+		}finally{
+			dbm.close();
+		}
+		
+		return list;
+		
+	}
     /**
      * @描述：添加一个新的数据字典
      * @作者：SZ

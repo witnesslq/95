@@ -2,88 +2,90 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String id=request.getParameter("id");
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
 %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-    <title>职务信息修改</title>
-    <link    rel="stylesheet" type="text/css" href="<%=basePath %>include/LigerUI/skins/Aqua/css/ligerui-all.css"/>
-    <link    rel="stylesheet" type="text/css"  href="<%=basePath %>include/LigerUI/skins/ligerui-icons.css" /> 
-    <script  type="text/javascript"  src="<%=basePath  %>include/jQuery/jquery-1.3.2.min.js"></script>    
-    <script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/js/ligerui.all.js" ></script>
-    <script src="<%=basePath  %>include/LigerUI/jquery-validation/jquery.validate.min.js"></script>
-    <script src="<%=basePath  %>include/LigerUI/jquery-validation/jquery.metadata.js" type="text/javascript"></script>
-    <script src="<%=basePath  %>include/LigerUI/jquery-validation/messages_cn.js" type="text/javascript"></script>
-    <script type="text/javascript">
-	   function modifyPost() {
-	   		var formData = liger.get("form2").getData();
-		   	var roleName = formData.rolename;
-		   	var remark = formData.remark;
-		   	var id = $("#rid").val();
-		   	var dataPost = {"model.id":id,"model.rolename":roleName,"model.remark":remark};
-			return dataPost;
-		}  
-
-
-		/**
-	   	获取单个的信息
-	   */
-	  function  getMess(mid){
-	     $.ajax({
-			url:"roleQueryById.action", 
-			data:"model.id="+mid, 
-			dataType:"json", 
-			type:"post",
-			success:function (data) {
-				var mm = data.model;
-				liger.get("form2").setData({
-					rolename:mm.rolename,
-					remark:mm.remark
-				});
-			}, 
-			error:function (error) {
-				alert("获取单个信息失败****" + error.status);
-		}});
-	  } 
-    </script>
-    <script type="text/javascript">
-		var form;
-        $(function (){
-        	form = $("#form2").ligerForm({
-                inputWidth: 170, 
-                labelWidth: 90, 
-                space: 40,
-				validate : true,
-                fields: [ 
-                    { label: "角色名称",name: "rolename", newline: true, type: "text", validate: { required: true,maxlength: 100 } },
-                    { label: "角色描述",name: "remark", newline: true, type: "textarea",width:300 , validate: { maxlength:200} }
-                ]
-            });
-            getMess("<%=id %>");
-        });
-        
-        /**提交验证*/
-        function f_validate() { 
-            if (form.valid()) {
-              return modifyPost();
-            }else {
-                form.showInvalid();
-            }
-            return null;
-        }
-
-	</script>
-    <style type="text/css">
-        body{ 
-	         margin: 0;
-	         padding: 0;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>IDC／ISP流量统计与质量监测系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+   <!-- bootstrap datepicker -->
+   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/datepicker3.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 </head>
-<body style="padding:10px">   
-	<form id="form2"></form> 
-	<input type="hidden" id="rid" value="<%=id %>"/>
+<body class="hold-transition">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+ 
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+ 
+ <form class="form-horizontal" role="form">
+  <div class="form-group form-group-sm ">
+    <label for="rolename" class="col-xs-2 control-label nopadding font-size">角色名称<font class="muststyle">(必填)</font>
+    </label>
+    <div class="col-xs-9 nopadding">
+  	 <input type="text" class="form-control" id="rolename" >
+   </div>
+  </div>
+  
+   <div class="form-group form-group-sm">
+      <label for="remark" class="col-xs-2 control-label nopadding font-size">角色描述</label>
+       <div class="col-xs-9 nopadding">
+	      <textarea class="form-control" rows="3"  id="remark"></textarea>
+	   </div>
+    </div>
+</form>
+   <input type="hidden" id="subId"/>
+    </section>
+  <div class="control-sidebar-bg"></div>
+</div>
+
+
+<!-- jQuery 2.2.3 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+ <!-- bootstrap datepicker -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script> 
+<script src="RoleEdit.js"></script>
+<!-- page script -->
+
 </body>
 </html>

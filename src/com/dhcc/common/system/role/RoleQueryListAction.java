@@ -1,9 +1,16 @@
 package com.dhcc.common.system.role;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.json.JSONArray;
+
+import org.apache.struts2.ServletActionContext;
+
 import com.dhcc.modal.system.PageModel;
+import com.dhcc.modal.system.Tsdict;
+import com.dhcc.modal.system.Tsrole;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -39,6 +46,23 @@ public class RoleQueryListAction extends ActionSupport{
 		return SUCCESS;
 	}
 
+	public String roleInfoQueryList() throws Exception {
+		RoleDao rd = new RoleDao();
+		List<Tsrole> list=rd.roleQueryList(rolename, sortname, sortorder);
+		PrintWriter pw = null;
+		try {
+		    JSONArray  json = JSONArray.fromObject(list);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+	}
 	
 	private String id;
 	public String roleHaveUserList() throws Exception {

@@ -1,7 +1,13 @@
 package com.dhcc.common.system.dictionary;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.struts2.ServletActionContext;
 
 import com.dhcc.modal.system.PageModel;
 import com.dhcc.modal.system.Tsdict;
@@ -37,7 +43,24 @@ public class DictionaryQueryListAction extends ActionSupport {
 		listmodel = pm.getList();
 		return SUCCESS;
 	}
-
+	public String dictionaryInfoQuery() throws Exception {
+		DictionaryDao dd = new DictionaryDao();
+		List<Tsdict> list=dd.dictQueryList( sortname, sortorder, dtype, dvalue);
+		PrintWriter pw = null;
+		try {
+		    JSONArray  json = JSONArray.fromObject(list);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+	}
+	
 	public List<Tsdict> getListmodel() {
 		return listmodel;
 	}

@@ -52,6 +52,33 @@ public class AnyTypeDao<Anytype,AnytypeMore> {
 		
 		return pm;
 	}
+	
+	/**
+	 * @描述：列表查询方法（不分页）
+	 * @作者：SZ
+	 * @时间：2014-11-18 下午03:15:29
+	 * @param pm
+	 * @param anytypeMore
+	 * @param querySql
+	 * @return
+	 */
+	public List<AnytypeMore> QueryList(AnytypeMore anytypeMore,String querySql){
+		List<AnytypeMore> list=null;
+		DBManager dbm=new DBManager();
+		try {
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createSQL(querySql);
+			pageFactory = null;
+			list = dbm.getObjectList(anytypeMore.getClass(), sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("--QueryList--失败"+e.getMessage());
+		}finally{
+			dbm.close();
+		}
+		
+		return list;
+	}
 	/**
 	 * @描述：添加方法
 	 * @作者：SZ

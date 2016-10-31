@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.struts2.ServletActionContext;
@@ -42,6 +43,32 @@ public class AnyTypeAction<Anytype,AnytypeMore> extends ActionSupport {
 		record = pm.getTotalRecord();
 		total = pm.getTotalPage();
 		listmodel = pm.getList();
+		return SUCCESS;
+	}
+	
+	
+	/**
+	 * @描述：列表查询(不分页)
+	 * @作者：SZ
+	 * @时间：2014-11-18 下午03:08:31
+	 * @param anytypeMore 用于查询的扩展model
+	 * @param querySql 列表查询的sql
+	 * @return
+	 */
+	public String ListInfo(AnytypeMore anytypeMore,String querySql){
+		List<AnytypeMore> result=dao.QueryList(anytypeMore,querySql);
+		PrintWriter pw = null;
+		try {
+		    JSONArray  json = JSONArray.fromObject(result);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
 		return SUCCESS;
 	}
 	/**

@@ -1,7 +1,13 @@
 package com.dhcc.common.system.systemLog;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.struts2.ServletActionContext;
 
 import com.dhcc.modal.system.PageModel;
 import com.opensymphony.xwork2.ActionSupport;
@@ -22,8 +28,13 @@ public class SysLogAction extends ActionSupport {
 	private String username;//查询条件 用户姓名
 	private String ids;//删除时用到的字段
 	private String result;//执行操作的结果
-	
-	
+	private int iTotalDisplayRecords;   
+	private int iTotalRecords;  
+	private int start;   
+	private int length; 
+	private String extra_search;
+	private List search;
+
 	/**
 	 * 查询系统日志列表
 	 */
@@ -39,6 +50,42 @@ public class SysLogAction extends ActionSupport {
 		return SUCCESS;
 	}
 
+	
+	
+	/**
+	 * 查询系统日志列表
+	 */
+	public String sysLogInfoQuery(){
+		SysLogDao dao =  new SysLogDao();
+		PageModel pm = new PageModel();
+		int currentpage=(start/length)+1;
+		pm.setCurrentPage(currentpage);
+		pm.setPerPage(length);
+		System.out.println(extra_search);
+		if(!"null".equals(extra_search)&&!"".equals(extra_search)&&extra_search!=null){
+			starttime=extra_search.substring(0, 19);
+			endtime=extra_search.substring(extra_search.length()-19, extra_search.length());
+		}
+		
+		pm = dao.sysLogQueryList(pm, starttime, endtime,username);
+	    JSONObject json = new JSONObject();
+	        json.put("aaData", pm.getList());
+	        json.put("iTotalRecords", pm.getTotalRecord());
+	        json.put("iTotalDisplayRecords", pm.getTotalRecord());
+	        
+		PrintWriter pw = null;
+		try {
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+	}
 	/**
 	 * 删除根据id
 	 */
@@ -147,5 +194,79 @@ public class SysLogAction extends ActionSupport {
 
 
 
-	
+	public int getiTotalDisplayRecords() {
+		return iTotalDisplayRecords;
+	}
+
+
+
+	public void setiTotalDisplayRecords(int iTotalDisplayRecords) {
+		this.iTotalDisplayRecords = iTotalDisplayRecords;
+	}
+
+
+
+	public int getiTotalRecords() {
+		return iTotalRecords;
+	}
+
+
+
+	public void setiTotalRecords(int iTotalRecords) {
+		this.iTotalRecords = iTotalRecords;
+	}
+
+
+
+	public int getStart() {
+		return start;
+	}
+
+
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+
+
+	public int getLength() {
+		return length;
+	}
+
+
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+
+
+	public String getExtra_search() {
+		return extra_search;
+	}
+
+
+
+	public void setExtra_search(String extraSearch) {
+		extra_search = extraSearch;
+	}
+
+
+
+	public List getSearch() {
+		return search;
+	}
+
+
+
+	public void setSearch(List search) {
+		this.search = search;
+	}
+
+
+
+
+
+
 }

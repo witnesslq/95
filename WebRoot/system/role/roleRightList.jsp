@@ -4,6 +4,8 @@ String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 String userid=(String)request.getSession().getAttribute("userid");//用户id
 String username=(String)request.getSession().getAttribute("username");//用户名
+String role_id=(String)request.getParameter("role_id");//角色id
+String node_id=(String)request.getParameter("node_id");//角色node id
 %>
 <!DOCTYPE html>
 <html>
@@ -49,11 +51,16 @@ String username=(String)request.getSession().getAttribute("username");//用户�
  
 
 </form>
-   <input type="hidden" id="subId"/>
+   <input type="hidden" value=<%=role_id %> id="role_id"/>
+   <input type="hidden" value=<%=node_id %> id="node_id"/>
     </section>
   <div class="control-sidebar-bg"></div>
 </div>
 
+ <footer class="main-footer main-footer-change">
+    <button type="button" class="btn btn-default" id="save_info">保存</button> 
+    <button type="button" class="btn btn-default" id="return_back">返回</button> 
+ </footer>
 
 <!-- jQuery 2.2.3 -->
 <script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
@@ -73,7 +80,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
  <!-- bootstrap datepicker -->
 <script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
 <script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script> 
-<script src="roleBtnQX.js"></script>
+<script src="roleRightList.js"></script>
 <!-- page script -->
 
 </body>

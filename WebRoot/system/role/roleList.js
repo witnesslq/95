@@ -4,19 +4,17 @@ $(function () {
 	 加载数据
 	*/
   $.ajax({
-		url: "dictionaryInfoQuery.action",
+		url: "roleInfoQueryList.action",
 		type: "post",
 		dataType: 'json',
 		success: function(data) {
 	    var dataSet = [];
 	   
 		for(var i=0;i<data.length;i++){
-		var menu = [];
+			 var menu = [];
 		var item = data[i];
 		menu.push("<input name=\"checked_info\" type=\"checkbox\" value=\""+item.id+"\">");   
-		menu.push(item.dtype);
-		menu.push(item.dkey);
-		menu.push(item.dvalue);
+		menu.push(item.rolename);
 		menu.push(item.remark);
 		dataSet.push(menu);
 		}		
@@ -24,10 +22,8 @@ $(function () {
 			 "data": dataSet,//数据源
 			 "columns": [
 		                    { "title": "<input name=\"checked_all_info\" type=\"checkbox\" value=\"\">" },
-		                    { "title": "类别" },
-		                    { "title": "代码" },
-		                    { "title": "值" },   
-		                    { "title": "备注", "class": "center" }
+		                    { "title": "角色名称" },
+		                    { "title": "备注" }
 		                ],
 			 "oLanguage": {//插件的汉化
              "sLengthMenu": "每页显示 _MENU_ 条记录",
@@ -72,7 +68,6 @@ $(function () {
 		  });
 			/**点击行事件*/
 		 $('#example1').on('click', 'tr', function (event) {
-			 console.log("11111");
 			  if($(this).find("input[name='checked_info']").is(':checked')){
 				  $(this).removeClass('selected');
 				  $(this).find("input[name='checked_info']").prop("checked",false);
@@ -142,12 +137,33 @@ $("#edit_user").click(function(){
 	      
 		});
 	
+
+	/**
+	按钮权限
+	*/
+$("#RoleBtnQX").click(function(){ 
+	 var id=getselectinfo();
+	 if(id==""){
+    	 $("#tipContent").html("请选择要查看的数据")
+    	 $("#myModal").modal('show');	 
+     }else if(id.indexOf(",") > 0){
+    	 $("#tipContent").html("只能查看一条按钮权限");
+    	 $("#myModal").modal('show');	 
+     }else{
+    	$("iframe[name='content_info']").get(0).contentWindow.loadInfo(id);
+     }
+	});
+
  $("button[name='adduser']").click(function(){
 	 $("iframe[name='adduser_content']").get(0).contentWindow.submit();
  });
  $("button[name='editUser']").click(function(){ 
 	 $("iframe[name='editUser_content']").get(0).contentWindow.submit();
  });
+ $("button[name='but_confirm']").click(function(){ 
+	 $("iframe[name='content_info']").get(0).contentWindow.submit();
+ });
+ 
   });
 /**
 删除选中项
@@ -156,28 +172,31 @@ function detletedate(){
 
 	var idstr=getselectinfo();
 	var counr=idstr.split(",").length;
-	var Dtable = $('#example1').DataTable();
-	 Dtable.rows('.selected').remove().draw(false);
-	 
-	 $.ajax({
-			url:"dictDel.action?ids="+idstr, 
-			dataType:"json", 
-			type:"post",
-			success:function (mm) {
-		 
-	       		if("error"==mm.result){
-	       			$("#tipContent").html("删除数据字典信息失败");
-		 			$("#myModal").modal('show');
-	   			}else{
-	   				$("#tipContent").html("您删除了"+counr+"条数据");
-		 			$("#myModal").modal('show');
-	   			}
-			}, 
-			error:function (error) {
-				$("#tipContent").html("删除数据字典信息失败");
-	 			$("#myModal").modal('show');
-		}});
-	  
+	
+	
+	
+	 if(QueryIsDelete("role",idstr)=="false"){
+		 $("#tipContent").html("删除数据失败，已分配人员的角色不能删除");
+			$("#myModal").modal('show');
+		}else{
+	        /**
+	           删除数据库数据
+	        */
+			
+			var Dtable = $('#example1').DataTable();
+			 Dtable.rows('.selected').remove().draw(false);
+			 $.post("roleDel.action", { ids: idstr},
+						function(data){
+				 			if(data.result == "success"){
+				 				 Dtable.rows('.selected').remove().draw(false);
+						      	$("#tipContent").html("您删除了"+counr+"条数据");
+					 			$("#myModal").modal('show');
+					        }else{
+					        	$("#tipContent").html("删除数据失敗");
+					 			$("#myModal").modal('show');
+					        }
+				      },"json");	
+   }
 }
 /**
 获取选中项
@@ -196,3 +215,54 @@ function getselectinfo(){
   }
  return id;
 }
+
+
+/**
+是否可以删除信息
+*/
+function  QueryIsDelete(type,id){
+	var dataPost = {"type":type,"ids":id};
+	var dataMM;
+		$.ajax({
+			url:"QueryIsDelete.action", 
+			data:dataPost, 
+			async:false,
+			dataType:"json", 
+			type:"post",
+			success:function (mm) {
+				dataMM = mm; 
+			}, 
+			error:function (error) {
+				dataMM = false;
+			}
+		});
+		return dataMM;
+}
+
+
+$("#own_user").click(function(){
+	 var id=getselectinfo();
+	    if(id==""){
+	   	 $("#tipContent").html("请选择角色")
+	   	 $("#myModal").modal('show');	 
+	    }else if(id.indexOf(",") > 0){
+	   	 $("#tipContent").html("同时只能查看一个角色关联用户");
+	   	 $("#myModal").modal('show');	 
+	    }else{
+	       location.href="roleHaveUserList.jsp?id="+id;
+	    }
+}); 
+
+$("#RoleOfAU").click(function(){
+	 var id=getselectinfo();
+	    if(id==""){
+	   	 $("#tipContent").html("请选择角色")
+	   	 $("#myModal").modal('show');	 
+	    }else if(id.indexOf(",") > 0){
+	   	 $("#tipContent").html("同时只能查看一个角色操作权限");
+	   	 $("#myModal").modal('show');	 
+	    }else{
+	       location.href="RoleOfAU.jsp?id="+id;
+	    }
+}); 
+

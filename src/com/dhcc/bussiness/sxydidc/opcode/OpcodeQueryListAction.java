@@ -20,7 +20,11 @@ public class OpcodeQueryListAction extends AnyTypeAction<Opcode, OpcodeModel>{
 		String sql = dao.QueryList();
 		return super.List(model,sql);
 	}
-
+	public String codeInfoQueryList(){
+		OpcodeModel model = new OpcodeModel();
+		String sql = dao.QueryList();
+		return super.ListInfo(model,sql);
+	}
 	@Override
 	public java.util.List<OpcodeModel> getListmodel() {
 		// TODO Auto-generated method stub

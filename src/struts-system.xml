@@ -165,6 +165,10 @@
 		<action name="dictionaryQuery" class="com.dhcc.common.system.dictionary.DictionaryQueryListAction">
 			<result type="json"></result>
 		</action>
+		<!-- 数据字典列表 -->
+		<action name="dictionaryInfoQuery" class="com.dhcc.common.system.dictionary.DictionaryQueryListAction" method="dictionaryInfoQuery">
+			<result type="json"></result>
+		</action>
 		<!-- 数据字典添加 -->
 		<action name="dictAdd" class="com.dhcc.common.system.dictionary.DictionaryManaerAction"  method="dictAdd">
 			<result type="json"></result>
@@ -308,6 +312,10 @@
 		<action name="roleQueryList" class="com.dhcc.common.system.role.RoleQueryListAction">
 			<result type="json"></result>
 		</action>
+		<!-- 角色列表 -->
+		<action name="roleInfoQueryList" class="com.dhcc.common.system.role.RoleQueryListAction" method="roleInfoQueryList">
+			<result type="json"></result>
+		</action>
 		<!-- 角色所拥有的用户列表 -->
 		<action name="roleHaveUserList" class="com.dhcc.common.system.role.RoleQueryListAction" method="roleHaveUserList">
 			<result type="json"></result>
@@ -346,6 +354,10 @@
 		</action>
 		<!-- 日志列表查看 -->
 		<action name="sysLogQuery" class="com.dhcc.common.system.systemLog.SysLogAction" method="sysLogQuery">
+			<result type="json"></result>
+		</action>
+				<!-- 日志列表查看 -->
+		<action name="sysLogInfoQuery" class="com.dhcc.common.system.systemLog.SysLogAction" method="sysLogInfoQuery">
 			<result type="json"></result>
 		</action>
 		<!-- 日志列表删除-->

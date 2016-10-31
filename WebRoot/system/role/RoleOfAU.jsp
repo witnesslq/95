@@ -1,238 +1,111 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java"  pageEncoding="UTF-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String roleid = request.getParameter("role_id");
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
+String id=(String)request.getParameter("id");//角色id
 %>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>IDC／ISP流量统计与质量监测系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+</head>
+<body class="hold-transition">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+ 
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+      操作权限
+      
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 系统管理</a></li>
+        <li class="active"><a href="RoleList.jsp" target="content">角色管理</a></li>   
+        <li class="active"><a href="#"> 操作权限</a></li> 
+      </ol>
+    </section>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <base href="<%=basePath%>"/>
-    
-    <title>角色权限</title>
-	<meta http-equiv="pragma" content="no-cache"/>
-	<meta http-equiv="cache-control" content="no-cache"/>
-	<meta http-equiv="expires" content="0"/>    
-	<link  rel="stylesheet" type="text/css" href="<%=basePath %>include/LigerUI/skins/Aqua/css/ligerui-all.css"/>
-    <link  rel="stylesheet" type="text/css"  href="<%=basePath %>include/LigerUI/skins/ligerui-icons.css" /> 
-    <script  type="text/javascript"  src="<%=basePath  %>include/jQuery/jquery-1.3.2.min.js"></script>   
-    <script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/js/core/base.js" ></script>  
-    <script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/js/plugins/ligerTree.js" ></script> 
-    <script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/js/plugins/ligerGrid.js" ></script> 
-    <script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/js/plugins/ligerLayout.js" ></script> 
-    <script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/js/plugins/ligerDialog.js" ></script> 
-    <script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/js/plugins/ligerDrag.js" ></script> 
-    <script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/json2.js" ></script> 
-  	<script type="text/javascript">
+    <!-- Main content -->
+    <section class="content">
+          <div class="box">
 
+			  <aside class="main-sidebar main-sidebar-change">
+					    <section class="sidebar">
+							      <ul class="sidebar-menu" id="menu">
+							        		<li class="header header-change">系统目录</li>
+							      </ul>
+					    </section>
+			  </aside>
+			  <div class="content-wrapper content-color-change">
+			    	<section class="content">
+			    	      <iframe  class="iframe-height" frameborder="0" scrolling="no" name="content_right" ></iframe>
+			    	</section>
+               </div>
+    </section>
+    <input type="hidden" value=<%=id %>  id="hidd_value"  />
+  <div class="control-sidebar-bg"></div>
+</div>
 
-        var manager = "";
-        var treemanager;
-        var sarr = [];
-        $(function () {
-            $("#layout1").ligerLayout({ leftWidth: 150, allowLeftResize: false, allowLeftCollapse: true, space: 2 });
-            $("#tree1").ligerTree({
-                url: 'topMenuQueryAll.action',
-                onSelect: onSelect,
-                idFieldName: 'id',
-                textFieldName: 'title',
-                iconFieldName: 'image',
-                checkbox: false,
-                itemopen: false
-            });
+<!-- 模态框（Modal） -->
+<!-- 添加-->
 
-            treemanager = $("#tree1").ligerGetTreeManager();
-
-   		  manager =  $("#maingrid4").ligerGrid({
-	            	checkbox: true,
-	            	selectRowButtonOnly:true,
-	            	rowHeight:24,
-	            	async:false,
-	                url: "",
-	                columns: [
-	                	{ display: '菜单名称', name: 'title', width: "30%" },
-	                    { display: '按钮', name: 'btnStr', width: "60%",
-		                    render:function(item){
-		                   		 if(item.flag == "1"){
-		                    		sarr.push(item);
-		                    	}
-		                    	return f_btnRender(item.btnStr,item.id);
-	                    }
-	                    }
-	                ],
-	                rowid: "id",
-	                frozenCheckbox:false,
-	                root:"list",
-	                width: '99%', 
-	                height: '100%',
-	                usePager: false,
-	                isScroll:false,
-	                tree: { 
-	                	columnName: 'title', 
-	                	idField: 'id',
-	                    parentIDField: 'pid'
-	                 },
-	                heightDiff: -3,
-	                onAfterShowData:function(){
-			            for(var i=0;i<sarr.length;i++){
-			              manager.select(sarr[i]);
-			            }
-	                }
-	            });
-            
-
-            var manager = $("#maingrid4").ligerGetGridManager();
-            
-            $("tbody> :checkbox").attr("checked", false);
-
-        });
-
-        function onSelect(note) {
-        	sarr = [];
-            //加载数据
-            var manager = $("#maingrid4").ligerGetGridManager();
-            var r_id = "<%=roleid %>";
-            var url = "menuListForAu.action?tid=" + note.data.id + '&roleid=' + r_id;
-            manager.set("url",url);
-             //manager.loadData(true);
-             $.ajax({//按钮权限获取
-               	url:"roleBtnQueryByMenuId.action",
-				data:"roleid="+r_id+"&menuSort="+note.data.id,
-                type: 'post',
-                success: function (data) {
-                 	var m = eval(data);
-                 	$.each(m,function(index,item){
-                 		if(item != ""){
-                 			$("#"+item).attr("checked","checked");
-                 		}
-                 	});
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    $.ligerDialog.error("按钮权限获取出错！");
-                }
-               });
-        	}
-
-        function f_save() {
-            var notes = treemanager.getSelected();
-            if (notes != null && notes != undefined) {
-                var app = notes.data.id;
-                var r_id = "<%=roleid %>";
-                var manager = $("#maingrid4").ligerGetGridManager();
-                  var selecteds = manager.getSelecteds();
-			      var idstr="";//所有选择行的id
-			      for(var i=0;i<selecteds.length;i++){
-			         idstr = idstr + selecteds[i].id;
-			         if(i!=(selecteds.length-1)){
-			         idstr = idstr + ",";
-			         }
-			         }
-                f_saving();
-                $.ajax({
-                	url:"roleMenuModify.action",
-					data:"ch="+idstr+"&roleId="+r_id+"&sort="+app,
-					async:false,
-                    type: 'post',
-                    success: function (data) {
-                       
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                       $.ligerDialog.closeWaitting();
-                       top.$.ligerDialog.error("修改权限出错！");
-                    }
-                });
-                var btnIDStr = "";
-               $(".btncheck:checked").each(function(index,item){
-               		btnIDStr += item.value;
-               		btnIDStr += ",";
-               });
-               
-               $.ajax({
-	               	url:"roleBtnModify.action",
-					data:"ch="+btnIDStr+"&roleid="+r_id+"&menuSort="+app,
-	                success: function (data) {
-	                   $.ligerDialog.closeWaitting();
-                       top.$.ligerDialog.confirm("是否继续编辑", "保存成功", function (ok) {
-		                    if (!ok) {
-		                       window.frameElement.dialog.close();
-		                    }
-               		 	});
-	                },
-	                error: function (XMLHttpRequest, textStatus, errorThrown) {
-	               		$.ligerDialog.closeWaitting();
-	                    $.ligerDialog.error("按钮权限修改出错！");
-	                }
-              	 });
-           	 }
-            else {
-                top.$.ligerDialog.error("请选择系统目录！");
-            }
-
-        }
-  
-       
-        function f_saving() {
-            $.ligerDialog.waitting("正在保存中...");
-        }
-
-		
-		function f_btnRender(btnStr,menuid){
-			var tempStr = "";
-			if(btnStr != null && btnStr != ""){
-				var btnArr = btnStr.split(",");
-				for(var i=0;i<btnArr.length;i++){
-					if(btnArr[i]!=""){
-						var tempArr = btnArr[i].split(";");
-						tempStr += "<input type=\"checkbox\" class='btncheck' id ='"+tempArr[0]+"' value='"+tempArr[0]+"' name='"+menuid+"'/>&nbsp;<label>"+tempArr[1]+"</label>";
-					}
-				}
-			}
-			return tempStr;
-		}
-	
-    </script>
-    <style type="text/css">
-    	.btncheck,.btncheck1{
-    	        vertical-align:middle;
-    			margin-left: 10px;
-    		}
-    	 label{
-    	        vertical-align:middle;
-    		}
-    	.btnTable{
-    	 		width: "99%";
-    	 		font-size:12px;
-    	 		border-collapse: collapse;
-    	 		border:1px #BED5F3 solid;
-    	  }
-    	 .btnTable th{
-    	 		width:150px;
-    	 		height:22px;
-    	 		text-align: center;
-    	  }
-    	  .btnTable td{
-    	  		border: 1px solid #B1CDE3;  
-    	 		text-align: left;
-    	 		height:22px;
-    	 		padding: 5px;
-    	  }
-    	  .l-layout-center .l-layout-content{
-    			overflow: auto !important;
-    			}
-    </style>
-  </head>
-  
-  <body style="padding: 0px;overflow:hidden;">
-    <div id="layout1" style="margin-top: -1px; margin-left: -1px">
-        <div position="left" title="系统目录">
-            <div id="treediv1" style="width: 250px; height: 100%; margin: -1px; float: left; border: 1px solid #ccc; overflow: auto;">
-                <ul id="tree1"></ul>
+<div class="modal fade" id="myModal" name="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
             </div>
-        </div>
-        <div position="center">
-            <div id="maingrid4"></div>
-        </div>
-    </div>
-  </body>
+            <div class="modal-body" id="tipContent">请选择要数据</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- jQuery 2.2.3 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+
+<script src="RoleOfAU.js"></script>
+</body>
 </html>

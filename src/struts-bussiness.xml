@@ -9,6 +9,10 @@
 		<action name="codeQueryList" class="com.dhcc.bussiness.sxydidc.opcode.OpcodeQueryListAction">
 			<result type="json"></result>
 		</action>
+				<!-- 编码模块列表查询 -->
+		<action name="codeInfoQueryList" class="com.dhcc.bussiness.sxydidc.opcode.OpcodeQueryListAction" method="codeInfoQueryList">
+			<result type="json"></result>
+		</action>
 		<!-- 编码信息添加 -->
 		<action name="codeAdd" class="com.dhcc.bussiness.sxydidc.opcode.OpcodeManagerAction" method="codeAdd">
 			<result type="json"></result>

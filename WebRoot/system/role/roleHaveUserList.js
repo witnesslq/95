@@ -5,15 +5,15 @@ $(function () {
 	*/
 var id=$("#hidden_id").val();
   $.ajax({
-		url: "stationHaveUserList.action",
+		url: "roleHaveUserList.action",
 		type: "post",
 		data:{id:id},
 		dataType: 'json',
 		success: function(data) {
 	    var dataSet = []; 
-		for(var i=0;i<data.listmodal.length;i++){
+		for(var i=0;i<data.listmodel.length;i++){
 		var menu = [];
-		var item = data.listmodal[i];
+		var item = data.listmodel[i];
 		var sex="";
 		if(item.sex=="W"){
 			sex="女";
@@ -84,6 +84,7 @@ var id=$("#hidden_id").val();
 		  });
 			/**点击行事件*/
 		 $('#example1').on('click', 'tr', function (event) {
+			 console.log("11111");
 			  if($(this).find("input[name='checked_info']").is(':checked')){
 				  $(this).removeClass('selected');
 				  $(this).find("input[name='checked_info']").prop("checked",false);
@@ -161,8 +162,9 @@ function getselectinfo(){
 function detletedate(){
 	var idstr=getselectinfo();
 	var id=$("#hidden_id").val();
+	var count=idstr.split(",").length;
 	var Dtable = $('#example1').DataTable();
-	$.post("stationDelUser.action", { ids: idstr,id: id},
+	$.post("roleDelUser.action", { ids: idstr,id: id},
 			function(data){
 		 Dtable.rows('.selected').remove().draw(false);
 		 $("#tipContent").html("您撤销了"+count+"条关联")

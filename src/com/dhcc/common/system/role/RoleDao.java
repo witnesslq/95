@@ -80,7 +80,63 @@ public class RoleDao {
 		
 	}
 	
-	 
+	 /**
+     * @param sname(不分页)
+     * @param pm
+     * @return
+     */
+	@SuppressWarnings("unchecked")
+	public List<Tsrole> roleQueryList(String rolename,String sortname,String sortorder){
+		DBManager dbm=new DBManager();
+		List<Tsrole> list = new ArrayList<Tsrole>();
+		try {
+			String querysql = "select tp.id,tp.rolename,tp.remark,tcp.corpname as topcorpid  from tsrole tp left join tscorp tcp on tcp.id = tp.topcorpid ";
+			String userid = (String)ActionContext.getContext().getSession().get("userid");
+			String superUserId = new CommDao().queryConfigSuperUserID();//获取最大权限id
+			boolean type = userid.equals(superUserId);
+			if(type){//数据权限控制
+				querysql += " where 1 = 1 ";
+			}else{
+				String topcorpid = (String)ActionContext.getContext().getSession().get("topcorpid");
+				querysql += " where 1 = 1 and tp.topcorpid='"+topcorpid+"' ";
+			}
+			if (!StringUtil.isNullOrEmpty(rolename)) {
+				querysql += " and tp.rolename like '%" + rolename + "%'";
+			}
+			querysql += " order by tp."+sortname+" "+sortorder+" ";
+			String countsql = "select count(*) from (" + querysql + ") t";
+			int count = dbm.executeQueryCount(countsql);
+			/**
+			 * 分页sql构造
+			 */
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querysql);
+			pageFactory = null;
+			
+			
+			List<Tsrole> list1= dbm.getObjectList(Tsrole.class, sql);
+			if(type){
+				Tsrole modelnew;
+				for(Tsrole model:list1){
+					modelnew = new Tsrole();
+					modelnew.setId(model.getId());
+					modelnew.setRolename(model.getRolename()+"("+model.getTopcorpid()+")");
+					modelnew.setRemark(model.getRemark());
+					list.add(modelnew);
+				}
+			}else{
+				list = list1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("查询角色列表时候出错！"+e.getMessage());
+		}finally{
+			dbm.close();
+		}
+		
+		return list;
+		
+	}
     /**
      * 添加一个新的角色
      * @param menu
