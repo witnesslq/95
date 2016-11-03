@@ -265,7 +265,13 @@
 		<action name="updateRack" class="com.dhcc.bussiness.sxydidc.rack.RackAction" method="updateRack">
 			<result type="json"></result>
 		</action>
-		
+		<!-- 机柜二维码查询 -->
+		<action name="queryAllQRCodeImgs" class="com.dhcc.bussiness.sxydidc.qrcode.QRCodeAction" method="queryAllQRCodeImgsByRoomId">
+			<result type="json"></result>
+		</action>
+		<action name="queryQRCodeImg" class="com.dhcc.bussiness.sxydidc.qrcode.QRCodeAction" method="queryQRCodeImgByRackId">
+			<result type="json"></result>
+		</action>
 					
 	</package>	
 	
