@@ -8,11 +8,15 @@ import org.apache.log4j.Logger;
 
 import com.dhcc.common.database.DBManager;
 import com.dhcc.common.system.page.PageFactory;
+import com.dhcc.common.system.systemLog.SaveLog;
 import com.dhcc.common.util.CommUtil;
 import com.dhcc.modal.sxydidc.rsdatacenter.Rsdatacenter;
 import com.dhcc.modal.system.PageModel;
+import com.dhcc.modal.system.Tscorp;
 import com.dhcc.modal.system.Tsdict;
-import com.mockrunner.util.common.StringUtil;
+import com.dhcc.modal.system.Tsuser;
+import com.dhcc.common.util.StringUtil;
+//import com.mockrunner.util.common.StringUtil;
 
 	public class RsdatacenterDao {
 		private static final Logger logger = Logger.getLogger(RsdatacenterDao.class);
@@ -47,7 +51,7 @@ import com.mockrunner.util.common.StringUtil;
 			this.init();
 			logger.info("call queryRsdatacenterById() start");
 			RsdatacenterModel rsdatacenterModel=new RsdatacenterModel();
-			if(!StringUtil.isEmptyOrNull(id)){
+			if(!StringUtil.isNullOrEmpty(id)){
 				StringBuilder sql=new StringBuilder("select t.id,t.companyId,t.regionId,t.name,t.address,(select corpname from tscorp where id=t.companyId ) as companyname,(select areaname from tsarea where id=t.regionId) as regionname,t.remark from rsdatacenter t");
 				sql.append(" where t.id='"+id+"' ");				
 					try {
@@ -69,7 +73,7 @@ import com.mockrunner.util.common.StringUtil;
 			this.init();
 			logger.info("call queryRsdatacenterByUserId() start");
 			RsdatacenterModel rsdatacenterModel=new RsdatacenterModel();
-			if(!StringUtil.isEmptyOrNull(userid)){
+			if(!StringUtil.isNullOrEmpty(userid)){
 				String sql = "select t.id,t.companyId,t.regionId,t.name,t.address,(select corpname from tscorp where id=t.companyId ) as companyname,(select areaname from tsarea where id=t.regionId) as regionname,t.remark from rsdatacenter t " +
 						"LEFT JOIN tsuser m on m.dcid= t.id WHERE m.id='"+userid+"'";
 					try {
@@ -87,7 +91,7 @@ import com.mockrunner.util.common.StringUtil;
 			return rsdatacenterModel;
 		}
 		
-		
+		/*
 		public PageModel queryRsdatacenter(PageModel pm){
 			this.init();
 			logger.info("call queryRsdatacenter() start");
@@ -114,7 +118,62 @@ import com.mockrunner.util.common.StringUtil;
 			logger.info("call queryRsdatacenter() finish");
 			return pm;
 		}
-		
+		*/
+		public List<RsdatacenterModel> queryRsdatacenter(String sortname,String sortorder,String name,String companyname){
+			DBManager dbm=new DBManager();
+			List<RsdatacenterModel> list=null;
+			try {
+				//String querysql = "select * from rsdatacenter where 1=1";
+				String querysql = "select t.id,t.companyId,t.regionId,t.name,t.address,(select corpname from tscorp where id=t.companyId ) as companyname,(select areaname from tsarea where id=t.regionId) as regionname,t.remark from rsdatacenter t";
+				if (!StringUtil.isNullOrEmpty(name)) {
+					querysql += " and name like '%" + name + "%'";
+				}
+				if (!StringUtil.isNullOrEmpty(companyname)) {
+					querysql += " and companyname like '%" + companyname + "%'";
+				}
+				querysql += " order by "+sortname+" "+sortorder+" ";
+				String countsql = "select count(*) from (" + querysql + ") t";
+
+				/**
+				 * 分页sql构造
+				 */
+				PageFactory pageFactory = new PageFactory();
+				String sql = pageFactory.createPageSQL(querysql);
+				pageFactory = null;
+				list = dbm.getObjectList(RsdatacenterModel.class, sql);
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.error("查询数据中心列表时候出错！"+e.getMessage());
+			}finally{
+				dbm.close();
+			}
+			
+			return list;
+			
+		}
+		public  boolean  RsdatacenterAdd(RsdatacenterModel model){
+			System.out.println(model.getAddress()+"77777");
+	    	DBManager dbm=new DBManager();
+	    	boolean b=true;
+			try {
+				Rsdatacenter tsusermodel = new Rsdatacenter();
+				tsusermodel.setAddress(model.getAddress());
+				tsusermodel.setId(model.getId());
+				tsusermodel.setName(model.getName());
+				tsusermodel.setCompanyId(model.getCompanyId());
+				tsusermodel.setRegionId(model.getRegionId());
+				b = dbm.insertObject(tsusermodel, "rsdatacenter");
+				//String sql = "select * from rsdatacenter where 1=1";
+		    	//List<Rsdatacenter> listcorp = dbm.getObjectList(Rsdatacenter.class,sql);
+				SaveLog saveLog = new SaveLog();
+				saveLog.saveLog("添加数据中心信息", "添加ID为"+model.getId()+"数据中心记录！");
+			} catch (Exception e) {
+				logger.error(e);
+			}finally{
+	    	  dbm.close();
+			}
+	    	return b;
+	    }
 		public PageModel quickSearchRsdatacenter(PageModel pm,String key){
 			this.init();
 			logger.info("call quickSearchRsdatacenter() start");
@@ -123,7 +182,7 @@ import com.mockrunner.util.common.StringUtil;
 			StringBuilder querySql=new StringBuilder("select t.id,t.companyId,t.regionId,t.name,t.address,(select corpname from tscorp where id=t.companyId ) as companyname,(select areaname from tsarea where id=t.regionId) as regionname,t.remark from rsdatacenter t");
 			
 			StringBuilder conditionSql=new StringBuilder();
-			if(!StringUtil.isEmptyOrNull(key)){
+			if(!StringUtil.isNullOrEmpty(key)){
 				conditionSql.append(" where t.name like '%").append(key).append("%' ");
 				conditionSql.append(" or t.address like '%").append(key).append("%' ");
 				conditionSql.append(" or (select corpname from tscorp where id=t.companyId ) like '%").append(key).append("%' ");
@@ -160,7 +219,7 @@ import com.mockrunner.util.common.StringUtil;
 			boolean result=false;
 			StringBuilder deleteSql=null;
 			List<String> list=new ArrayList<String>();  
-				if(!StringUtil.isEmptyOrNull(ids)){
+				if(!StringUtil.isNullOrEmpty(ids)){
 					if(ids.indexOf(",")!=-1){//如果是批量删除
 						ids=ids.replaceAll(",", "','");
 					}
