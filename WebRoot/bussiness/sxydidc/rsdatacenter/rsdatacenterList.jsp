@@ -92,7 +92,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
                 <h4 class="modal-title" id="myModalLabel"><b>添加数据中心</b></h4>
             </div>
             <div class="modal-body" >
-            <iframe src="rsdatacenterAdd1.jsp" class="smallModel" frameborder="0" scrolling="no" name="adduser_content"></iframe>
+            <iframe src="rsdatacenterAdd.jsp" class="smallModel" frameborder="0" scrolling="no" name="adduser_content"></iframe>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" name="adduser">添加</button> 
@@ -112,7 +112,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
                 <h4 class="modal-title" id="myModalLabel"><b>修改数据中心</b></h4>
             </div>
             <div class="modal-body" >
-            <iframe src="rsdatacenterEdit1.jsp" class="smallModel" frameborder="0" scrolling="no" name="editUser_content"></iframe>
+            <iframe src="rsdatacenterEdit.jsp" class="smallModel" frameborder="0" scrolling="no" name="editUser_content"></iframe>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" name="editUser">修改</button> 
