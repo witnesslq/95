@@ -1,161 +1,109 @@
-<%@ page language="java"  pageEncoding="UTF-8"%>
+﻿<%@ page language="java"  pageEncoding="UTF-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String id = request.getParameter("id");
-String type = request.getParameter("type");
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
 %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-	<base href="<%=basePath%>"/>
-    <title>添加邮箱信息</title>
-	<jsp:include page="../common/head.jsp" flush="true"/>
-    <script type="text/javascript">
-        var form;
-        $(function (){
-        	form = $("#form").ligerForm({
-        		inputWidth: 180, 
-        		labelWidth: 120, 
-        		space: 40, 
-				validate : true,
-                fields: [
-                	{ name: "area",type: "hidden"},
-                	{ label: "名称",name: "name",newline: true,type: "text",validate: {required: true}},
-                	{ label: "地址",name: "address",newline: true,type: "text",validate: {required: true}},
-                	{ label: "所属公司",name: "companyId",newline: true,type: "select",
-                		editor: {
-							width : 180, 
-							selectBoxWidth: 190,
-							selectBoxHeight: 190, 
-							valueField: 'id',
-							treeLeafOnly: false,
-							tree: { 
-								url:"cropDeptTreeQuery.action", 
-								ajaxType:'post',
-								idFieldName: 'id',
-								parentIDFieldName: 'pid',
-								checkbox: false				
-							},
-							onSelected: function(id,value){
-								if(''!=id&&''!=value&&"null"!=value){
-										$("[name=deptid]").val(id);
-										var topcorpid = "";
-										$.ajax({
-											url:"QueryTopCorpId.action?corpid="+id, 
-											async:false,
-											type:"post",
-											success:function (data) {
-												topcorpid = data;
-											}, 
-											error:function (error) {
-												top.my_alert("获取信息失败！" + error.status);
-											}
-										});
-										liger.get("regionId").treeManager.set("url","QueryAreaByDept.action?corpid="+topcorpid);
-								}
-							}							
-						}
-                	},
-                	{ label: "所属区域",name: "regionId",newline: true,type: "select",
-                		editor: {
-	                        width : 180, 
-				            selectBoxWidth: 200,
-				            selectBoxHeight: 200, 
-				            valueField: 'id',
-				            treeLeafOnly: true,
-	                        tree: { 
-								ajaxType:'post',
-								idFieldName: 'id',
-	            				parentIDFieldName: 'pid',
-	            				onSuccess:function(){
-	            					clearNullValue(liger.get("regionId"));
-	            				},
-	            				checkbox: false
-							},
-							onSelected: function(id,value){
-								if(''!=id&&''!=value&&"null"!=value){
-									$("[name=regionId]").val(id);
-								}
-							}
-	                    }
-                	},
-                	{ label: "备注", name: "remark", newline: true, width:520,type:"textarea", validate: { maxlength: 200 }}
-                ]
-            }); 
-                       
-        });
-		
-		/**供回调方法使用*/
-		function f_validate(){ 
-			if(form.valid()){
-				return datePost();
-			}else{
-			    form.showInvalid();
-			}
-		}
-		function clearNullValue(obj){//当前下拉框的ligerui对象。liger.get("id");
-		var ids = obj.getValue();
-		var tempArr = new Array();
-		if(ids != "" && ids != "null"){
-			var idArr = ids.split(";");
-			for(var i=0;i<idArr.length;i++){
-				var id = idArr[i];
-				if(id != "" && id != "null"){
-					var t = obj.treeManager.getTextByID(id);//
-					if(t != null && t != "" && t != "null"){
-						tempArr.push(id);
-					}
-				}
-			}
-		}
-		obj.setValue(tempArr.join(";"));
-		if(!tempArr.join(";")){
-			obj.setText("");
-		}
-		return tempArr.join(";");
-	}
-		
-		/**获取表单要保存的数据以json格式返回*/
-		function datePost(){
-			var formData = form.getData();	
-			var data = {"rsdata.id":"<%=id %>",
-						"rsdata.name":formData.name,
-						"rsdata.address":formData.address,
-						"rsdata.companyId":formData.companyId,
-						"rsdata.regionId":formData.regionId,
-						"rsdata.remark":formData.remark
-			};
-			return data;
-		}
-		
-		function block(){
-			$.blockUI({
-    			message:$('#wait'),
-				css: { 
-					border: 'none', 
-					padding: '15px'
-				}	
-    		});
-		}
-		
-		function unblock(){
-			$.unblockUI(); 
-		}				
-    </script>
-    <style type="text/css">
-        html,body{ 
-	        margin:0;
-	        padding:0;
-        	font-size:14px;
-        }       
-    </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>IDC／ISP流量统计与质量监测系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+   <!-- bootstrap datepicker -->
+   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/datepicker3.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 </head>
-<body style="padding:10px">
-	<div id="wait" style="display: none;opacity:0.4;">
-		正在执行操作请稍候...<img src="<%=basePath%>include/LigerUI/skins/Gray2014/images/ui/loadingl.gif"/>
-	</div>
-	<form id="form"></form> 
+<body class="hold-transition">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+ 
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+ 
+ <form class="form-horizontal" role="form">
+  <div class="form-group form-group-sm ">
+    <label for="name" class="col-xs-2 control-label nopadding font-size">名称<font class="muststyle">(必填)</font>
+    </label>
+    <div class="col-xs-9 nopadding">
+  	 <input type="text" class="form-control" id="name" >
+   </div>
+  </div>
+
+  
+   <div class="form-group form-group-sm ">
+    <label for="address" class="col-xs-2 control-label nopadding font-size">地址<font class="muststyle">(必填)</font>
+    </label>
+      <div class="col-xs-9 nopadding">
+  	     <input type="text" class="form-control" id="address" >
+      </div>
+  </div>
+  
+   <div class="form-group form-group-sm ">
+    <label for="companyId" class="col-xs-2 control-label nopadding font-size">所属公司<font class="muststyle">(必填)</font>
+    </label>
+      <div class="col-xs-9 nopadding">
+  	    <select type="text" class="form-control" id="companyId" ></select>
+      </div>
+  </div>
+  
+   <div class="form-group form-group-sm">
+      <label for="regionId" class="col-xs-2 control-label nopadding font-size">所属区域</label>
+       <div class="col-xs-9 nopadding">
+	      <select class="form-control" rows="3"  id="regionId"></select>
+	   </div>
+    </div>
+   </div>
+</form>
+    
+    </section>
+  <div class="control-sidebar-bg"></div>
+</div>
+
+
+<!-- jQuery 2.2.3 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+ <!-- bootstrap datepicker -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script> 
+<script src="rsdatacenterAdd.js"></script>
+<!-- page script -->
+
 </body>
 </html>

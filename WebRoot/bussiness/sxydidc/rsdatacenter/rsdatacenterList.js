@@ -1,213 +1,199 @@
-$(function($){
-    my_initGrid();
-    bindSearch();
-});
-/**
-初始化机房信息表格
-RsroomData：要填充的数据
-*/
-function my_initGrid(){
-	window['g']=$("#maingrid").ligerGrid({
-		checkbox: true,
-		height:'98%',
-		url:"queryRsdatacenter.action",
-		columns: [
-		{ display: 'id', name: 'id',width:'1%',hide:true},
-		{ display: '所属公司id', name: 'companyId',width:'1%',hide:true},
-		{ display: '所属区域id', name: 'regionId',width:'1%',hide:true},
-		{ display: '名称', name: 'name',width:'30%'},
-		{ display: '地址', name: 'address',width:'30%'},
-		{ display: '所属公司', name: 'companyname',width:'20%'},
-		{ display: '所属区域', name: 'regionname',width:'20%'}
-		],
-		pageSize:10,
-		root:"listmodel",
-		sortname:"id",
-		record:"record",
-	 	rownumbers:true, 
-	 	title:"数据中心列表"
-       });
-}
-
-function bindSearch(){
-	$("#addBtn").bind("click", function(){
-		itemadd();
-	});
-	$("#editBtn").bind("click", function(){
-		itemedit();
-	});
+$(function () {
 	
-	$("#delBtn").bind("click", function(){
-		itemdelete();
-	});
-	
-	$("#searchBtn").bind("click", function(){
-		var value=$("#searchTxt").val();
-  		quicksearch(value);
-	});
-	
-	$("#searchTxt").bind("keydown", function(event){
-		if(event.keyCode==13){
-			var value=$("#searchTxt").val();
-  			quicksearch(value);
-  			return false;
-		}
-	});
-}
-
-/**
-打开添加信息窗口的方法
-*/
-function  itemadd(){
-	var url = "bussiness/sxydidc/rsdatacenter/rsdatacenterAdd.jsp";
-	winBlockOpen(url,'添加数据中心',800,400,'添加','取消',function(dialog,data){
-       	$.ajax({
-			url:"saveRsdatacenter.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-       			if("error" == msg.result){
-       				top.$.ligerDialog.error("添加信息失败!");
-       			}else{
-					var unblock=dialog.frame.unblock;//执行锁屏
-					unblock();
-       				dialog.close();
-	       			top.$.ligerDialog.success("添加信息成功!");
-	       			my_initGrid();
-       			}
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("添加信息失败" + error.status,"错误");
-		}});
-	});
-	
-}
-/**
-打开编辑信息窗口的方法
-*/
-function  itemedit(){
-	var selected = g.getSelected();
-	var id=selected.id;//所有选择行的id
-	var url = "bussiness/sxydidc/rsdatacenter/rsdatacenterEdit.jsp?id="+id;
-	winBlockOpen(url,'数据中心',800,400,'保存','取消',function(dialog,data){
-	
-       	$.ajax({
-			url:"updateRsdatacenterByIds.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-       			if("error" == msg.result){
-       				top.$.ligerDialog.error("添加信息失败!");
-       			}else{
-					var unblock=dialog.frame.unblock;//执行锁屏
-					unblock();
-       				dialog.close();
-	       			top.$.ligerDialog.success("添加信息成功!");
-	       			my_initGrid();
-       			}
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("添加信息失败" + error.status,"错误");
-		}});
-	});
-	
-}
-
-
-
-/**
-打开添加信息窗口的方法
-*/
-function  itemdelete(){
-	var selected = g.getSelected();
-    if (!selected) {  top.my_alert('请选择要删除的数据行!',"warn"); return; }
-    window.top.$.ligerDialog.confirm("确定删除选择的数据", "提示", function (ok) {
-	    if (ok) {
-	      	
-			var selecteds = g.getSelecteds();
-			var idstr="";//所有选择行的id
-			for(var i=0;i<selecteds.length;i++){
-				idstr = idstr + selecteds[i].id;
-				if(i!=(selecteds.length-1)){
-					idstr = idstr + ",";
-				}
-			}
+	/**
+	 加载数据
+	*/
+  $.ajax({
+		url: "queryRsdatacenter.action",
+		type: "post",
+		dataType: 'json',
+		success: function(data) {
+	    var dataSet = [];
+	   
+		for(var i=0;i<data.length;i++){
+		var menu = [];
+		var item = data[i];
+		menu.push("<input name=\"checked_info\" type=\"checkbox\" value=\""+item.id+"\">");   
+		menu.push(item.name);
+		menu.push(item.address);
+		menu.push(item.companyname);
+		menu.push(item.regionname);
+		//alert(menu);
+		dataSet.push(menu);
+		}		
+		 $("#example1").DataTable({
+			 "data": dataSet,//数据源
+			 "columns": [
+		                    { "title": "<input name=\"checked_all_info\" type=\"checkbox\" value=\"\">" },
+		                    { "title": "名称" },
+		                    { "title": "地址" },
+		                    { "title": "所属公司" },   
+		                    { "title": "所属区域", "class": "center" }
+		                ],
+			 "oLanguage": {//插件的汉化
+             "sLengthMenu": "每页显示 _MENU_ 条记录",
+             "sZeroRecords": "抱歉， 没有找到",
+             "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+             "sInfoEmpty": "没有数据",
+             "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+             "oPaginate": {
+                 "sFirst": "首页",
+                 "sPrevious": "前一页",
+                 "sNext": "后一页",
+                 "sLast": "尾页"
+             },
+		    "sZeroRecords": "没有检索到数据",
+            "sProcessing": "<img src='' />",
+            "sSearch": "搜索"
+		 },
+             
+		 });
+			/**点击复选框，行选中*/
+		 $('#example1').on('click', 'input[name="checked_info"]', function (event) {
+			  if($(this).is(':checked')){
+				  $(this).parent().parent().addClass('selected');  
+			  }else{	
+				  $(this).parent().parent().removeClass('selected');
+			  }
+			  event.stopPropagation();
+		  });
 			/**
-				删除数据库数据
-			 */
-			$.ajax({
-				url:"deleteRsdatacenterByIds.action?ids="+idstr, 
-				dataType:"json", 
-				type:"post",
-				success:function (msg) {
-		   			top.$.ligerDialog.success("删除邮箱信息成功!");
-		   			my_initGrid();
-				}, 
-				error:function (error) {
-					top.$.ligerDialog.error("删除邮箱信息失败!" + error.status);
-				}
-				});
+			 全选 或取消
+			*/
+		  $("input[name='checked_all_info']").click(function(event){
+			  if($(this).is(':checked')){
+				  $("input[name='checked_info']").parent().parent().addClass('selected');  
+				  $("input[name='checked_info']").prop("checked",true);
+				  
+			  }else{
+				  $("input[name='checked_info']").prop("checked",false);
+				  $("input[name='checked_info']").parent().parent().removeClass('selected');  
+			  }
+			  event.stopPropagation();
+		  });
+			/**点击行事件*/
+		 $('#example1').on('click', 'tr', function (event) {
+			 console.log("11111");
+			  if($(this).find("input[name='checked_info']").is(':checked')){
+				  $(this).removeClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",false);
+			  }else{
+				  $(this).addClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",true);
+			  } 
+			  event.stopPropagation();
+			});
+		}
+		});
+
+
+  
+	/**
+	 添加信息
+	*/
+$("#add_user").click(function(){ 
+	     $("#adduser").modal('show');   
+		});
+	
+	/**
+	 删除信息
+	*/
+  $("#detele_user").click(function(){
+	     var id=getselectinfo();
+             if(id==""){
+            	 $("#tipContent").html("请选择要删除的数据")
+            	 $('#myModal').modal('show');
+             }else{
+            	 $('#confirm').modal('show');          	 
+             }
+		});
+	
+	/**
+	 获取选中项
+	*/
+  function getselectinfo(){
+	  var checkboxval=$("input[name='checked_info']"); 
+      var id="";   
+      for (var i=0;i<checkboxval.length;i++ ){       
+          if(checkboxval[i].checked){ 
+              if(id=="") {
+              id=id+checkboxval[i].value; 
+               }else{
+                 id=id+","+checkboxval[i].value;   
+               }
+          }  
+       }
+      return id;
+  }
+  
+	/**
+	 修改信息
+	*/
+$("#edit_user").click(function(){ 
+	     var id=getselectinfo();
+	     if(id==""){
+	    	 $("#tipContent").html("请选择要修改的数据")
+	    	 $("#myModal").modal('show');	 
+	     }else if(id.indexOf(",") > 0){
+	    	 $("#tipContent").html("只能修改一条数据");
+	    	 $("#myModal").modal('show');	 
+	     }else{
+	    	 $("iframe[name='editUser_content']").get(0).contentWindow.loadInfo(id);    	 
 	     }
-	 });
-}
-
-
-
+	      
+		});
+	
+ $("button[name='adduser']").click(function(){
+	 $("iframe[name='adduser_content']").get(0).contentWindow.submit();
+ });
+ $("button[name='editUser']").click(function(){ 
+	 $("iframe[name='editUser_content']").get(0).contentWindow.submit();
+ });
+  });
 /**
- * 模糊查询
- */
-function quicksearch(value){
-	var data=[{name:'key',value:value}];
-	g.setOptions({newPage:1});
-	g.setOptions({parms:data});
-	g.loadData();
+删除选中项
+*/
+function detletedate(){
+
+	var idstr=getselectinfo();
+	var counr=idstr.split(",").length;
+	var Dtable = $('#example1').DataTable();
+	 Dtable.rows('.selected').remove().draw(false);
+	 
+	 $.ajax({
+			url:"deleteRsdatacenterByIds.action?ids="+idstr, 
+			dataType:"json", 
+			type:"post",
+			success:function (mm) {
+		 
+	       		if("error"==mm.result){
+	       			$("#tipContent").html("删除数据中心信息失败");
+		 			$("#myModal").modal('show');
+	   			}else{
+	   				$("#tipContent").html("您删除了"+counr+"条数据");
+		 			$("#myModal").modal('show');
+	   			}
+			}, 
+			error:function (error) {
+				$("#tipContent").html("删除数据中心信息失败");
+	 			$("#myModal").modal('show');
+		}});
+	  
 }
-
-function winOpen(url,title,width,height,button1,button2,callback){
-	window.top.$.ligerDialog.open({
-		width: width, height: height, url: url, title: title, buttons: [{
-			text: button1, onclick: function (item, dialog) {
-				var fn = dialog.frame.f_validate || dialog.frame.window.f_validate;
-				var data = fn();
-				if(data){
-					callback(data);
-					dialog.close();
-				}
-			}
-		},{
-			text: button2, onclick: function (item, dialog) {
-				dialog.close();
-			}
-		}
-		
-		]
-     });
+/**
+获取选中项
+*/
+function getselectinfo(){
+ var checkboxval=$("input[name='checked_info']"); 
+ var id="";   
+ for (var i=0;i<checkboxval.length;i++ ){       
+     if(checkboxval[i].checked){ 
+         if(id=="") {
+         id=id+checkboxval[i].value; 
+          }else{
+            id=id+","+checkboxval[i].value;   
+          }
+     }  
+  }
+ return id;
 }
-
-function winBlockOpen(url,title,width,height,button1,button2,callback){
-	window.top.$.ligerDialog.open({
-		width: width, height: height, url: url, title: title, buttons: [{
-			text: button1, onclick: function (item, dialog) {
-				var block=dialog.frame.block;//执行锁屏
-				block();
-				var fn = dialog.frame.f_validate || dialog.frame.window.f_validate;
-				var data = fn();
-				if(data){
-					callback(dialog,data);
-				}
-			}
-		},{
-			text: button2, onclick: function (item, dialog) {
-				dialog.close();
-			}
-		}
-		
-		]
-     });
-}
-
-
-
-
