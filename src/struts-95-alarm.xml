@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="alarm" extends="json-default">
+<interceptors>
+    <interceptor-stack name="jsonStack">
+    	<interceptor-ref name="defaultStack"></interceptor-ref>
+        <interceptor-ref name="json">
+            <param name="enableSMD">true</param>
+        </interceptor-ref>
+    </interceptor-stack>
+</interceptors>
+		<!-- 分页查询告警信息 -->
+		<action name="query_alarm_info"
+			class="com.dhcc.bussiness.sxydidc.alarm.actions.AlarmInfoAction">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<!-- 所有告警规则 -->
+		<action name="query_all_alarm_rule" class="com.dhcc.bussiness.sxydidc.alarm.actions.AlarmRuleAction">
+			<result type="json">
+				<param name="root">list</param>
+				<param name="excludeProperties">
+					\[\d+\]\.alarmIndicator\.alarmRules.*,
+					\[\d+\]\.alarmRuleValueType\.alarmRules.*,
+                    \[\d+\]\.alarmSeverity\.alarmRules.*,
+                    \[\d+\]\.alarmNoticeTypes\[\d+\]\.alarmRules.*,
+                    \[\d+\]\.tsusers\[\d+\]\.alarmRules.*
+				</param>
+			</result>
+		</action>
+		
+		<!-- 所有严重性程度 -->
+		<action name="query_all_alarm_severity" class="com.dhcc.bussiness.sxydidc.alarm.actions.AlarmSeverityAction">
+			<result type="json">
+				<param name="root">list</param>
+				<param name="excludeProperties">
+					\[\d+\]\.alarmRules.*
+				</param>
+			</result>
+		</action>
+		
+		<!-- 所有 -->
+		<action name="query_all_alarm_notice_type" class="com.dhcc.bussiness.sxydidc.alarm.actions.AlarmNoticeTypeAction">
+			<result type="json">
+				<param name="root">list</param>
+				<param name="excludeProperties">
+					\[\d+\]\.alarmRules.*
+				</param>
+			</result>
+		</action>
+		
+		<!-- 所有值为数字类型的指标 -->
+		<action name="query_all_with_number_type" class="com.dhcc.bussiness.sxydidc.alarm.actions.AlarmIndicatorAction">
+			<result type="json">
+				<param name="root">list</param>
+				<param name="excludeProperties">
+					\[\d+\]\.alarmRules\[\d+\]\.alarmSeverity,
+					\[\d+\]\.alarmRules\[\d+\]\.alarmIndicator\.alarmRules.*,
+					\[\d+\]\.alarmRules\[\d+\]\.alarmRuleValueType\.alarmRules.*,
+					\[\d+\]\.alarmRules\[\d+\]\.alarmNoticeTypes.*,
+					\[\d+\]\.alarmRules\[\d+\]\.tsusers.*
+				</param>
+			</result>
+		</action>
+		
+		<!-- 更新告警指标及其规则 -->
+		<action name="update_alarm_indicator" class="com.dhcc.bussiness.sxydidc.alarm.actions.AlarmIndicatorAction" method="updateIndicator">
+          	<interceptor-ref name="jsonStack"></interceptor-ref>
+			<result type="json">
+			</result>
+		</action>
+		
+		<!-- 更新告警规则 -->
+		<action name="update_alarm_rule" class="com.dhcc.bussiness.sxydidc.alarm.actions.AlarmRuleAction" method="updateRule">
+          	<interceptor-ref name="jsonStack"></interceptor-ref>
+			<result type="json">
+			</result>
+		</action>
+		
+		<!-- 所有用户 -->
+		<action name="query_all_user" class="com.dhcc.bussiness.sxydidc.alarm.actions.TsuserAction">
+			<result type="json">
+				<param name="root">list</param>
+				<param name="includeProperties">
+					\[\d+\]\.id,
+					\[\d+\]\.username
+				</param>
+			</result>
+			
+		</action>
+		
+	</package>
+</struts>

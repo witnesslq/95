@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-1 10:20:58 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.alarm.models.AlarmRuleValueType" table="ALARM_RULE_VALUE_TYPE"  optimistic-lock="version">
+        <id name="valueTypeId" type="big_decimal">
+            <column name="VALUE_TYPE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="500" not-null="true">
+                <comment>&#192;&#224;&#208;&#205;&#195;&#251;&#179;&#198;</comment>
+            </column>
+        </property>
+        <property name="valueCount" type="big_decimal">
+            <column name="VALUE_COUNT" precision="22" scale="0" not-null="true">
+                <comment>&#202;&#253;&#215;&#214;&#214;&#181;&#181;&#196;&#184;&#246;&#202;&#253;</comment>
+            </column>
+        </property>
+        <property name="doneWithClass" type="string">
+            <column name="DONE_WITH_CLASS" length="1000">
+                <comment>&#180;&#166;&#192;&#237;&#214;&#181;&#181;&#196;&#192;&#224;</comment>
+            </column>
+        </property>
+        <set name="alarmRules" table="ALARM_RULE" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="VALUE_TYPE_ID" precision="22" scale="0">
+                    <comment>
+                    &#184;&#230;&#190;&#175;&#185;&#230;&#212;&#242;&#214;&#181;&#192;&#224;&#208;&#205;&#163;&#172;&#211;&#208;&#181;&#165;&#214;&#181;&#202;&#253;&#215;&#214;&#163;&#172;&#193;&#189;&#184;&#246;&#214;&#181;&#181;&#196;&#202;&#253;&#215;&#214;&#163;&#172;&#182;&#224;&#214;&#181;&#202;&#253;&#215;&#214;&#163;&#172;&#206;&#196;&#177;&#190;&#180;&#174;</comment>
+                </column>
+            </key>
+            <one-to-many class="com.dhcc.bussiness.sxydidc.alarm.models.AlarmRule" />
+        </set>
+    </class>
+</hibernate-mapping>

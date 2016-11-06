@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+  <table-filter match-name="ALARM_INDICATOR"/>
+  <table-filter match-name="ALARM_INFO"/>
+  <table-filter match-name="ALARM_NOTICE_TYPE"/>
+  <table-filter match-name="ALARM_RULE"/>
+  <table-filter match-name="ALARM_RULE_NOTICE_TSUSER"/>
+  <table-filter match-name="ALARM_RULE_USE_NOTICE_TYPE"/>
+  <table-filter match-name="ALARM_RULE_VALUE_TYPE"/>
+  <table-filter match-name="ALARM_SEVERITY"/>
+  <table-filter match-name="TSUSER"/>
+</hibernate-reverse-engineering>

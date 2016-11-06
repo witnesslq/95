@@ -9,4 +9,5 @@
 	<include file="struts-bussiness.xml"></include>
 	<include file="struts-sxydidc-*.xml"></include>
 	<include file="struts-reportForms.xml"></include>
+	<include file="struts-95-alarm.xml"></include>
 </struts>

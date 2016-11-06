@@ -33,7 +33,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     -->
     <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/skin-blue.min.css">
     <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/iCheck/minimal/blue.css">
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -109,7 +108,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <h3 class="box-title">门限阀值配置</h3>
             </div>
             <div class="box-body">
-              <table  class="table">
+              <table  class="table" id="alarmIndicatorsTable">
                 <thead>
                   <tr>
                     <th>序号</th>
@@ -118,65 +117,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <th>操作</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>客户带宽利用率</td>
-                    <td>
-                      <input type="text" id="threshold1" />
-                    </td>
-                    <td>
-                      <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>网络设备带宽利用率</td>
-                    <td>
-                      <input type="text" id="threshold2" />
-                      
-                    </td>
-                    <td>
-                      <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-                      
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>网络设备丢包率</td>
-                    <td>
-                      <input type="text" id="threshold3" />
-                      
-                    </td>
-                    <td>
-                      <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-                      
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>网络设备错报率</td>
-                    <td>
-                      <input type="text" id="threshold4" />
-                      
-                    </td>
-                    <td>
-                      <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-                      
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>客户异常流量倍数</td>
-                    <td>
-                      <input type="text" id="threshold5" />
-                      
-                    </td>
-                    <td>
-                      <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-                      
-                    </td>
-                  </tr>
+                <tbody>                 
+                 
                 </tbody>
               </table>
             </div>
@@ -187,7 +129,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <h3 class="box-title">告警规则配置</h3>
             </div>
             <div class="box-body">
-              <table class="table">
+              <table class="table" id="alarmRulesTable">
                 <thead>
                   <tr>
                     <th>序号</th>
@@ -201,341 +143,209 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>客户带宽利用率下限</td>
-                    <td>0-10</td>
-                    <td>
-                      <select name="" id="" class="form-control panic">
-                        <option value="1" class="panic" selected="selected">严重</option>
-                        <option value="2" class="crit">重要</option>
-                        <option value="3" class="warn">次要</option>
-                        <option value="4" class="notice">警告</option>
-                      </select>
-                    </td>
-                    <td><select name="" id="" class="form-control">
-                      <option value="0">否</option>
-                      <option value="1">是</option>
-                    </select>
-                  </td>
-                  <td>
-                    <input type="checkbox" checked="checked">短信</input>
-                    <input type="checkbox" checked="checked">邮件</input>
-                  </td>
-                  <td>
-                    <div class="input-group">
-                      <input type="text" class="form-control">
-                      <div class="input-group-btn"><button class="btn btn-default" type="buton">通知人</button></div>
-                    </div>
-                  </td>
-                  <td>
-                    <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-                    
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>客户带宽利用率下限</td>
-                  <td>0-10</td>
-                  <td><select name="" id="" class="form-control panic">
-                    <option value="1" class="panic" selected="selected">严重</option>
-                    <option value="2" class="crit">重要</option>
-                    <option value="3" class="warn">次要</option>
-                    <option value="4" class="notice">警告</option>
-                  </select></td>
-                  <td><select name="" id="" class="form-control">
-                    <option value="0">否</option>
-                    <option value="1">是</option>
-                  </select>
-                </td>
-                <td>
-                  <input type="checkbox" checked="checked">短信</input>
-                  <input type="checkbox" checked="checked">邮件</input>
-                </td>
-                <td>
-                  <div class="input-group">
-                    <input type="text" class="form-control">
-                    <div class="input-group-btn"><button class="btn btn-default" type="buton">通知人</button></div>
-                  </div>
-                </td>
-                <td>
-                  <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
                   
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>客户带宽利用率上限</td>
-                <td>70-10</td>
-                <td>
-                  <select name="" id="" class="form-control panic">
-                    <option value="1" class="panic" selected="selected">严重</option>
-                    <option value="2" class="crit">重要</option>
-                    <option value="3" class="warn">次要</option>
-                    <option value="4" class="notice">警告</option>
-                  </select></td>
-                  <td><select name="" id="" class="form-control">
-                    <option value="0">否</option>
-                    <option value="1">是</option>
-                  </select>
-                </td>
-                <td>
-                  <input type="checkbox" checked="checked">短信</input>
-                  <input type="checkbox" checked="checked">邮件</input>
-                </td>
-                <td>
-                  <div class="input-group">
-                    <input type="text" class="form-control">
-                    <div class="input-group-btn"><button class="btn btn-default" type="buton">通知人</button></div>
-                  </div>
-                </td>
-                <td>
-                  <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
                   
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>网络设备带宽利用率下限</td>
-                <td>0-10</td>
-                <td><select name="" id="" class="form-control">
-                  <option value="1">严重</option>
-                  <option value="2">重要</option>
-                  <option value="3">次要</option>
-                  <option value="4">警告</option>
-                </select></td>
-                <td><select name="" id="" class="form-control">
-                  <option value="0">否</option>
-                  <option value="1">是</option>
-                </select>
-              </td>
-              <td>
-                <input type="checkbox" checked="checked">短信</input>
-                <input type="checkbox" checked="checked">邮件</input>
-              </td>
-              <td>
-                <div class="input-group">
-                  <input type="text" class="form-control">
-                  <div class="input-group-btn"><button class="btn btn-default" type="buton">通知人</button></div>
-                </div>
-              </td>
-              <td>
-                <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-                
-              </td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>网络设备带宽利用率上限</td>
-              <td>80-100</td>
-              <td><select name="" id="" class="form-control">
-                <option value="1">严重</option>
-                <option value="2">重要</option>
-                <option value="3">次要</option>
-                <option value="4">警告</option>
-              </select></td>
-              <td><select name="" id="" class="form-control">
-                <option value="0">否</option>
-                <option value="1">是</option>
-              </select>
-            </td>
-            <td>
-              <input type="checkbox" checked="checked">短信</input>
-              <input type="checkbox" checked="checked">邮件</input>
-            </td>
-            <td>
-              <div class="input-group">
-                <input type="text" class="form-control">
-                <div class="input-group-btn"><button class="btn btn-default" type="buton">通知人</button></div>
-              </div>
-            </td>
-            <td>
-              <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-              
-            </td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>丢包率门限</td>
-            <td>10-100</td>
-            <td><select name="" id="" class="form-control">
-              <option value="1">严重</option>
-              <option value="2">重要</option>
-              <option value="3">次要</option>
-              <option value="4">警告</option>
-            </select></td>
-            <td><select name="" id="" class="form-control">
-              <option value="0">否</option>
-              <option value="1">是</option>
-            </select>
-          </td>
-          <td>
-            <input type="checkbox" checked="checked">短信</input>
-            <input type="checkbox" checked="checked">邮件</input>
-          </td>
-          <td>
-            <div class="input-group">
-              <input type="text" class="form-control">
-              <div class="input-group-btn"><button class="btn btn-default" type="buton">通知人</button></div>
+                </tbody>
+              </table>
             </div>
-          </td>
-          <td>
-            <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-            
-          </td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>错报率门限</td>
-          <td>10-100</td>
-          <td><select name="" id="" class="form-control">
-            <option value="1">严重</option>
-            <option value="2">重要</option>
-            <option value="3">次要</option>
-            <option value="4">警告</option>
-          </select></td>
-          <td><select name="" id="" class="form-control">
-            <option value="0">否</option>
-            <option value="1">是</option>
-          </select>
-        </td>
-        <td>
-          <input type="checkbox" checked="checked">短信</input>
-          <input type="checkbox" checked="checked">邮件</input>
-        </td>
-        <td>
-          <div class="input-group">
-            <input type="text" class="form-control">
-            <div class="input-group-btn"><button class="btn btn-default" type="buton">通知人</button></div>
+            <!-- /.box-body -->
           </div>
+        </section>
+      </div>
+    </div>
+    <div class="modal fade" id="generalModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" type="button" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">选择被通知人</h4>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" type="button" data-dismiss="modal" >取消</button>
+            <button class="btn btn-primary" type="button" name="btn-save-receiver" id="" data-dismiss="modal" >确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content -->
+    <!-- REQUIRED JS SCRIPTS -->
+    <!-- jQuery 2.2.3 -->
+    <script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <!-- Bootstrap 3.3.6 -->
+    <script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Ion.rangeSlider -->
+    <script src="<%=basePath  %>/node_modules/admin-lte/plugins/ionslider/ion.rangeSlider.min.js"></script>
+    <!-- iCheck -->
+    <script src="<%=basePath  %>/node_modules/admin-lte/plugins/iCheck/icheck.js"></script>
+    <!-- AdminLTE App -->
+    <script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+    <script>
+    var basePath = "<%= basePath %>";
+    </script>
+
+    <!-- 告警规则配置模板 -->
+    <script type="text/x-ejs-template" id="alarmRulesTmpl">
+    <\%
+for(var i = 0,size = alarmRules.length;i<size;i++){
+      var rule = alarmRules[i],
+        alarmIndicatorToRule = rule.alarmIndicator;
+    %>
+    <tr>
+        <td><\%=i+1  %></td>
+        <td><\%=alarmIndicatorToRule.name + rule.name  %></td>
+        <td><\%=rule.value  %></td>
+        <td>
+            <select name="severity-rule<\%=rule.ruleId  %>" class="form-control <\%=rule.alarmSeverity.color  %>">
+            <\%
+              var severityId = rule.alarmSeverity.severityId;
+              for(var j = 0,jSize = alarmSeveritys.length;j<jSize;j++){
+                var alarmSeverity = alarmSeveritys[j];
+                if(severityId == alarmSeverity.severityId){
+            %>
+              <option value="<\%=alarmSeverity.severityId  %>" class="<\%=alarmSeverity.color  %>" selected="selected"><\%= alarmSeverity.name %></option>
+
+            <\%   }else{
+              %>
+                <option value="<\%=alarmSeverity.severityId  %>" class="<\%=alarmSeverity.color  %>"><\%= alarmSeverity.name %></option>
+              <\%
+                }
+              }
+              %>
+                
+            </select>
         </td>
         <td>
-          <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
+          <select name="isSuppress-rule<\%=rule.ruleId  %>" class="form-control">
+            <\% 
+            if(parseInt(rule.isSuppress)){
+            %>
+              <option value="1" selected="selected">是</option>
+              <option value="0">否</option>
+
+            <\%
+            }else{
+            %>
+              <option value="1">是</option>
+
+              <option value="0" selected="selected">否</option>
+            
+            <\%
+            }
+            %>
+          </select>
+      </td>
+      <td>
+      <\% 
+      //遍历告警方式
+      var noticeTypes = rule.alarmNoticeTypes;
+      for(j = 0,jSize = alarmNoticeTypes.length;j<jSize;j++){
+          var alarmNoticeType = alarmNoticeTypes[j],
+              hasThisNoticeType=false;
+
+           for(var k = 0,kSize=noticeTypes.length;k<kSize;k++){
+              var noticeType = noticeTypes[k];
+              if(noticeType.noticeTypeId == alarmNoticeType.noticeTypeId){
+                hasThisNoticeType=true;
+                break;
+              }
+           }
+
+           if(hasThisNoticeType){
+      %>
+          <input type="checkbox" name="noticeType-rule<\%=rule.ruleId  %>"  checked="checked" value="<\%=alarmNoticeType.noticeTypeId %>"><\%=alarmNoticeType.name %></input>
+      <\%
+           }else{
+      %>
+          <input type="checkbox"  name="noticeType-rule<\%=rule.ruleId  %>"  value="<\%=alarmNoticeType.noticeTypeId  %>"><\%=alarmNoticeType.name  %></input>
+      <\%
+           }
+      }
+        %>
+      </td>
+      <td>
+          <div class="input-group">
+              <\% 
+                var receiversName = "";
+                for(var j = 0,jSize = rule.tsusers.length;j<jSize;j++){
+                    receiversName += rule.tsusers[j].username.trim()+",";
+                }
+                receiversName = receiversName.length>0?receiversName.substring(0,receiversName.length-1):receiversName;
+               %>
+              <input type="text" class="form-control" value="<\%=receiversName  %>" name="user-rule<\%=rule.ruleId  %>" readonly></input>
+              <div class="input-group-btn"><button id="btn-user-rule<\%=rule.ruleId  %>" class="btn btn-default" type="buton" data-toggle="modal" data-target="#generalModal">通知人</button></div>
+          </div>
+      </td>
+      <td>
+          <button id="btn-rule<\%=rule.ruleId  %>" class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
           
-        </td>
-      </tr>
-      <tr>
-        <td>7</td>
-        <td>异常流量倍数门限</td>
-        <td>10</td>
-        <td><select name="" id="" class="form-control">
-          <option value="1">严重</option>
-          <option value="2">重要</option>
-          <option value="3">次要</option>
-          <option value="4">警告</option>
-        </select></td>
-        <td><select name="" id="" class="form-control">
-          <option value="0">否</option>
-          <option value="1">是</option>
-        </select>
-      </td>
-      <td>
-        <input type="checkbox" checked="checked">短信</input>
-        <input type="checkbox" checked="checked">邮件</input>
-      </td>
-      <td>
-        <div class="input-group">
-          <input type="text" class="form-control">
-          <div class="input-group-btn"><button class="btn btn-default" type="buton">通知人</button></div>
-        </div>
-      </td>
-      <td>
-        <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-        
       </td>
     </tr>
-    <tr>
-      <td>8</td>
-      <td>端口通断</td>
-      <td>Up</td>
-      <td><select name="" id="" class="form-control">
-        <option value="1">严重</option>
-        <option value="2">重要</option>
-        <option value="3">次要</option>
-        <option value="4">警告</option>
-      </select></td>
-      <td><select name="" id="" class="form-control">
-        <option value="0">否</option>
-        <option value="1">是</option>
-      </select>
-    </td>
-    <td>
-     <label class="normal"> <input type="checkbox" checked="checked">短信</input></label>
-     <label class="normal"> <input type="checkbox" checked="checked">邮件</input></label>
-    </td>
-    <td>
-      <div class="input-group">
-        <input type="text" class="form-control">
-        <div class="input-group-btn"><button class="btn btn-default" type="buton" data-toggle="modal" data-target="#generalModal">通知人</button></div>
-      </div>
-    </td>
-    <td>
-      <button class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-    </td>
-  </tr>
-</tbody>
-</table>
-</div>
-<!-- /.box-body -->
-</div>
-</section>
-</div>
-</div>
+    <\%
+    }
+    %>
+    
+    </script>
 
-<div class="modal fade" id="generalModal">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-<button class="close" type="button" data-dismiss="modal">&times;</button>
-<h4 class="modal-title">选择被通知人</h4>
-</div>
-<div class="modal-body">
+    <!-- 告警门限配置模板 -->
+    <script type="text/x-ejs-template" id="alarmIndicatorsTmpl">
+      <\% for(var i = 0,iSize=alarmIndicators.length;i<iSize;i++){
+      var alarmIndicator = alarmIndicators[i];
+     %>
+         <tr>
+                    <td><\%=i+1  %></td>
+                    <td><\%=alarmIndicator.name  %></td>
+                    <td>
+                      <input type="text" id="indicator<\%=alarmIndicator.indicatorId  %>" value="" />
+                    </td>
+                    <td>
+                      <button id="btn-indicator<\%=alarmIndicator.indicatorId  %>" class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
+                    </td>
+                 </tr>
+     <\%
+    }
+      %>
+    </script>
 
-<div class="container-fluid">
+<!-- 用户模板 -->
+    <script type="text/x-ejs-template" id="usersTmpl">
+      <\% for(var i =0,size=users.length;i<size;i++){
+      var user = users[i];
 
-<div class="row">
-<div class="col-xs-2">
-  <label><input type="checkbox" value="">张三</label>
-</div>
-<div class="col-xs-2">
-  <label><input type="checkbox" value="">张三</label>
-</div>
-<div class="col-xs-2">
-  <label><input type="checkbox" value="">张三</label>
-</div>
-<div class="col-xs-2">
-  <label><input type="checkbox" value="">张三</label>
-</div>
-<div class="col-xs-2">
-  <label class="normal"><input type="checkbox" value="">张三</label>
-</div>
-<div class="col-xs-2">
-  <label class="normal"><input type="checkbox" value="">张三三</label>
-</div>
-</div>
-</div>
+      if(i%6==0){
 
-</div>
-<div class="modal-footer">
-<button class="btn btn-default" type="button" data-dismiss="modal" >取消</button>
-<button class="btn btn-primary" type="button">确定</button>
-</div>
-</div>
-</div>
-</div>
-<!-- /.content -->
-<!-- REQUIRED JS SCRIPTS -->
-<!-- jQuery 2.2.3 -->
-<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<!-- Bootstrap 3.3.6 -->
-<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
-<!-- Ion.rangeSlider -->
-<script src="<%=basePath  %>/node_modules/admin-lte/plugins/ionslider/ion.rangeSlider.min.js"></script>
-<!-- iCheck -->
-<script src="<%=basePath  %>/node_modules/admin-lte/plugins/iCheck/icheck.js"></script>
+  %>
+        <div class="row">
+  <\%
+      }
+      
+      var checked = "";
+      for(var j = 0,jSize = receivers.length;j<jSize;j++){
+          var receiver = receivers[j];
+          if(receiver.id == user.id){
+            checked='checked = "checked"';
+          }
+      }
+  %>
+          <div class="col-xs-2">
+                  <label class="normal"><input type="checkbox" <\%=checked  %> data-username="<\%= user.username.trim() %>" value="<\%=user.id  %>"><\%= user.username.trim() %></input></label>
+             </div>
+  <\%
+      if((i+1)%6==0){
+    %>
+              </div>
 
-<!-- AdminLTE App -->
-<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
-<script src="<%=basePath  %>/js/alarm_config.js"></script>
-</body>
+    <\%
+      }
+    }
+      %>
+    </script>
+    <script src="<%=basePath  %>/node_modules/ejs/ejs.js"></script>
+
+    <script src="<%=basePath  %>/js/alarm_config.js"></script>
+  </body>
 </html>

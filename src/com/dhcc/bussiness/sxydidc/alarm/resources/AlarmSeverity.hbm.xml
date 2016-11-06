@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-1 10:20:58 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.alarm.models.AlarmSeverity" table="ALARM_SEVERITY"  optimistic-lock="version">
+        <id name="severityId" type="big_decimal">
+            <column name="SEVERITY_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="40" not-null="true">
+                <comment>&#209;&#207;&#214;&#216;&#208;&#212;&#181;&#196;&#195;&#251;&#179;&#198;</comment>
+            </column>
+        </property>
+        <property name="color" type="string">
+            <column name="COLOR" length="20">
+                <comment>&#203;&#249;&#182;&#212;&#211;&#166;&#181;&#196;&#207;&#212;&#202;&#190;&#209;&#213;&#201;&#171;</comment>
+            </column>
+        </property>
+        <set name="alarmRules" table="ALARM_RULE" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="SEVERITY_ID" precision="22" scale="0" not-null="true">
+                    <comment>&#209;&#207;&#214;&#216;&#179;&#204;&#182;&#200;</comment>
+                </column>
+            </key>
+            <one-to-many class="com.dhcc.bussiness.sxydidc.alarm.models.AlarmRule" />
+        </set>
+    </class>
+</hibernate-mapping>

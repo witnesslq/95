@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-1 10:20:58 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.alarm.models.AlarmInfo" table="ALARM_INFO"  optimistic-lock="version">
+        <id name="alarmId" type="string">
+            <column name="ALARM_ID" length="100" />
+            <generator class="assigned" />
+        </id>
+        <property name="ip" type="string">
+            <column name="IP" length="15" not-null="true">
+                <comment>
+                IP&#181;&#216;&#214;&#183;&#163;&#172;&#192;&#224;&#212;&#180;&#211;&#218;&#191;&#205;&#187;&#167;&#186;&#207;&#205;&#172;&#214;&#208;IP&#178;&#250;&#198;&#183;&#163;&#172;&#205;&#226;&#188;&#252;&#180;&#253;&#182;&#168;</comment>
+            </column>
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" length="500" not-null="true">
+                <comment>&#184;&#230;&#190;&#175;&#185;&#230;&#212;&#242;</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="1000" not-null="true">
+                <comment>&#184;&#230;&#190;&#175;&#195;&#232;&#202;&#246;</comment>
+            </column>
+        </property>
+        <property name="time" type="date">
+            <column name="TIME" length="7">
+                <comment>&#184;&#230;&#190;&#175;&#202;&#177;&#188;&#228;</comment>
+            </column>
+        </property>
+        <property name="severityName" type="string">
+            <column name="SEVERITY_NAME" length="40" not-null="true">
+                <comment>&#184;&#230;&#190;&#175;&#209;&#207;&#214;&#216;&#208;&#212;&#195;&#251;&#179;&#198;</comment>
+            </column>
+        </property>
+        <property name="severityColor" type="string">
+            <column name="SEVERITY_COLOR" length="20" not-null="true">
+                <comment>&#209;&#207;&#214;&#216;&#208;&#212;&#209;&#213;&#201;&#171;</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd http://java.sun.com/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee" version="2.4">
+<web-app 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://java.sun.com/xml/ns/j2ee" 
+xmlns:web="http://java.sun.com/xml/ns/javaee" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd http://java.sun.com/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee" 
+version="2.4">
+  <servlet>
+  	<servlet-name>HibernateInitServlet</servlet-name>
+  	<servlet-class>com.dhcc.bussiness.sxydidc.alarm.actions.HibernateInitServlet</servlet-class>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
   <filter>
     <filter-name>struts2</filter-name>
     <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>

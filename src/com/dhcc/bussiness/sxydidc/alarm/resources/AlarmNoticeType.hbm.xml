@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-1 10:20:58 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.alarm.models.AlarmNoticeType" table="ALARM_NOTICE_TYPE"  optimistic-lock="version">
+        <id name="noticeTypeId" type="big_decimal">
+            <column name="NOTICE_TYPE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="200">
+                <comment>&#195;&#251;&#179;&#198;&#163;&#172;&#192;&#253;&#200;&#231; &#182;&#204;&#208;&#197; &#211;&#202;&#188;&#254;&#181;&#200;</comment>
+            </column>
+        </property>
+        <set name="alarmRules" table="ALARM_RULE_USE_NOTICE_TYPE" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="NOTICE_TYPE_ID" precision="22" scale="0" not-null="true">
+                    <comment>&#205;&#168;&#214;&#170;&#183;&#189;&#202;&#189;ID</comment>
+                </column>
+            </key>
+            <many-to-many entity-name="com.dhcc.bussiness.sxydidc.alarm.models.AlarmRule">
+                <column name="RULE_ID" precision="22" scale="0" not-null="true">
+                    <comment>&#184;&#230;&#190;&#175;&#185;&#230;&#212;&#242;ID</comment>
+                </column>
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

@@ -9,14 +9,10 @@
 	<description>95计费管理门户</description>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-		<resources>
-			<resource>
-				<directory>src</directory>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
+		<testSourceDirectory>test</testSourceDirectory>
+    <outputDirectory>WebRoot\WEB-INF\classes</outputDirectory>
+    <testOutputDirectory>WebRoot\WEB-INF\classes</testOutputDirectory>
+    
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
@@ -53,19 +49,25 @@
 		</plugins>
 	</build>
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/org.apache.struts/struts2-core -->
-		<dependency>
-			<groupId>org.apache.struts</groupId>
-			<artifactId>struts2-core</artifactId>
-			<version>2.3.16.3</version>
-		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.apache.struts/struts2-core -->
 		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-core</artifactId>
 			<version>2.3.30</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javassist</groupId>
+					<artifactId>javassist</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.apache.struts/struts2-json-plugin -->
+		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts2-json-plugin</artifactId>
+			<version>2.3.16.3</version>
+		</dependency>
 
 
 		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
@@ -148,6 +150,12 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-c3p0</artifactId>
 			<version>4.3.11.Final</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.oracle/ojdbc14 -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>10.2.0.4.0</version>
 		</dependency>
 
 		<dependency>

@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-1 10:20:58 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.alarm.models.AlarmRule" table="ALARM_RULE" optimistic-lock="version">
+        <id name="ruleId" type="big_decimal">
+            <column name="RULE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="alarmIndicator" class="com.dhcc.bussiness.sxydidc.alarm.models.AlarmIndicator" lazy="false" fetch="select">
+            <column name="INDICATOR_ID" precision="22" scale="0" not-null="true">
+                <comment>&#184;&#230;&#190;&#175;&#192;&#224;&#177;&#240; 1&#191;&#205;&#187;&#167;&#180;&#248;&#191;&#237;&#192;&#251;&#211;&#195;&#194;&#202;
+                2&#201;&#232;&#177;&#184;&#182;&#203;&#191;&#218;&#180;&#248;&#191;&#237;&#192;&#251;&#211;&#195;&#194;&#202;
+                3&#182;&#203;&#191;&#218;&#182;&#170;&#176;&#252;&#194;&#202; 4&#182;&#203;&#191;&#218;&#180;&#237;&#206;&#243;&#194;&#202;
+                5&#191;&#205;&#187;&#167;&#210;&#236;&#179;&#163;&#193;&#247;&#193;&#191; 6&#182;&#203;&#191;&#218;&#205;&#168;&#182;&#207;</comment>
+            </column>
+        </many-to-one>
+        <many-to-one  name="alarmRuleValueType" class="com.dhcc.bussiness.sxydidc.alarm.models.AlarmRuleValueType" lazy="false" fetch="select">
+            <column name="VALUE_TYPE_ID" precision="22" scale="0">
+                <comment>
+                &#184;&#230;&#190;&#175;&#185;&#230;&#212;&#242;&#214;&#181;&#192;&#224;&#208;&#205;&#163;&#172;&#211;&#208;&#181;&#165;&#214;&#181;&#202;&#253;&#215;&#214;&#163;&#172;&#193;&#189;&#184;&#246;&#214;&#181;&#181;&#196;&#202;&#253;&#215;&#214;&#163;&#172;&#182;&#224;&#214;&#181;&#202;&#253;&#215;&#214;&#163;&#172;&#206;&#196;&#177;&#190;&#180;&#174;</comment>
+            </column>
+        </many-to-one>
+        <many-to-one  name="alarmSeverity" class="com.dhcc.bussiness.sxydidc.alarm.models.AlarmSeverity" lazy="false" fetch="select">
+            <column name="SEVERITY_ID" precision="22" scale="0" not-null="true">
+                <comment>&#209;&#207;&#214;&#216;&#179;&#204;&#182;&#200;</comment>
+            </column>
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" length="1000">
+                <comment>&#184;&#230;&#190;&#175;&#185;&#230;&#212;&#242;&#195;&#251;&#179;&#198;,&#199;&#248;&#188;&#228;&#195;&#251;</comment>
+            </column>
+        </property>
+        <property name="isSuppress" type="java.lang.Character">
+            <column name="IS_SUPPRESS" length="1">
+                <comment>&#202;&#199;&#183;&#241;&#210;&#214;&#214;&#198;&#184;&#230;&#190;&#175; 0&#183;&#241; 1&#202;&#199;</comment>
+            </column>
+        </property>
+        <property name="value" type="string">
+            <column name="VALUE" length="4000">
+                <comment>
+                &#184;&#230;&#190;&#175;&#185;&#230;&#212;&#242;&#214;&#181;&#163;&#172;&#211;&#208;&#181;&#165;&#214;&#181;&#202;&#253;&#215;&#214;&#163;&#172;&#193;&#189;&#184;&#246;&#214;&#181;&#181;&#196;&#202;&#253;&#215;&#214;&#163;&#172;&#182;&#224;&#214;&#181;&#202;&#253;&#215;&#214;&#163;&#172;&#206;&#196;&#177;&#190;&#180;&#174;</comment>
+            </column>
+        </property>
+        <property name="valueField" type="big_decimal">
+            <column name="VALUE_FIELD" precision="22" scale="0">
+                <comment>
+                &#214;&#181;&#211;&#242;&#181;&#196;&#177;&#224;&#186;&#197;&#163;&#172;&#199;&#248;&#188;&#228;&#214;&#181;&#206;&#170;&#199;&#248;&#188;&#228;&#186;&#197;</comment>
+            </column>
+        </property>
+        <set name="alarmNoticeTypes" table="ALARM_RULE_USE_NOTICE_TYPE" inverse="false" lazy="false" fetch="select">
+            <key>
+                <column name="RULE_ID" precision="22" scale="0" not-null="true">
+                    <comment>&#184;&#230;&#190;&#175;&#185;&#230;&#212;&#242;ID</comment>
+                </column>
+            </key>
+            <many-to-many entity-name="com.dhcc.bussiness.sxydidc.alarm.models.AlarmNoticeType">
+                <column name="NOTICE_TYPE_ID" precision="22" scale="0" not-null="true">
+                    <comment>&#205;&#168;&#214;&#170;&#183;&#189;&#202;&#189;ID</comment>
+                </column>
+            </many-to-many>
+        </set>
+        <set name="tsusers" table="ALARM_RULE_NOTICE_TSUSER" inverse="false" lazy="false" fetch="select">
+            <key>
+                <column name="RULE_ID" precision="22" scale="0" not-null="true">
+                    <comment>&#184;&#230;&#190;&#175;&#185;&#230;&#212;&#242;ID</comment>
+                </column>
+            </key>
+            <many-to-many entity-name="com.dhcc.bussiness.sxydidc.alarm.models.Tsuser">
+                <column name="ID" length="50" not-null="true">
+                    <comment>&#211;&#195;&#187;&#167;ID</comment>
+                </column>
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

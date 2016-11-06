@@ -1,48 +1,50 @@
 $(function() {
-	var data = [{
-		ip: "2.16 .1 .1",
-		category: "客户带宽利用率",
-		description: "192.168.1.1 客户带宽利用率 90% 告警值80-100",
-		time: "2016-10-17 10:10:10"
-	}, {
-		ip: "192.168 .0 .1",
-		category: "客户带宽利用率",
-		description: "192.168.1.1 客户带宽利用率 90% 告警值80-100",
-		time: "2016-10-17 10:10:10"
-	}, {
-		ip: "92.168 .1 .1",
-		category: "客户带宽利用率",
-		description: "192.168.1.1 客户带宽利用率 90% 告警值80-100",
-		time: "2016-10-17 10:10:10"
-	}, {
-		ip: "192.168 .1 .1",
-		category: "客户带宽利用率",
-		description: "192.168.1.1 客户带宽利用率 90% 告警值80-100",
-		time: "2016-10-17 10:10:10"
-	}, {
-		ip: "12.18 .1 .1",
-		category: "客户带宽利用率",
-		description: "192.168.1.1 客户带宽利用率 90% 告警值80-100",
-		time: "2016-10-17 10:10:10"
-	}];
+
+	/*
+		分页显示告警
+	 */
 	var alarmDataTable = $("#alarmTable").DataTable({
-		data: data,
-		autoWidth:false,
+		processing:true,
+		serverSide:true,
+		searching:false,
+		ordering:false,
+		ajax: {
+			url: basePath + "/query_alarm_info.action",
+			type:"POST",
+			dataSrc:function(data){
+				data.recordsTotal = data.totalCount;
+				data.recordsFiltered = data.totalCount;
+				return data.list;
+			},
+			data:function(d){
+				var data = {},
+				start = d.start,
+				length = d.length;
+
+				//将开始索引转换为页号（0开始）
+				data["currentPageNumber"] = parseInt((start+1)/length)+(start%length>0?1:0);
+				data["countPerPage"] = length;
+				return data;
+			},
+			error:function(){
+
+			}
+		},
+		autoWidth: false,
 		"language": {
 			"url": basePath + "/lang/dataTables.chinese.lang"
 		},
 		columns: [{
 			data: null,
 			title: "序号",
-			orderable:false,
 			render: function(data, type, row, meta) {
-				return meta.row+1;
+				return meta.row + 1;
 			}
 		}, {
 			data: "ip",
 			title: "IP"
 		}, {
-			data: "category",
+			data: "name",
 			title: "告警类型"
 		}, {
 			data: "description",

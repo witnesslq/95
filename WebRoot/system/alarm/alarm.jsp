@@ -99,6 +99,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.js"></script>
     <!-- AdminLTE App -->
     <script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+    <script src="<%=basePath  %>/node_modules/json-js/json2.js"></script>
     <script>
     var basePath = "<%=basePath  %>";
     </script>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-1 10:20:58 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.alarm.models.AlarmIndicator" table="ALARM_INDICATOR"  optimistic-lock="version">
+        <id name="indicatorId" type="big_decimal">
+            <column name="INDICATOR_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="1000" not-null="true">
+                <comment>&#214;&#184;&#177;&#234;&#195;&#251;&#179;&#198;</comment>
+            </column>
+        </property>
+        <property name="unit" type="string">
+            <column name="UNIT" length="100">
+                <comment>&#181;&#165;&#206;&#187;&#163;&#172;%&#163;&#172;&#177;&#182;</comment>
+            </column>
+        </property>
+        <set name="alarmRules" table="ALARM_RULE" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="INDICATOR_ID" precision="22" scale="0" not-null="true">
+                    <comment>&#184;&#230;&#190;&#175;&#192;&#224;&#177;&#240; 1&#191;&#205;&#187;&#167;&#180;&#248;&#191;&#237;&#192;&#251;&#211;&#195;&#194;&#202;
+                    2&#201;&#232;&#177;&#184;&#182;&#203;&#191;&#218;&#180;&#248;&#191;&#237;&#192;&#251;&#211;&#195;&#194;&#202;
+                    3&#182;&#203;&#191;&#218;&#182;&#170;&#176;&#252;&#194;&#202; 4&#182;&#203;&#191;&#218;&#180;&#237;&#206;&#243;&#194;&#202;
+                    5&#191;&#205;&#187;&#167;&#210;&#236;&#179;&#163;&#193;&#247;&#193;&#191; 6&#182;&#203;&#191;&#218;&#205;&#168;&#182;&#207;</comment>
+                </column>
+            </key>
+            <one-to-many class="com.dhcc.bussiness.sxydidc.alarm.models.AlarmRule" />
+        </set>
+    </class>
+</hibernate-mapping>

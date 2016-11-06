@@ -25,6 +25,7 @@
     "highcharts": "^5.0.0",
     "ionicons": "^3.0.0",
     "jquery": "^1.12.4",
+    "json-js": "^1.1.2",
     "validator": "^6.1.0"
   },
   "devDependencies": {
