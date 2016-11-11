@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-9 16:51:53 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.customer95.models.ProductIp" table="PRODUCT_IP" schema="IPS" optimistic-lock="version">
+        <composite-id name="id" class="com.dhcc.bussiness.sxydidc.customer95.models.ProductIpId">
+            <key-property name="productId" type="string">
+                <column name="PRODUCT_ID" length="100" />
+            </key-property>
+            <key-property name="ip" type="string">
+                <column name="IP" length="15" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="product" class="com.dhcc.bussiness.sxydidc.customer95.models.Product" update="false" insert="false" fetch="select">
+            <column name="PRODUCT_ID" length="100" not-null="true">
+                <comment>&#178;&#250;&#198;&#183;&#177;&#234;&#202;&#182;</comment>
+            </column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-9 16:51:53 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.customer95.models.Contract" table="CONTRACT" schema="IPS" optimistic-lock="version">
+        <id name="contractId" type="string">
+            <column name="CONTRACT_ID" length="100" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="customer" class="com.dhcc.bussiness.sxydidc.customer95.models.Customer" fetch="select">
+            <column name="CUSTOMER_ID" length="100">
+                <comment>&#191;&#205;&#187;&#167;&#177;&#234;&#202;&#182;</comment>
+            </column>
+        </many-to-one>
+        <property name="contractMoney" type="java.lang.Double">
+            <column name="CONTRACT_MONEY" precision="126" scale="0">
+                <comment>&#186;&#207;&#205;&#172;&#189;&#240;&#182;&#238;</comment>
+            </column>
+        </property>
+        <property name="discount" type="java.lang.Double">
+            <column name="DISCOUNT" precision="126" scale="0">
+                <comment>&#213;&#219;&#191;&#219;&#194;&#202;</comment>
+            </column>
+        </property>
+        <property name="trafficUnitPrice" type="java.lang.Double">
+            <column name="TRAFFIC_UNIT_PRICE" precision="126" scale="0">
+                <comment>&#193;&#247;&#193;&#191;&#181;&#165;&#188;&#219;</comment>
+            </column>
+        </property>
+        <property name="lowestBandwidth" type="java.lang.Double">
+            <column name="LOWEST_BANDWIDTH" precision="126" scale="0">
+                <comment>&#177;&#163;&#181;&#215;&#180;&#248;&#191;&#237;</comment>
+            </column>
+        </property>
+        <property name="startTime" type="date">
+            <column name="START_TIME" length="7">
+                <comment>&#191;&#170;&#202;&#188;&#202;&#177;&#188;&#228;</comment>
+            </column>
+        </property>
+        <property name="contractPeriod" type="big_decimal">
+            <column name="CONTRACT_PERIOD" precision="22" scale="0">
+                <comment>&#186;&#207;&#205;&#172;&#214;&#220;&#198;&#218;</comment>
+            </column>
+        </property>
+        <property name="trafficChargeRule" type="string">
+            <column name="TRAFFIC_CHARGE_RULE" length="200">
+                <comment>&#193;&#247;&#193;&#191;&#188;&#198;&#183;&#209;&#185;&#230;&#212;&#242;</comment>
+            </column>
+        </property>
+        <set name="products" table="PRODUCT" inverse="true" lazy="true"  cascade="save-update" fetch="select">
+            <key>
+                <column name="CONTRACT_ID" length="100">
+                    <comment>&#186;&#207;&#205;&#172;&#177;&#224;&#186;&#197;</comment>
+                </column>
+            </key>
+            <one-to-many class="com.dhcc.bussiness.sxydidc.customer95.models.Product" />
+        </set>
+    </class>
+</hibernate-mapping>

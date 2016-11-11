@@ -84,24 +84,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <h3 class="box-title">流量采集配置</h3>
             </div>
             <div class="box-body">
-              <form action="" class="form-horizontal">
+              <form id="importForm" action="import_customer.action" target="importResult" class="form-horizontal" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                   <label for="import" class="col-xs-1 control-label">导入模板</label>
                   <div class="col-xs-8">
-                    <input id="import" type="file" class="form-control" value="导入模板">
+                    <input id="import" type="file" name="file" class="form-control" value="导入模板">
                   </div>
                   <div class="col-xs-2"></div>
                 </div>
                 <div class="form-group">
                   <div class="col-xs-12 text-center">
                     <button class="btn btn-primary" type="submit">导入</button>
-                    <button class="btn btn-default" type="button">导出</button>
+                    <!-- <button class="btn btn-default" type="button">导出</button> -->
                   </div>
                 </div>
               </form>
             </div>
             <!-- /.box-body -->
           </div>
+          <iframe src="" id="importResult" name="importResult" frameborder="0" style="display: none;visibility: hidden;width: 0;height: 0;margin: 0;padding: 0;"></iframe>
           <!-- 门限阀值 -->
           <div class="box box-default">
             <div class="box-header with-border">
@@ -117,8 +118,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <th>操作</th>
                   </tr>
                 </thead>
-                <tbody>                 
-                 
+                <tbody>
+                  
                 </tbody>
               </table>
             </div>
@@ -172,6 +173,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
       </div>
     </div>
+
+    <div class="modal fade modal-danger" id="alertBox">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" type="button" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">警告</h4>
+          </div>
+          <div class="modal-body">
+            <p></p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline" type="button" data-dismiss="modal" >关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- /.content -->
     <!-- REQUIRED JS SCRIPTS -->
     <!-- jQuery 2.2.3 -->
@@ -187,102 +205,96 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
     var basePath = "<%= basePath %>";
     </script>
-
     <!-- 告警规则配置模板 -->
     <script type="text/x-ejs-template" id="alarmRulesTmpl">
     <\%
-for(var i = 0,size = alarmRules.length;i<size;i++){
-      var rule = alarmRules[i],
-        alarmIndicatorToRule = rule.alarmIndicator;
+    for(var i = 0,size = alarmRules.length;i<size;i++){
+    var rule = alarmRules[i],
+    alarmIndicatorToRule = rule.alarmIndicator;
     %>
     <tr>
-        <td><\%=i+1  %></td>
-        <td><\%=alarmIndicatorToRule.name + rule.name  %></td>
-        <td><\%=rule.value  %></td>
-        <td>
-            <select name="severity-rule<\%=rule.ruleId  %>" class="form-control <\%=rule.alarmSeverity.color  %>">
-            <\%
-              var severityId = rule.alarmSeverity.severityId;
-              for(var j = 0,jSize = alarmSeveritys.length;j<jSize;j++){
-                var alarmSeverity = alarmSeveritys[j];
-                if(severityId == alarmSeverity.severityId){
-            %>
-              <option value="<\%=alarmSeverity.severityId  %>" class="<\%=alarmSeverity.color  %>" selected="selected"><\%= alarmSeverity.name %></option>
-
-            <\%   }else{
-              %>
-                <option value="<\%=alarmSeverity.severityId  %>" class="<\%=alarmSeverity.color  %>"><\%= alarmSeverity.name %></option>
-              <\%
-                }
-              }
-              %>
-                
-            </select>
-        </td>
-        <td>
-          <select name="isSuppress-rule<\%=rule.ruleId  %>" class="form-control">
-            <\% 
-            if(parseInt(rule.isSuppress)){
-            %>
-              <option value="1" selected="selected">是</option>
-              <option value="0">否</option>
-
-            <\%
-            }else{
-            %>
-              <option value="1">是</option>
-
-              <option value="0" selected="selected">否</option>
-            
-            <\%
-            }
-            %>
-          </select>
+      <td><\%=i+1  %></td>
+      <td><\%=alarmIndicatorToRule.name + rule.name  %></td>
+      <td><\%=rule.value  %></td>
+      <td>
+        <select name="severity-rule<\%=rule.ruleId  %>" class="form-control <\%=rule.alarmSeverity.color  %>">
+          <\%
+          var severityId = rule.alarmSeverity.severityId;
+          for(var j = 0,jSize = alarmSeveritys.length;j<jSize;j++){
+          var alarmSeverity = alarmSeveritys[j];
+          if(severityId == alarmSeverity.severityId){
+          %>
+          <option value="<\%=alarmSeverity.severityId  %>" class="<\%=alarmSeverity.color  %>" selected="selected"><\%= alarmSeverity.name %></option>
+          <\%   }else{
+          %>
+          <option value="<\%=alarmSeverity.severityId  %>" class="<\%=alarmSeverity.color  %>"><\%= alarmSeverity.name %></option>
+          <\%
+          }
+          }
+          %>
+          
+        </select>
       </td>
       <td>
-      <\% 
-      //遍历告警方式
-      var noticeTypes = rule.alarmNoticeTypes;
-      for(j = 0,jSize = alarmNoticeTypes.length;j<jSize;j++){
-          var alarmNoticeType = alarmNoticeTypes[j],
-              hasThisNoticeType=false;
-
-           for(var k = 0,kSize=noticeTypes.length;k<kSize;k++){
-              var noticeType = noticeTypes[k];
-              if(noticeType.noticeTypeId == alarmNoticeType.noticeTypeId){
-                hasThisNoticeType=true;
-                break;
-              }
-           }
-
-           if(hasThisNoticeType){
-      %>
-          <input type="checkbox" name="noticeType-rule<\%=rule.ruleId  %>"  checked="checked" value="<\%=alarmNoticeType.noticeTypeId %>"><\%=alarmNoticeType.name %></input>
-      <\%
-           }else{
-      %>
-          <input type="checkbox"  name="noticeType-rule<\%=rule.ruleId  %>"  value="<\%=alarmNoticeType.noticeTypeId  %>"><\%=alarmNoticeType.name  %></input>
-      <\%
-           }
-      }
+        <select name="isSuppress-rule<\%=rule.ruleId  %>" class="form-control">
+          <\%
+          if(parseInt(rule.isSuppress)){
+          %>
+          <option value="1" selected="selected">是</option>
+          <option value="0">否</option>
+          <\%
+          }else{
+          %>
+          <option value="1">是</option>
+          <option value="0" selected="selected">否</option>
+          
+          <\%
+          }
+          %>
+        </select>
+      </td>
+      <td>
+        <\%
+        //遍历告警方式
+        var noticeTypes = rule.alarmNoticeTypes;
+        for(j = 0,jSize = alarmNoticeTypes.length;j<jSize;j++){
+        var alarmNoticeType = alarmNoticeTypes[j],
+        hasThisNoticeType=false;
+        for(var k = 0,kSize=noticeTypes.length;k<kSize;k++){
+        var noticeType = noticeTypes[k];
+        if(noticeType.noticeTypeId == alarmNoticeType.noticeTypeId){
+        hasThisNoticeType=true;
+        break;
+        }
+        }
+        if(hasThisNoticeType){
+        %>
+        <input type="checkbox" name="noticeType-rule<\%=rule.ruleId  %>"  checked="checked" value="<\%=alarmNoticeType.noticeTypeId %>"><\%=alarmNoticeType.name %></input>
+        <\%
+        }else{
+        %>
+        <input type="checkbox"  name="noticeType-rule<\%=rule.ruleId  %>"  value="<\%=alarmNoticeType.noticeTypeId  %>"><\%=alarmNoticeType.name  %></input>
+        <\%
+        }
+        }
         %>
       </td>
       <td>
-          <div class="input-group">
-              <\% 
-                var receiversName = "";
-                for(var j = 0,jSize = rule.tsusers.length;j<jSize;j++){
-                    receiversName += rule.tsusers[j].username.trim()+",";
-                }
-                receiversName = receiversName.length>0?receiversName.substring(0,receiversName.length-1):receiversName;
-               %>
-              <input type="text" class="form-control" value="<\%=receiversName  %>" name="user-rule<\%=rule.ruleId  %>" readonly></input>
-              <div class="input-group-btn"><button id="btn-user-rule<\%=rule.ruleId  %>" class="btn btn-default" type="buton" data-toggle="modal" data-target="#generalModal">通知人</button></div>
-          </div>
+        <div class="input-group">
+          <\%
+          var receiversName = "";
+          for(var j = 0,jSize = rule.tsusers.length;j<jSize;j++){
+          receiversName += rule.tsusers[j].username.trim()+",";
+          }
+          receiversName = receiversName.length>0?receiversName.substring(0,receiversName.length-1):receiversName;
+          %>
+          <input type="text" class="form-control" value="<\%=receiversName  %>" name="user-rule<\%=rule.ruleId  %>" readonly></input>
+          <div class="input-group-btn"><button id="btn-user-rule<\%=rule.ruleId  %>" class="btn btn-default" type="buton" data-toggle="modal" data-target="#generalModal">通知人</button></div>
+        </div>
       </td>
       <td>
-          <button id="btn-rule<\%=rule.ruleId  %>" class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-          
+        <button id="btn-rule<\%=rule.ruleId  %>" class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
+        
       </td>
     </tr>
     <\%
@@ -290,62 +302,63 @@ for(var i = 0,size = alarmRules.length;i<size;i++){
     %>
     
     </script>
-
     <!-- 告警门限配置模板 -->
     <script type="text/x-ejs-template" id="alarmIndicatorsTmpl">
-      <\% for(var i = 0,iSize=alarmIndicators.length;i<iSize;i++){
-      var alarmIndicator = alarmIndicators[i];
-     %>
-         <tr>
-                    <td><\%=i+1  %></td>
-                    <td><\%=alarmIndicator.name  %></td>
-                    <td>
-                      <input type="text" id="indicator<\%=alarmIndicator.indicatorId  %>" value="" />
-                    </td>
-                    <td>
-                      <button id="btn-indicator<\%=alarmIndicator.indicatorId  %>" class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
-                    </td>
-                 </tr>
-     <\%
+    <\% for(var i = 0,iSize=alarmIndicators.length;i<iSize;i++){
+    var alarmIndicator = alarmIndicators[i];
+    %>
+    <tr>
+      <td><\%=i+1  %></td>
+      <td><\%=alarmIndicator.name  %></td>
+      <td>
+        <input type="text" id="indicator<\%=alarmIndicator.indicatorId  %>" value="" />
+      </td>
+      <td>
+        <button id="btn-indicator<\%=alarmIndicator.indicatorId  %>" class="btn btn-default" type="button"><span class="fa fa-save"></span>保存</button>
+      </td>
+    </tr>
+    <\%
     }
-      %>
+    %>
     </script>
-
-<!-- 用户模板 -->
+    <!-- 用户模板 -->
     <script type="text/x-ejs-template" id="usersTmpl">
-      <\% for(var i =0,size=users.length;i<size;i++){
-      var user = users[i];
-
-      if(i%6==0){
-
-  %>
-        <div class="row">
-  <\%
+    <\% for(var i =0,size=users.length;i<size;i++){
+    var user = users[i];
+    if(i%6==0){
+    %>
+    <div class="row">
+      <\%
       }
       
       var checked = "";
       for(var j = 0,jSize = receivers.length;j<jSize;j++){
-          var receiver = receivers[j];
-          if(receiver.id == user.id){
-            checked='checked = "checked"';
-          }
+      var receiver = receivers[j];
+      if(receiver.id == user.id){
+      checked='checked = "checked"';
       }
-  %>
-          <div class="col-xs-2">
-                  <label class="normal"><input type="checkbox" <\%=checked  %> data-username="<\%= user.username.trim() %>" value="<\%=user.id  %>"><\%= user.username.trim() %></input></label>
-             </div>
-  <\%
-      if((i+1)%6==0){
-    %>
-              </div>
-
-    <\%
       }
-    }
       %>
+      <div class="col-xs-2">
+        <label class="normal"><input type="checkbox" <\%=checked  %> data-username="<\%= user.username.trim() %>" value="<\%=user.id  %>"><\%= user.username.trim() %></input></label>
+      </div>
+      <\%
+      if((i+1)%6==0){
+      %>
+    </div>
+    <\%
+    }
+    }
+    %>
+    </script>
+
+<!-- loading模板 -->
+    <script type="text/x-ejs-template" id="overlayTmpl">
+      <div class="overlay">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
     </script>
     <script src="<%=basePath  %>/node_modules/ejs/ejs.js"></script>
-
     <script src="<%=basePath  %>/js/alarm_config.js"></script>
   </body>
 </html>

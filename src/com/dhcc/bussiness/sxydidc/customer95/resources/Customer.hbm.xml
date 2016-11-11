@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-9 16:51:53 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.customer95.models.Customer" table="CUSTOMER" schema="IPS" optimistic-lock="version">
+        <id name="customerId" type="string">
+            <column name="CUSTOMER_ID" length="100" />
+            <generator class="assigned" />
+        </id>
+        <property name="customerName" type="string">
+            <column name="CUSTOMER_NAME" length="1000">
+                <comment>&#191;&#205;&#187;&#167;&#195;&#251;&#179;&#198;</comment>
+            </column>
+        </property>
+        <set name="contracts" table="CONTRACT" inverse="true" cascade="save-update" lazy="false" fetch="select">
+            <key>
+                <column name="CUSTOMER_ID" length="100">
+                    <comment>&#191;&#205;&#187;&#167;&#177;&#234;&#202;&#182;</comment>
+                </column>
+            </key>
+            <one-to-many class="com.dhcc.bussiness.sxydidc.customer95.models.Contract" />
+        </set>
+    </class>
+</hibernate-mapping>

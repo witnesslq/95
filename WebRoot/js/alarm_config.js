@@ -1,6 +1,29 @@
 $(function() {
 
 	/*
+		导入模板完成，去掉loading,如果失败，弹出modal提示
+	 */
+	$("#importResult").on("load", function(event) {
+		$("#importForm").parents(".box").children(".overlay").remove();
+
+		var message = $(this.contentWindow.document.body).text();
+
+		if (message.trim() != "") {
+			$("#alertBox .modal-body p").text(message);
+			$("#alertBox").modal();
+		}
+
+	});
+
+	/*
+		显示loading
+	 */
+	$("#importForm").on("submit", function(event) {
+		var tmpl = $("#overlayTmpl").html(),
+			result = ejs.render(tmpl);
+		$(this).parents(".box").append(result);
+	});
+	/*
 	 告警门限配置
 	 */
 	$.ajax({
@@ -111,7 +134,10 @@ $(function() {
 					dataType: "json",
 					data: JSON.stringify({
 						"indicator": alarmIndicator
-					})
+					}),
+					beforeSend: function(jqXHR, settings) {
+						// body...
+					}
 				}).done(function(data, textStatus, jqXHR) {
 					// body...
 				});
@@ -173,7 +199,9 @@ $(function() {
 		};
 	}).fail(function(a1, a2, a3) {
 		console.log(a1 + a2 + a3);
-	}).always(function(a1, a2, a3) {}).then(function() {
+	}).always(function(a1, a2, a3) {
+
+	}).then(function() {
 
 		//渲染告警规则
 		var tmpl = $("#alarmRulesTmpl").html(),

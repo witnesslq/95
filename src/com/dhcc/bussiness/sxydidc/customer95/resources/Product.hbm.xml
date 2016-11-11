@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-9 16:51:53 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.customer95.models.Product" table="PRODUCT" schema="IPS" optimistic-lock="version">
+        <id name="productId" type="string">
+            <column name="PRODUCT_ID" length="100" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="contract" class="com.dhcc.bussiness.sxydidc.customer95.models.Contract" fetch="select">
+            <column name="CONTRACT_ID" length="100">
+                <comment>&#186;&#207;&#205;&#172;&#177;&#224;&#186;&#197;</comment>
+            </column>
+        </many-to-one>
+        <property name="productName" type="string">
+            <column name="PRODUCT_NAME" length="200">
+                <comment>&#178;&#250;&#198;&#183;&#195;&#251;&#179;&#198;</comment>
+            </column>
+        </property>
+        <property name="productCharacter" type="string">
+            <column name="PRODUCT_CHARACTER" length="200">
+                <comment>&#178;&#250;&#198;&#183;&#208;&#212;&#214;&#202;</comment>
+            </column>
+        </property>
+        <property name="productCount" type="big_decimal">
+            <column name="PRODUCT_COUNT" precision="22" scale="0">
+                <comment>&#178;&#250;&#198;&#183;&#202;&#253;&#193;&#191;</comment>
+            </column>
+        </property>
+        <property name="productUnitPrice" type="java.lang.Double">
+            <column name="PRODUCT_UNIT_PRICE" precision="126" scale="0">
+                <comment>&#178;&#250;&#198;&#183;&#181;&#165;&#188;&#219;</comment>
+            </column>
+        </property>
+        <property name="settingBandwidth" type="java.lang.Double">
+            <column name="SETTING_BANDWIDTH" precision="126" scale="0">
+                <comment>&#197;&#228;&#214;&#195;&#180;&#248;&#191;&#237;</comment>
+            </column>
+        </property>
+        <property name="settingBandwidthUnit" type="string">
+            <column name="SETTING_BANDWIDTH_UNIT" length="10">
+                <comment>&#197;&#228;&#214;&#195;&#180;&#248;&#191;&#237;&#181;&#196;&#181;&#165;&#206;&#187;</comment>
+            </column>
+        </property>
+        <property name="isCharge" type="string">
+            <column name="IS_CHARGE" length="20">
+                <comment>&#202;&#199;&#183;&#241;&#188;&#198;&#183;&#209;</comment>
+            </column>
+        </property>
+        <set name="productIps" table="PRODUCT_IP" inverse="true"  cascade="save-update"  lazy="true" fetch="select">
+            <key>
+                <column name="PRODUCT_ID" length="100" not-null="true">
+                    <comment>&#178;&#250;&#198;&#183;&#177;&#234;&#202;&#182;</comment>
+                </column>
+            </key>
+            <one-to-many class="com.dhcc.bussiness.sxydidc.customer95.models.ProductIp" />
+        </set>
+    </class>
+</hibernate-mapping>
