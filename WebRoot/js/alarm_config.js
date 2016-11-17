@@ -6,10 +6,10 @@ $(function() {
 	$("#importResult").on("load", function(event) {
 		$("#importForm").parents(".box").children(".overlay").remove();
 
-		var message = $(this.contentWindow.document.body).text();
-
-		if (message.trim() != "") {
-			$("#alertBox .modal-body p").text(message);
+		var $message = $(this.contentWindow.document.body),
+			result = $message.find("dt").first().text().trim();
+		if (result == "ERROR") {
+			$("#alertBox .modal-body").html($message.html());
 			$("#alertBox").modal();
 		}
 

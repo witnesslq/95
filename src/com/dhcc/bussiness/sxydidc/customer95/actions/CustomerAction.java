@@ -8,10 +8,13 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.interceptor.RequestAware;
+import org.hibernate.HibernateException;
 
 import com.dhcc.bussiness.sxydidc.customer95.dao.CustomerDao;
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
@@ -21,6 +24,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 public class CustomerAction extends ActionSupport implements Excel,RequestAware {
 
+	private final Log log = LogFactory.getLog(CustomerAction.class);
 	File file;
 	String fileContentType;
 	String fileFileName;
@@ -73,21 +77,35 @@ public class CustomerAction extends ActionSupport implements Excel,RequestAware 
 	@Override
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
-		CustomerParseUtil util = new CustomerParseUtil();
-		List<Customer> customerList = null;
-		if(this.isExcelFile()){
-			customerList = util.parse(this);
-		}else{
-			request.put("error", "添加客户失败");
-			return ActionSupport.ERROR;
-		}
-		CustomerDao dao = new CustomerDao();
-		if(dao.deleteAll()){
-			if(dao.saveMany(customerList)){
-				return ActionSupport.SUCCESS;
+		try{
+			CustomerParseUtil util = new CustomerParseUtil();
+			List<Customer> customerList = null;
+			if(this.isExcelFile()){
+				customerList = util.parse(this);
+			}else{
+				request.put("result", "ERROR");
+				request.put("summary", "添加客户失败");
+				request.put("description", "不是Excel文件");
+				return ActionSupport.ERROR;
 			}
+			CustomerDao dao = new CustomerDao();
+			if(dao.deleteAll()){
+				if(dao.saveMany(customerList)){
+					return ActionSupport.SUCCESS;
+				}
+			}
+		}catch(HibernateException e){
+			request.put("description", "数据库错误");
+			e.printStackTrace();
+		}catch(NumberFormatException e){
+			request.put("description", "数据格式有问题");
+			e.printStackTrace();
+		}catch(Exception e){
+			log.error(e);
+			e.printStackTrace();
 		}
-		request.put("error", "添加客户失败");
+		request.put("result", "ERROR");
+		request.put("summary", "添加客户失败");
 		return ActionSupport.ERROR;
 	}
 

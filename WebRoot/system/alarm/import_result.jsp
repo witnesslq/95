@@ -7,6 +7,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-${error}
+<dl>
+	<dt>${result}</dt>
+	<dd>${summary}</dd>
+	<dd>${description}</dd>
+</dl>
 </body>
 </html>

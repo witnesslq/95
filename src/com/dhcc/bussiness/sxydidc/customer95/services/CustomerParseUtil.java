@@ -33,6 +33,7 @@ import com.dhcc.bussiness.sxydidc.customer95.models.Product;
 public class CustomerParseUtil {
 
 	private static final Log log = LogFactory.getLog(CustomerParseUtil.class);
+
 	/*
 	 * 表头类型
 	 */
@@ -76,7 +77,7 @@ public class CustomerParseUtil {
 				}
 
 				// 只要有一个表头域不存在，判定为不是这种类型的表头
-				if (!existThisField){
+				if (!existThisField) {
 					enhancedRow.setHeader(false);
 					return false;
 				}
@@ -103,7 +104,7 @@ public class CustomerParseUtil {
 		private ContractHeaderField(String name) {
 			this.name = name;
 		}
-		
+
 		@Override
 		public boolean equals(String name) {
 			return this.name.equals(name);
@@ -135,7 +136,7 @@ public class CustomerParseUtil {
 	private class EnhancedRow {
 		Row row;
 		boolean isHeader;
-		
+
 		/**
 		 * @return the isHeader
 		 */
@@ -144,13 +145,16 @@ public class CustomerParseUtil {
 		}
 
 		/**
-		 * @param isHeader the isHeader to set
+		 * @param isHeader
+		 *            the isHeader to set
 		 */
 		public void setHeader(boolean isHeader) {
 			this.isHeader = isHeader;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
@@ -167,6 +171,7 @@ public class CustomerParseUtil {
 		}
 
 		List<String> fieldNameList = new LinkedList<String>();
+
 		/**
 		 * @param row
 		 */
@@ -185,80 +190,112 @@ public class CustomerParseUtil {
 			for (Cell cell : row) {
 				EnhancedCell enhancedCell = new EnhancedCell(cell);
 				String cellValue = enhancedCell.getCellValue();
-				
+
 				fieldNameList.add(cellValue);
 			}
 		}
-		private  final Log log = LogFactory.getLog(EnhancedRow.class);
-		
+
+		private final Log log = LogFactory.getLog(EnhancedRow.class);
+
 		/*
 		 * 根据不同类型格式化值，不合法的值转换为null
 		 */
-		private <Type> Type valueOf(String value,Class<Type> clazz){
-			try{
-				if(Double.class == clazz){
-					return (Type)Double.valueOf(value);
-				}else if(BigDecimal.class == clazz){
-					return (Type)new BigDecimal(value);
-				}else if(Date.class == clazz){
-					return (Type)new Date(Long.valueOf(value));
+		private <Type> Type valueOf(String value, Class<Type> clazz) {
+			try {
+				if (Double.class == clazz) {
+					return (Type) Double.valueOf(value);
+				} else if (BigDecimal.class == clazz) {
+					return (Type) new BigDecimal(value);
+				} else if (Date.class == clazz) {
+					return (Type) new Date(Long.valueOf(value));
 				}
-				
-			}catch(NumberFormatException e){
-//				log.error(e);
+
+			} catch (NumberFormatException e) {
+				// log.error(e);
 			}
 			return null;
 		}
-		public <T> T get(T o){
-			if(o instanceof Contract){
-				Contract contract = (Contract)o;
-				
+
+		public <T> T get(T o) {
+			if (o instanceof Contract) {
+				Contract contract = (Contract) o;
+
 				contract.setContractId(fieldNameList.get(0));
-				
-				contract.setContractMoney(valueOf(fieldNameList.get(1),Double.class));
-				contract.setDiscount(valueOf(fieldNameList.get(2),Double.class));
-				
-				contract.setStartTime(valueOf(fieldNameList.get(3),Date.class));
-				contract.setContractPeriod(valueOf(fieldNameList.get(4),BigDecimal.class));
+
+				contract.setContractMoney(valueOf(fieldNameList.get(1),
+						Double.class));
+				contract.setDiscount(valueOf(fieldNameList.get(2), Double.class));
+
+				contract.setStartTime(valueOf(fieldNameList.get(3), Date.class));
+				contract.setContractPeriod(valueOf(fieldNameList.get(4),
+						BigDecimal.class));
 				contract.setTrafficChargeRule(fieldNameList.get(5));
-				contract.setLowestBandwidth(valueOf(fieldNameList.get(6),Double.class));
-				contract.setTrafficUnitPrice(valueOf(fieldNameList.get(7),Double.class));
-			}else if(o instanceof Product){
+				contract.setLowestBandwidth(valueOf(fieldNameList.get(6),
+						Double.class));
+				contract.setTrafficUnitPrice(valueOf(fieldNameList.get(7),
+						Double.class));
+			} else if (o instanceof Product) {
 				Product product = (Product) o;
-				
+
 				product.setProductId(UUID.randomUUID().toString());
 				product.setContract(new Contract(fieldNameList.get(0)));
 				product.setProductName(fieldNameList.get(1));
 				product.setProductCharacter(fieldNameList.get(2));
-				product.setProductCount(valueOf(fieldNameList.get(3),BigDecimal.class));
-				product.setProductUnitPrice(valueOf(fieldNameList.get(4),Double.class));
+				product.setProductCount(valueOf(fieldNameList.get(3),
+						BigDecimal.class));
+				product.setProductUnitPrice(valueOf(fieldNameList.get(4),
+						Double.class));
 				product.setIsCharge(fieldNameList.get(5));
-				Matcher matcher = Pattern.
-						compile("(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})").
-						matcher(fieldNameList.get(6));
-				while(matcher.find()){
-					product.addProductIp(matcher.group());
+				Matcher matcher = Pattern
+						.compile(
+								"(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/?(\\d{1,3})?")
+						.matcher(fieldNameList.get(6));
+				while (matcher.find()) {
+					// 非IP段
+					if (matcher.group(5) == null)
+						product.addProductIp(matcher.group());
+					else {
+						// IP段
+						int ipRangeStart = Integer.parseInt(matcher.group(4)), ipRangeEnd = Integer
+								.parseInt(matcher.group(5));
+						StringBuffer ip = new StringBuffer();
+						ip.append(matcher.group(1)).append(".")
+							.append(matcher.group(2)).append(".")
+							.append(matcher.group(3)).append(".");
+						
+						if (ipRangeStart > ipRangeEnd) {
+							for (int i = ipRangeEnd; i <= ipRangeStart; i++) {
+								product.addProductIp(ip.toString()+i);
+							}
+						} else {
+							for (int i = ipRangeStart; i <= ipRangeEnd; i++) {
+								product.addProductIp(ip.toString()+i);
+							}
+						}
+					}
 				}
-				product.setSettingBandwidth(valueOf(fieldNameList.get(7),Double.class));
+				product.setSettingBandwidth(valueOf(fieldNameList.get(7),
+						Double.class));
 			}
 			return o;
 		}
 	}
-	
-	
+
 	private class EnhancedCell {
 		private Cell cell;
 		private boolean isMerged;
 		private int mergedRowCount;
 		private int mergedColumnCount;
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
 		public String toString() {
-			return "EnhancedCell [cell=" + getCellValue() + ", isMerged=" + isMerged
-					+ ", mergedRowCount=" + mergedRowCount
+			return "EnhancedCell [cell=" + getCellValue() + ", isMerged="
+					+ isMerged + ", mergedRowCount=" + mergedRowCount
 					+ ", mergedColumnCount=" + mergedColumnCount + "]";
 		}
 
@@ -276,7 +313,8 @@ public class CustomerParseUtil {
 			return mergedColumnCount;
 		}
 
-		private void init() {}
+		private void init() {
+		}
 
 		/**
 		 * @param cell
@@ -310,7 +348,7 @@ public class CustomerParseUtil {
 				if (isMerged) {
 					this.isMerged = true;
 					this.mergedRowCount = lastRow - firstRow;
-					this.mergedColumnCount = lastColumn - firstColumn ;
+					this.mergedColumnCount = lastColumn - firstColumn;
 					break; // 是合并的单元格
 				} else {
 					continue;
@@ -333,8 +371,9 @@ public class CustomerParseUtil {
 			} else if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
 				return String.valueOf(cell.getBooleanCellValue());
 			} else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
-				if(DateUtil.isCellDateFormatted(cell)){
-					return String.valueOf(DateUtil.getJavaDate(cell.getNumericCellValue()).getTime());
+				if (DateUtil.isCellDateFormatted(cell)) {
+					return String.valueOf(DateUtil.getJavaDate(
+							cell.getNumericCellValue()).getTime());
 				}
 				return String.valueOf(cell.getNumericCellValue());
 			} else if (cell.getCellTypeEnum() == CellType.FORMULA) {
@@ -347,7 +386,7 @@ public class CustomerParseUtil {
 
 	public void read(String path, String fileName, String fileType) {
 		File file = new File(path + fileName + "." + fileType);
-		Excel excel = new Excel(){
+		Excel excel = new Excel() {
 
 			@Override
 			public boolean isExcelFile() {
@@ -361,44 +400,44 @@ public class CustomerParseUtil {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 		};
 		try {
-			if(excel.isExcelFile()){
+			if (excel.isExcelFile()) {
 				parse(excel);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/*
 	 * 解析Excel，取得 客户及相关联的合同，产品表
 	 */
-	public List<Customer> parse(Excel excel) throws FileNotFoundException, IOException {
-		
+	public List<Customer> parse(Excel excel) throws FileNotFoundException,
+			IOException {
+
 		List<Customer> customerList = new LinkedList<Customer>();
-	
+
 		Sheet sheet1 = excel.getWorkbook().getSheetAt(0);
-		
-		
-		Customer customer =null;
+
+		Customer customer = null;
 		Contract contract = null;
 		Product product = null;
-		
-		Header currentHeader = null; //当前的头类型
-		for (int i = 0,lastRowNum = sheet1.getLastRowNum();i<=lastRowNum;i++) {
+
+		Header currentHeader = null; // 当前的头类型
+		for (int i = 0, lastRowNum = sheet1.getLastRowNum(); i <= lastRowNum; i++) {
 			Row row = sheet1.getRow(i);
-			
+
 			EnhancedCell enhancedCell = null;
 			for (Cell cell : row) {
-//				合并的单元格，表示这一行是客户名称
-				 enhancedCell = new EnhancedCell(cell);
-				if(enhancedCell.isMerged()) {
+				// 合并的单元格，表示这一行是客户名称
+				enhancedCell = new EnhancedCell(cell);
+				if (enhancedCell.isMerged()) {
 					System.out.println(enhancedCell);
-					//新用户
+					// 新用户
 					customer = new Customer();
 					customerList.add(customer);
 					customer.setCustomerId(UUID.randomUUID().toString());
@@ -406,33 +445,35 @@ public class CustomerParseUtil {
 					break;
 				}
 			}
-//			客户行
-			/*if(enhancedCell != null && enhancedCell.isMerged()){
-				i += enhancedCell.getMergedRowCount();
-				continue;
-			}*/
-//			判断行是否是表头行
+			// 客户行
+			/*
+			 * if(enhancedCell != null && enhancedCell.isMerged()){ i +=
+			 * enhancedCell.getMergedRowCount(); continue; }
+			 */
+			// 判断行是否是表头行
 			EnhancedRow enhancedRow = new EnhancedRow(row);
-			
-			if(Header.CONTRACT.equals(enhancedRow)){	//合同表头行
-				
+
+			if (Header.CONTRACT.equals(enhancedRow)) { // 合同表头行
+
 				currentHeader = Header.CONTRACT;
-			}else if(Header.PRODUCT.equals(enhancedRow)){	//产品表头行
+			} else if (Header.PRODUCT.equals(enhancedRow)) { // 产品表头行
 				currentHeader = Header.PRODUCT;
-			}else{
-				if(currentHeader == Header.CONTRACT){
-//					合同行
-				    contract = new Contract();
-				    contract = enhancedRow.get(contract);
-				    if(customer != null) customer.addContract(contract);
-				}else if(currentHeader == Header.PRODUCT){
-//					产品行
+			} else {
+				if (currentHeader == Header.CONTRACT) {
+					// 合同行
+					contract = new Contract();
+					contract = enhancedRow.get(contract);
+					if (customer != null)
+						customer.addContract(contract);
+				} else if (currentHeader == Header.PRODUCT) {
+					// 产品行
 					product = new Product();
 					product = enhancedRow.get(product);
-					Iterator<Contract> contracts = customer.getContracts().iterator();
-					while(contracts.hasNext()){
+					Iterator<Contract> contracts = customer.getContracts()
+							.iterator();
+					while (contracts.hasNext()) {
 						contract = contracts.next();
-						if(contract.equals(product.getContract())){
+						if (contract.equals(product.getContract())) {
 							break;
 						}
 					}
@@ -441,7 +482,7 @@ public class CustomerParseUtil {
 			}
 			System.out.println(enhancedRow);
 		}
-		
+
 		System.out.println(customerList);
 		return customerList;
 	}
