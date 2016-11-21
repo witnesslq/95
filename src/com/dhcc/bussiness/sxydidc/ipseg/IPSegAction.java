@@ -34,6 +34,11 @@ public class IPSegAction  extends AnyTypeAction<Rsip,IPSegModel>{
 	private String sysLogContent;//日志内容
 	private String flownumber;
 	private String username;//ip段名称
+	private int iTotalDisplayRecords;   
+	private int iTotalRecords;  
+	private int start;   
+	private int length; 
+	private String search;
 	String userid = (String)ActionContext.getContext().getSession().get("userid");//当前用户id
 	
 	public String queryIPSeg(){
@@ -57,6 +62,38 @@ public class IPSegAction  extends AnyTypeAction<Rsip,IPSegModel>{
 	
 	
 	
+	public String queryIPSegInfo(){
+		PageModel pm = new PageModel();
+		int currentpage=(start/length)+1;
+		pm.setCurrentPage(currentpage);
+		pm.setPerPage(length);
+		if(StringUtil.isEmptyOrNull(search)){
+			if(ipseg==null){
+				pm = dao.queryIPSeg(pm,needRoleFilter);
+			}else{
+				pm = dao.queryIPSegByCondition(pm, ipseg,needRoleFilter);
+			}			
+		}else{
+			pm=dao.quickSearch(pm, search,needRoleFilter);
+		}
+		JSONObject json = new JSONObject();
+        json.put("aaData", pm.getList());
+        json.put("iTotalRecords", pm.getTotalRecord());
+        json.put("iTotalDisplayRecords", pm.getTotalRecord());
+        
+	PrintWriter pw = null;
+	try {
+		ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+		pw = ServletActionContext.getResponse().getWriter();
+		pw.print(json);
+	} catch (Exception e) {
+		e.printStackTrace();
+	} finally {
+		pw.flush();
+		pw.close();
+	}
+		return SUCCESS;
+	}
 	
 
 	public String queryIPSegProperty(){
@@ -273,4 +310,65 @@ public class IPSegAction  extends AnyTypeAction<Rsip,IPSegModel>{
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+
+
+	public int getiTotalDisplayRecords() {
+		return iTotalDisplayRecords;
+	}
+
+
+
+	public void setiTotalDisplayRecords(int iTotalDisplayRecords) {
+		this.iTotalDisplayRecords = iTotalDisplayRecords;
+	}
+
+
+
+	public int getiTotalRecords() {
+		return iTotalRecords;
+	}
+
+
+
+	public void setiTotalRecords(int iTotalRecords) {
+		this.iTotalRecords = iTotalRecords;
+	}
+
+
+
+	public int getStart() {
+		return start;
+	}
+
+
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+
+
+	public int getLength() {
+		return length;
+	}
+
+
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+
+
+	public String getSearch() {
+		return search;
+	}
+
+
+
+	public void setSearch(String search) {
+		this.search = search;
+	}
+	
 }

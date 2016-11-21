@@ -1,162 +1,170 @@
-<%@ page import="com.dhcc.bussiness.sxydidc.datacenter.DataCenterModel" language="java"  pageEncoding="UTF-8"%>
+<%@ page language="java"  pageEncoding="UTF-8"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-	DataCenterModel dc=(DataCenterModel)request.getSession(true).getAttribute("dc");
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
 %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-	<base href="<%=basePath%>"/>
-    <title>IP段信息添加</title>
-	<jsp:include page="../common/head.jsp" flush="true"/>
-    <script type="text/javascript">
-        var form;
-        $(function (){
-        	form = $("#form").ligerForm({
-        		inputWidth: 180, 
-        		labelWidth: 120, 
-        		space: 40, 
-				validate : true,
-                fields: [ 
-                	{ label: "起始IP",name: "startip",newline: true,type: "text"},
-                	{ label: "IP数量",name: "count",newline: false,type: "text"},
-               		{ label: "终止IP",name: "endip",newline: true,type: "text",
-               			editor:{
-               				onFocus:function(){
-               					var startip=$("input[name='startip']").val();
-               					var count=$("input[name='count']").val();
-               					var array=new Array();
-               					if(startip!=null&&startip!=''&&count!=null&&count!=''){
-               						array=startip.split(".");
-               						var lastip;
-               						if(count=='0'){
-            							lastip=parseInt(array[3]);
-            						}else{
-            							lastip=parseInt(array[3])+parseInt(count)-1;
-            						}
-               						if(lastip>255){
-               							$("input[name='endip']").val('');
-          								$("input[name='endip']").attr("title","IP地址错误.");
-               						}else{
-               							var endip=array[0]+"."+array[1]+"."+array[2]+"."+lastip.toString();
-               							$("input[name='endip']").val(endip);
-               						}               					
-               					}
-
-               				}                			
-               			}
-               		},                	
-               		{ label: "IP段名称",name: "name",newline: false,type: "text",
-               			editor:{
-               				onFocus:function(){
-               					var startip=$("input[name='startip']").val();
-               					var endip=$("input[name='endip']").val();
-               					var array=new Array();
-               					if(startip!=null&&startip!=''&&endip!=null&&endip!=''){
-               						array=endip.split(".");
-               						$("input[name='name']").val(startip+"~"+array[3].toString());               					
-               					}
-               				}                			
-               			}               		
-               		
-               		},
-               		{ label: "子网掩码",name: "netmask",newline: true,type: "text"},
-               		{ label: "网关IP",name: "gatewayip",newline: false,type: "text"},
-/*                    { label: "所属客户",name: "customerid",newline: true,type: "popupedit",
-						editor: {
-                			condition: {
-                   			 	prefixID: 'condtion_',
-                    			fields: [{ name: 'name',type:'text', label: '客户名称' }]
-                			},
-                			grid: queryCustomerData(''),
-                			valueField: 'id',
-                			textField: 'name',
-                			width: 600,
-                			onButtonClick:function(){
-                				
-                			}       									
-						}                     
-                    },
-                    { label: "所属单位或部门",name: "deptid",newline: false,type: "select",
-						editor: {
-							width : 180, 
-							selectBoxWidth: 190,
-							selectBoxHeight: 190, 
-							valueField: 'id',
-							treeLeafOnly: false,
-							tree: { 
-								url:"cropDeptTreeQuery.action", 
-								ajaxType:'post',
-								idFieldName: 'id',
-								parentIDFieldName: 'pid',
-								checkbox: false
-							}
-						}                   
-                    },*/
-                    { label: "IP段状态",name: "status",newline: true,type: "select",
-                         editor:{
-                    		data:queryDictionary('IPSEGSTATUS',null),
-                    		initValue:"01",
-                    		options:{disabled:true}
-                    	}                     
-                    },                                   		
-               		{ label: "VLAN编号",name: "vlanno",newline: false,type: "text"},
-					{ label: "首先DNS",name: "dns1",newline: true,type: "text"},
-					{ label: "备选DNS",name: "dns2",newline: false,type: "text"},
-                    { label: "所属数据中心",name: "dcname",newline: true,type: "text",
-                   		editor:{
-                    		value:"<%=dc!=null?dc.getName():""%>"
-                    	},
-                    	options: {disabled: true}                    
-                    },					  
-                    { label: "用户说明", name: "usefor", newline: true, width:520,type:"textarea"},                     
-                    { label: "备注", name: "remark", newline: true, width:520,type:"textarea"}                                      
-                ]
-            });             
-        });
-		
-		/**供回调方法使用*/
-		function f_validate(){ 
-			if(form.valid()){
-				return datePost();
-			}else{
-			    form.showInvalid();
-			}
-		}
-		
-		/**获取表单要保存的数据以json格式返回*/
-		function datePost(){
-			var formData = form.getData();		
-			var data = {"ipseg.name":formData.name,
-						"ipseg.startip":formData.startip,
-						"ipseg.endip":formData.endip,
-						"ipseg.netmask":formData.netmask,
-						"ipseg.gatewayip":formData.gatewayip,
-						//"ipseg.customerid":formData.customerid,
-						"ipseg.status":formData.status,
-						//"ipseg.areaid":formData.areaid,
-						"ipseg.count":formData.count,
-						"ipseg.vlanno":formData.vlanno,
-						"ipseg.dns1":formData.dns1,
-						"ipseg.dns2":formData.dns2,
-						"ipseg.usefor":formData.usefor,
-						"ipseg.remark":formData.remark
-			};
-			return data;
-		}
-
-    </script>
-    <style type="text/css">
-        html,body{ 
-	        margin:0;
-	        padding:0;
-        	font-size:14px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>IDC／ISP流量统计与质量监测系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+   <!-- bootstrap datepicker -->
+   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/datepicker3.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 </head>
-<body style="padding:10px">   
-	<form id="form"></form> 
+<body class="hold-transition">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+ 
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+ 
+ <form class="form-horizontal" role="form">
+  <div class="form-group form-group-sm ">
+    <label for="startip" class="col-xs-2 control-label nopadding font-size">起始IP
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="startip" >
+   </div>
+   <label for="count" class="col-xs-2 control-label nopadding font-size">IP数量
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="count" >
+   </div>
+  </div>
+
+  
+   <div class="form-group form-group-sm ">
+    <label for="endip" class="col-xs-2 control-label nopadding font-size">终止IP
+    </label>
+      <div class="col-xs-4 nopadding">
+  	     <input type="text" class="form-control" id="endip" >
+      </div>
+     <label for="name" class="col-xs-2 control-label nopadding font-size">IP段名称
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="name" >
+   </div>
+  </div>
+  
+   <div class="form-group form-group-sm ">
+    <label for="netmask" class="col-xs-2 control-label nopadding font-size">子网掩码
+    </label>
+      <div class="col-xs-4 nopadding">
+  	     <input type="text" class="form-control" id="netmask" >
+      </div>
+    <label for="gatewayip" class="col-xs-2 control-label nopadding font-size">网关IP
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="gatewayip" >
+   </div>
+  </div>
+  
+  
+   <div class="form-group form-group-sm ">
+    <label for="status" class="col-xs-2 control-label nopadding font-size">IP段状态
+    </label>
+      <div class="col-xs-4 nopadding">
+  	     <input type="text" class="form-control" id="status"  readonly>
+      </div>
+    <label for="vlanno" class="col-xs-2 control-label nopadding font-size">VLAN编号
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="vlanno" >
+   </div>
+  </div>
+  
+   <div class="form-group form-group-sm ">
+    <label for="dns1" class="col-xs-2 control-label nopadding font-size">首选DNS
+    </label>
+      <div class="col-xs-4 nopadding">
+  	     <input type="text" class="form-control" id="dns1" >
+      </div>
+    <label for="dns2" class="col-xs-2 control-label nopadding font-size">备选DNS
+    </label>
+    <div class="col-xs-4 nopadding">
+  	 <input type="text" class="form-control" id="dns2" >
+   </div>
+  </div>
+  
+  
+   <div class="form-group form-group-sm ">
+    <label for="dcname" class="col-xs-2 control-label nopadding font-size">所属数据中心
+    </label>
+      <div class="col-xs-10 nopadding">
+  	     <input type="text" class="form-control" id="dcname"  readonly>
+      </div>
+  </div>
+  
+  
+   <div class="form-group form-group-sm">
+      <label for="usefor" class="col-xs-2 control-label nopadding font-size">用户说明
+      </label>
+       <div class="col-xs-10 nopadding">
+	      <textarea class="form-control" rows="3"  id="usefor"></textarea>
+	   </div>
+    </div>
+    
+      <div class="form-group form-group-sm">
+      <label for="remark" class="col-xs-2 control-label nopadding font-size">备注
+      </label>
+       <div class="col-xs-10 nopadding">
+	      <textarea class="form-control" rows="3"  id="remark"></textarea>
+	   </div>
+    </div>
+    <input type="hidden" id="type" value=""></div>
+</form>
+    
+    </section>
+  <div class="control-sidebar-bg"></div>
+</div>
+
+
+<!-- jQuery 2.2.3 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+ <!-- bootstrap datepicker -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script> 
+<script src="ipsegAdd.js"></script>
+<!-- page script -->
+
 </body>
 </html>

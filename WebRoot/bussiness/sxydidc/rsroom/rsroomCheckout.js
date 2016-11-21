@@ -2,6 +2,19 @@ $(document).ready(function(){
     $(document).bind("contextmenu",function(e){
           return false;
     });
+    $("button[name='adduser']").click(function(){
+    	 $("iframe[name='adduser_content']").get(0).contentWindow.submit();
+    });
+    $("button[name='editInfo']").click(function(){
+		$("iframe[name='edit_content']").get(0).contentWindow.submit();   
+	});
+    $("button[name='addsome']").click(function(){
+		$("iframe[name='addsome_content']").get(0).contentWindow.submit();   
+	});
+    $("button[name='addPillar']").click(function(){
+    	addPillarCheck();
+	});
+    
 });
 
 function showinfo(id,unumber,rackNo,rackName,rackModel,rackstuts,belongCustomer,belongRoom,totalU,freeU,disRentU,whlRentU,preU){
@@ -213,35 +226,32 @@ function whitchimage(uno){
 	return url;
 }
 function deinfo(id){//服务器
-	var url = "bussiness/sxydidc/rsserver/rsserverView.jsp?id="+id;
-	winDetailOpen(url,'设备信息展示',760,560,'关闭',function(data){});
-	
+	$("iframe[name='rsserverInfo_content']").get(0).contentWindow.loadInfo(id);   
 }
 function switchinfo(id){//网络设备
-	var url = "bussiness/sxydidc/device/deviceView.jsp?id="+id;
-	winDetailOpen(url,'设备信息展示',760,560,'关闭',function(data){});
-	
+	$("iframe[name='device_content']").get(0).contentWindow.loadInfo(id);   
 }
 
 function updaterack(id){
-	var url = "bussiness/sxydidc/rack/rackEdit.jsp?id="+id;
-	winOpen(url,'机架信息编辑',760,560,'保存','取消',function(data){
-       	$.ajax({
-			url:"updateRack.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-       		if("error" == msg.result){
-       			
-   				top.$.ligerDialog.error("修改机架信息失败!");
-   				
-   			}else{ 
-       			top.$.ligerDialog.success("修改机架信息成功!");
-       			window.location.reload(true);
-   			}
-			}});
-	});
+	 $("iframe[name='edit_content']").get(0).contentWindow.loadInfo(id);   	
+//	var url = "bussiness/sxydidc/rack/rackEdit.jsp?id="+id;
+//	winOpen(url,'机架信息编辑',760,560,'保存','取消',function(data){
+//       	$.ajax({
+//			url:"updateRack.action", 
+//			data:data,
+//			dataType:"json", 
+//			type:"post",
+//			success:function (msg) {
+//       		if("error" == msg.result){
+//       			
+//   				top.$.ligerDialog.error("修改机架信息失败!");
+//   				
+//   			}else{ 
+//       			top.$.ligerDialog.success("修改机架信息成功!");
+//       			window.location.reload(true);
+//   			}
+//			}});
+//	});
 }
 
 //function newRack(){
@@ -251,29 +261,29 @@ function updaterack(id){
 //	window.top.$.ligerDialog.open({ width: 500, height: 400, url: url, title: '新建', buttons: [ { text: '新建', onclick: function (item, dialog) { console.log(dialog); } }, { text: '关闭', onclick: function (item, dialog) { dialog.close(); } } ] });
 //}
 function  newRack(){
-	var room_id=$("#markroomid").val();
-	var roomtype=$("#roomtype").val();
-	var url = "bussiness/sxydidc/rack/rackAdd.jsp?room_id="+room_id+"&&roomtype="+roomtype;
-	winOpen(url,'添加机架信息',760,560,'添加','取消',function(data){
-       	$.ajax({
-			url:"saveRack.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-       			if("error" == msg.result){
-       				top.$.ligerDialog.error("添加机架信息失败!");
-       			}else{
-	       			top.$.ligerDialog.success("添加机架信息成功!");
-	       			window.location.reload(true);
-       			}
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("添加机架信息失败!" + error.status,"错误");
-		}});
-	});
-	
+	 $("#adduser").modal('show');	 
+//	
+//	var url = "bussiness/sxydidc/rack/rackAdd.jsp?room_id="+room_id+"&&roomtype="+roomtype;
+//	winOpen(url,'添加机架信息',760,560,'添加','取消',function(data){
+//       	$.ajax({
+//			url:"saveRack.action", 
+//			data:data,
+//			dataType:"json", 
+//			type:"post",
+//			success:function (msg) {
+//       			if("error" == msg.result){
+//       				top.$.ligerDialog.error("添加机架信息失败!");
+//       			}else{
+//	       			top.$.ligerDialog.success("添加机架信息成功!");
+//	       			window.location.reload(true);
+//       			}
+//			}, 
+//			error:function (error) {
+//				top.$.ligerDialog.error("添加机架信息失败!" + error.status,"错误");
+//		}});
+//	});	
 }
+
 function winOpen(url,title,width,height,button1,button2,callback){
 	window.top.$.ligerDialog.open({
 		width: width, height: height, url: url, title: title, buttons: [{
@@ -296,98 +306,16 @@ function winOpen(url,title,width,height,button1,button2,callback){
    }
 
 function  newSomeRack(){
-	var alldevnumber=$("#alldevnumber").val();
-	var room_id=$("#markroomid").val();
-	var url = "bussiness/sxydidc/rsroom/addSomeRack.jsp?room_id="+room_id+"&&alldevnumber="+alldevnumber;
-	window.top.$.ligerDialog.open({ width:320, height: 220, url: url, title: '批量添加机架', 
-		     buttons: [ { text: '保存', onclick: function (item, dialog) {  
-		    	 infoIsRight(dialog) } }, 
-		    	 { text: '关闭', onclick: function (item, dialog) { dialog.close(); } } ] });
-
+	 $("#addsome").modal('show');	 
           }
-function infoIsRight(dialog){
-	
-	var startRow=dialog.frame.document.getElementById("startRow").value; 
-	var lastRow=dialog.frame.document.getElementById("lastRow").value; 
-	var startCol=dialog.frame.document.getElementById("startCol").value; 
-	var lastCol=dialog.frame.document.getElementById("lastCol").value; 
-	var room_id=dialog.frame.document.getElementById("room_id").value; 
-	var maxpower=dialog.frame.document.getElementById("maxpower").value; 
-	var rowNumber=dialog.frame.document.getElementById("rowNumber").value; 
-	var colNumber=dialog.frame.document.getElementById("colNumber").value; 
-	var re = /^[1-9]+[0-9]*]*$/;
-	if(!re.test(startRow)){
-		top.$.ligerDialog.alert("起始行为正整数且不为空!");
-		return;
-	}
-	if(!re.test(lastRow)){
-		top.$.ligerDialog.alert("结束行为正整数且不为空!");
-		return;
-	}
-	if(!re.test(startCol)){
-		top.$.ligerDialog.alert("起始列为正整数且不为空!");
-		return;
-	}
-	if(!re.test(lastCol)){
-		top.$.ligerDialog.alert("结束列为正整数且不为空!");
-		return;
-	}
-	if(!re.test(maxpower)){
-		top.$.ligerDialog.alert("最大功率为正整数且不为空!");
-		return;
-	}
-	
-	if(parseInt(lastRow)<parseInt(startRow)){
-		top.$.ligerDialog.alert("结束行数应大于等于起始行数!");
-		return;
-	}
-    if(parseInt(lastCol)<parseInt(startCol)){
-    	top.$.ligerDialog.alert(" 结束列数应大于等于起始列数!")
-		return;
-	}
-    if(parseInt(lastRow)>parseInt(rowNumber)){
-    	top.$.ligerDialog.alert(" 所填行数超出机房行数!");	
-		return;
-	}
-    if(parseInt(lastCol)>parseInt(colNumber)){
-    	top.$.ligerDialog.alert(" 所填列数超出机房列数!");	
-		return;	
-    }else{	
-    	var manager=top.$.ligerDialog.waitting('正在添加中,请稍候...');
-    		$.ajax({
-				url:"saveSomeRack.action", 
-				data:{"room_id":room_id,"startRow":startRow,"lastRow":lastRow,"startCol":startCol,"lastCol":lastCol,"maxpower":maxpower},
-				dataType:"json", 
-				type:"post",
-				success:function (msg) {
-	       			if("error" == msg.result){
-	       				manager.close();
-	       				top.$.ligerDialog.error("添加机架信息失败!");
-	       			}else{
-	       				manager.close();
-		       			top.$.ligerDialog.success("添加机架信息成功!");
-		       			window.location.reload(true);
-		       			dialog.close();
-	       			}
-				}, 
-				error:function (error) {
-					manager.close();
-					top.$.ligerDialog.error("添加机架信息失败!" + error.status,"错误");
-			}
-			});
-	}
-}
+
 function newPillar(){
-	var alldevnumber=$("#alldevnumber").val();
-	var room_id=$("#markroomid").val();
-	var url = "bussiness/sxydidc/rsroom/addPillar.jsp";
-	window.top.$.ligerDialog.open({ width:300, height: 150, url: url, title: '添加柱子', 
-		     buttons: [ { text: '保存', onclick: function (item, dialog) {  
-		    	 addPillarCheck(alldevnumber,room_id,dialog) } }, 
-		    	 { text: '关闭', onclick: function (item, dialog) { dialog.close(); } } ] });
+	$("#addPillar").modal('show');	
 }
-function addPillarCheck(alldevnumber,room_id,dialog){
-	var rowNumber=dialog.frame.document.getElementById("rowNumber").value; 
+function addPillarCheck(){
+	var room_id=$("#markroomid").val();
+	var alldevnumber=$("#alldevnumber").val();
+	var rowNumber=$("#rowNumber").val(); 
 	$.ajax({
 		url:"roomAndrackInfo.action", 
 		data:{"room_id":room_id},
@@ -404,16 +332,18 @@ function addPillarCheck(alldevnumber,room_id,dialog){
    			if(parseInt(rsroomDevNumber)>parseInt(alldevnumber)){
    				var re = /^[1-9]+[0-9]*]*$/;
    				if(!re.test(rowNumber)){
-   					top.$.ligerDialog.alert("行数为正整数!");	
+   				 $("#tipContent").html("行数为正整数")
+	        	     $('#myModal').modal('show');			
    					return;
    				}else{
    					if(everyRowNumber>=parseInt(msg[0].colcount)){
-   						
-   						top.$.ligerDialog.alert("机架此行已满!!");	
+   					 $("#tipContent").html("机架此行已满")
+		        	     $('#myModal').modal('show');		
    	   					return;
    					}
    					else if(parseInt(rowNumber)>parseInt(msg[0].rowcount)){
-   						top.$.ligerDialog.alert("行数超出机房行数!");	
+   					 $("#tipContent").html("行数超出机房行数")
+		        	     $('#myModal').modal('show');			
    	   					return;
    					}else{	
    						$.ajax({
@@ -423,26 +353,33 @@ function addPillarCheck(alldevnumber,room_id,dialog){
    							type:"post",
    							success:function (date) {
    				       			if("error" == date.result){
-   				       				top.$.ligerDialog.error("添加柱子失败!");
+   				       			 $("#tipContent").html("添加柱子失败")
+   				        	     $('#myModal').modal('show');		
+   				       				
    				       			}else{
-   					       			top.$.ligerDialog.success("添加柱子成功!");
+   				       			 $("#tipContent").html("添加柱子成功")
+   				        	     $('#myModal').modal('show');		       		
    					       		    window.location.reload(true);
-   					       			dialog.close();
    				       			}
    							}, 
    							error:function (error) {
-   								top.$.ligerDialog.error("添加柱子失败!" + error.status,"错误");
+   								$("#tipContent").html("添加柱子失败")
+   				        	   $('#myModal').modal('show');
+   								
    						}
    						});
    					}
    				}
    			}else{
-   				top.$.ligerDialog.alert("机房已满!");
+   				$("#tipContent").html("机房已满")
+         	   $('#myModal').modal('show');
    			    }
    			
 		}, 
 		error:function (error) {
-			top.$.ligerDialog.error("添加机柱子息失败!" + error.status,"错误");
+			$("#tipContent").html("添加柱子失败")
+        	   $('#myModal').modal('show');
+			
 	}});
 }
 

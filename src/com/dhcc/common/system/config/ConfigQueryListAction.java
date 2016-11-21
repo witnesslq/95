@@ -22,7 +22,12 @@ public class ConfigQueryListAction extends AnyTypeAction<Tsconfig, Tsconfig>{
 		String sql = dao.QueryList(dtype, dvalue,sortname,sortorder);
 		return super.List(model,sql);
 	}
-
+	public String configInfoQuery() throws Exception {
+		Tsconfig model = new Tsconfig();
+		String sql = dao.QueryList(dtype, dvalue,sortname,sortorder);
+		return super.ListInfo(model,sql);
+	}
+	
 	public String getDtype() {
 		return dtype;
 	}

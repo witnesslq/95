@@ -472,6 +472,144 @@ public class CustomerDao {
 		return pm;
 	}
 	
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<CustomerModel> queryCustomerByCondition(CustomerModel customer,String customerType){
+		List<CustomerModel> list=null;
+		this.init();
+		logger.info("call RscustomerDao.queryCustomerByCondition() start");
+		String sql1=" select * from (select cust.*,net.customerlevel as customerlevel,net.customerproperty as customerproperty,net.customerfield as customerfield,net.registername as registername,net.contactname as contactname,net.mobilephone as mobilephone,net.contactphone as contactphone,FROM_UNIXTIME(net.createdate/1000,'%Y-%m-%d %H:%i:%s') as createdate,tsu.username as managername,tsu.mobileprivate as managerphone from buscnetuser net left join busccustomer cust on net.id=cust.id left join tsuser tsu on net.manager=tsu.id  where cust.id=net.id and cust.status!='99' and cust.type='03' ";
+		String sql2=" select * from (select cust.*,grp.customerlevel as customerlevel,grp.customerproperty as customerproperty,grp.customerfield as customerfield,grp.registername as registername,grp.contactname as contactname,grp.mobilephone as mobilephone,grp.contactphone as contactphone,FROM_UNIXTIME(grp.createdate/1000,'%Y-%m-%d %H:%i:%s') as createdate,tsu.username as managername,tsu.mobileprivate as managerphone from buscgroupuser grp left join busccustomer cust on grp.id=cust.id left join tsuser tsu on grp.manager=tsu.id  where cust.id=grp.id and cust.status!='99' and cust.type='01' ";		
+		
+		StringBuilder conditionSql=new StringBuilder();
+		
+		if(!StringUtil.isEmptyOrNull(customer.getManager())){
+			conditionSql.append(" and net.manager='").append(customer.getManager()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getCustomerlevel())){
+			conditionSql.append(" and net.customerlevel='").append(customer.getCustomerlevel()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getSortname())){
+			conditionSql.append(" and net.sortname like '%").append(customer.getSortname()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getContactname())){
+			conditionSql.append(" and net.contactname like '%").append(customer.getContactname()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getMobilephone())){
+			conditionSql.append(" and net.mobilephone='").append(customer.getMobilephone()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getContactphone())){
+			conditionSql.append(" and net.contactphone='").append(customer.getContactphone()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getCustomerproperty())){
+			conditionSql.append(" and net.customerproperty='").append(customer.getCustomerproperty()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getCustomerfield())){
+			conditionSql.append(" and net.customerfield='").append(customer.getCustomerfield()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getNo())){
+			conditionSql.append(" and cust.no like '%").append(customer.getNo()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getName())){
+			conditionSql.append(" and cust.name like '%").append(customer.getName()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getType())){
+			conditionSql.append(" and cust.type='").append(customer.getType()).append("' ");
+		}		
+		
+		if(!StringUtil.isEmptyOrNull(customer.getStatus())){
+			conditionSql.append(" and cust.status='").append(customer.getStatus()).append("' ");
+		}
+		
+		sql1=sql1+conditionSql.toString()+"  order by cust.no) tempa ";
+		conditionSql.delete(0, conditionSql.toString().length());
+		
+		if(!StringUtil.isEmptyOrNull(customer.getManager())){
+			conditionSql.append(" and grp.manager='").append(customer.getManager()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getCustomerlevel())){
+			conditionSql.append(" and grp.customerlevel='").append(customer.getCustomerlevel()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getSortname())){
+			conditionSql.append(" and grp.sortname like '%").append(customer.getSortname()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getContactname())){
+			conditionSql.append(" and grp.contactname like '%").append(customer.getContactname()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getMobilephone())){
+			conditionSql.append(" and grp.mobilephone='").append(customer.getMobilephone()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getContactphone())){
+			conditionSql.append(" and grp.contactphone='").append(customer.getContactphone()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getCustomerproperty())){
+			conditionSql.append(" and grp.customerproperty='").append(customer.getCustomerproperty()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getCustomerfield())){
+			conditionSql.append(" and grp.customerfield='").append(customer.getCustomerfield()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getNo())){
+			conditionSql.append(" and cust.no like '%").append(customer.getNo()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getName())){
+			conditionSql.append(" and cust.name like '%").append(customer.getName()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getType())){
+			conditionSql.append(" and cust.type='").append(customer.getType()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(customer.getStatus())){
+			conditionSql.append(" and cust.status='").append(customer.getStatus()).append("' ");
+		}
+		
+		sql2=sql2+conditionSql.toString()+" order by cust.no) tempb ";
+		String querySql = "";
+		if(!StringUtil.isEmptyOrNull(customerType)){
+			if("01".equals(customerType)){
+				querySql = sql2;
+			}else if("03".equals(customerType)){
+				querySql = sql1;
+			}			
+		}else{
+			querySql = sql1+" union all "+sql2;
+		}
+
+		String countSql=" select count(*) from ("+querySql+")temp ";
+		try {
+
+			String sql = querySql.toString();
+			 list =  dbm.getObjectList(CustomerModel.class, sql);
+			logger.info("call RscustomerDao.queryCustomerByCondition() success");
+		} catch (Exception e) {
+			logger.info("call RscustomerDao.queryCustomerByCondition() fail");
+			e.printStackTrace();
+		}finally{
+			this.destory();
+		}
+		logger.info("call RscustomerDao.queryCustomerByCondition() finish");
+		return list;
+	}
 	@SuppressWarnings("unchecked")
 	public PageModel queryAllCustomerByCondition(PageModel pm,CustomerModel customer){
 		this.init();
@@ -595,7 +733,85 @@ public class CustomerDao {
 		logger.info("call RscustomerDao.quickSearch() finish");
 		return pm;
 	}
-	
+	@SuppressWarnings("unchecked")
+	public List<CustomerModel> quickSearch(CustomerModel customer,String key){
+		List<CustomerModel> list=null;
+		this.init();
+		List<Tsdict> dics=new ArrayList<Tsdict>();
+		StringBuilder keys=new StringBuilder("");
+		logger.info("call RscustomerDao.quickSearch() start");
+		String sql1=" select cust.*,net.customerproperty as customerproperty,net.customerfield as customerfield,net.customerlevel as customerlevel,net.registername as registername,net.contactname as contactname,net.mobilephone as mobilephone,net.contactphone as contactphone,FROM_UNIXTIME(net.createdate/1000,'%Y-%m-%d %H:%i:%s') as createdate,tsu.username as managername,tsu.mobileprivate as managerphone,ck.newkey as custkey from buscnetuser net left join busccustomer cust on cust.id=net.id left join tsuser  tsu on net.manager=tsu.id left join buscustkey ck on cust.id = ck.custid where (cust.status!='99' or cust.status is null) ";
+		
+		if(customer!=null&&(!StringUtil.isEmptyOrNull(customer.getManager()))){
+			sql1=sql1+" and tsu.id='"+customer.getManager()+"' ";
+		}
+		
+		StringBuilder conditionSql=new StringBuilder();
+		String sql2=" select cust.*,grp.customerproperty as customerproperty,grp.customerfield as customerfield,grp.customerlevel as customerlevel,grp.registername as registername,grp.contactname as contactname,grp.mobilephone as mobilephone,grp.contactphone as contactphone,FROM_UNIXTIME((grp.createdate-28800000)/1000,'%Y-%m-%d %H:%i:%s') as createdate,tsu.username as managername,tsu.mobileprivate as managerphone,ck.newkey as custkey from buscgroupuser grp left join busccustomer cust on cust.id=grp.id left join tsuser tsu on grp.manager=tsu.id left join buscustkey ck on cust.id = ck.custid where (cust.status!='99' or cust.status is null)  ";
+		if(customer!=null&&(!StringUtil.isEmptyOrNull(customer.getManager()))){
+			sql2=sql2+" and tsu.id='"+customer.getManager()+"' ";
+		}		
+		
+		if(!StringUtil.isEmptyOrNull(key)){
+			conditionSql.append(" cust.no like '%").append(key).append("%' ");
+			conditionSql.append(" or cust.name like '%").append(key).append("%' ");
+			dics=this.queryDicIds(dbm, key);
+			for(Tsdict dic:dics){
+				if(dics.lastIndexOf(dic)!=dics.size()-1){
+					keys.append("'").append(dic.getDkey()).append("',");
+				}else{
+					keys.append("'").append(dic.getDkey()).append("'");
+				}
+			}
+			
+			if(!StringUtil.isEmptyOrNull(keys.toString())){
+				conditionSql.append(" or net.customerlevel in(").append(keys.toString()).append(") ");
+				conditionSql.append(" or cust.type in(").append(keys.toString()).append(") ");
+				conditionSql.append(" or cust.status in(").append(keys.toString()).append(") ");
+				conditionSql.append(" or net.customerproperty in(").append(keys.toString()).append(") ");
+				conditionSql.append(" or net.customerfield in(").append(keys.toString()).append(") ");				
+			}
+			conditionSql.append(" or tsu.loginname like '%").append(key).append("%' ");
+			conditionSql.append(" or tsu.mobileprivate like '%").append(key).append("%' ");
+			conditionSql.append(" or net.contactname like '%").append(key).append("%' ");
+			conditionSql.append(" or net.mobilephone like '%").append(key).append("%' ");
+			sql1=sql1+" and ("+conditionSql.toString()+") ";
+			
+			conditionSql.delete(0, conditionSql.toString().length());
+			
+			conditionSql.append(" cust.no like '%").append(key).append("%' ");
+			conditionSql.append(" or cust.name like '%").append(key).append("%' ");
+			if(!StringUtil.isEmptyOrNull(keys.toString())){
+				conditionSql.append(" or grp.customerlevel in(").append(keys.toString()).append(") ");
+				conditionSql.append(" or cust.type in(").append(keys.toString()).append(") ");
+				conditionSql.append(" or cust.status in(").append(keys.toString()).append(") ");
+				conditionSql.append(" or grp.customerproperty in(").append(keys.toString()).append(") ");
+				conditionSql.append(" or grp.customerfield in(").append(keys.toString()).append(") ");				
+			}
+			conditionSql.append(" or tsu.loginname like '%").append(key).append("%' ");
+			conditionSql.append(" or tsu.mobileprivate like '%").append(key).append("%' ");
+			conditionSql.append(" or grp.contactname like '%").append(key).append("%' ");
+			conditionSql.append(" or grp.mobilephone like '%").append(key).append("%' ");
+			sql2=sql2+" and ("+conditionSql.toString()+") ";
+		}
+		
+		String querySql=" select * from ("+sql1+" union all "+sql2+")temp order by temp.no ";
+		String countSql=" select count(*) from ("+querySql+")temp ";
+		try {
+
+
+			String sql = querySql.toString();
+			 list =  dbm.getObjectList(CustomerModel.class, sql);
+			logger.info("call RscustomerDao.quickSearch() success");
+		} catch (Exception e) {
+			logger.info("call RscustomerDao.quickSearch() fail");
+			e.printStackTrace();
+		}finally{
+			this.destory();
+		}
+		logger.info("call RscustomerDao.quickSearch() finish");
+		return list;
+	}
 	@SuppressWarnings("unchecked")
 	private List<Tsdict> queryDicIds(DBManager dbm,String dvalue){
 		List<Tsdict> list=new ArrayList<Tsdict>();

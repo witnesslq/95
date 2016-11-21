@@ -3,6 +3,8 @@ package com.dhcc.bussiness.sxydidc.device;
 import java.io.PrintWriter;
 import java.util.List;
 import org.apache.struts2.ServletActionContext;
+
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.dhcc.common.util.AnyTypeAction;
 import com.dhcc.common.util.CreateNum;
@@ -57,7 +59,35 @@ public class DeviceAction  extends AnyTypeAction<Rsdevice,DeviceModel>{
 	}
 	
 
-	
+	public String queryDeviceInfo(){
+		List<DeviceModel> list=null;
+		if(StringUtil.isEmptyOrNull(key)){
+			if(device==null){
+				list = dao.queryDevice(needRoleFilter);
+			}else{
+				if(StringUtil.isEmptyOrNull(device.getDevicetype())){
+					device.setDevicetype("01");
+					device.setOwner(1);
+				}
+				list = dao.queryDeviceByCondition(device,needRoleFilter);
+			}			
+		}else{
+			list=dao.quickSearch(key,needRoleFilter);
+		}
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(list);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+	}
 	
 	
 	public String queryDeviceProperty(){
@@ -165,6 +195,29 @@ public class DeviceAction  extends AnyTypeAction<Rsdevice,DeviceModel>{
 		return SUCCESS;
 		
 	}
+	public String queryportInfoByDevpackId(){
+		List<DeviceportModel> result=null;
+		if(portdevice==null){
+			 result=dao.queryportByDevpackId(id,needRoleFilter);
+		}else{
+			 result=dao.queryDevicePortByCondition(portdevice,needRoleFilter);
+		}
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(result);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+		
+	}
+	
 	public String updateDevicePack(){
 		boolean result=dao.updateDevicePack(packdevice);
 		if(result){

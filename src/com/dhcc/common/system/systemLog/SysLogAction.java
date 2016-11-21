@@ -3,6 +3,7 @@ package com.dhcc.common.system.systemLog;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -33,7 +34,7 @@ public class SysLogAction extends ActionSupport {
 	private int start;   
 	private int length; 
 	private String extra_search;
-	private List search;
+	private String search;
 
 	/**
 	 * 查询系统日志列表
@@ -61,13 +62,12 @@ public class SysLogAction extends ActionSupport {
 		int currentpage=(start/length)+1;
 		pm.setCurrentPage(currentpage);
 		pm.setPerPage(length);
-		System.out.println(extra_search);
 		if(!"null".equals(extra_search)&&!"".equals(extra_search)&&extra_search!=null){
 			starttime=extra_search.substring(0, 19);
 			endtime=extra_search.substring(extra_search.length()-19, extra_search.length());
 		}
 		
-		pm = dao.sysLogQueryList(pm, starttime, endtime,username);
+		pm = dao.sysLogQueryList(pm, starttime, endtime,search);
 	    JSONObject json = new JSONObject();
 	        json.put("aaData", pm.getList());
 	        json.put("iTotalRecords", pm.getTotalRecord());
@@ -254,15 +254,18 @@ public class SysLogAction extends ActionSupport {
 
 
 
-	public List getSearch() {
+	public String getSearch() {
 		return search;
 	}
 
 
 
-	public void setSearch(List search) {
+	public void setSearch(String search) {
 		this.search = search;
 	}
+
+
+
 
 
 

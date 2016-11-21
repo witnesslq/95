@@ -44,13 +44,57 @@ for(int i=0;i<StatuInfo.size();i++){
 	<meta http-equiv="expires" content="0">    
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
-	<jsp:include page="../common/head.jsp" flush="true"/> 
+	    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+	
 	<link    rel="stylesheet" type="text/css" href="<%=basePath %>include/LigerUI/skins/Aqua/css/ligerui-all.css"/>
     <link    rel="stylesheet" type="text/css"  href="<%=basePath %>include/LigerUI/skins/ligerui-icons.css" /> 
     <link    rel="stylesheet" type="text/css" href="<%=basePath %>css/rsroomViewEditor.css"/>
-	<link    rel="stylesheet" type="text/css"  href="<%=basePath %>css/reportMain.css" /> 
+    
+       <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+   <!-- bootstrap datepicker -->
+   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/datepicker3.css">
 	<script  type="text/javascript"  src="<%=basePath  %>include/jQuery/jquery-1.9.1.js"></script>  
-	<script  type="text/javascript"  src="<%=basePath  %>include/LigerUI/js/ligerui.all.js" ></script> 
+
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+ <!-- bootstrap datepicker -->
+<script src="<%=basePath  %>/bussiness/sxydidc/js/common.js"></script>
+
 	<script src="<%=basePath%>/include/LigerUI/json2.js"type="text/javascript"></script>
 	<script src="<%=basePath%>/bussiness/sxydidc/rsroom/rsroomCheckout.js"type="text/javascript"></script>
     <script src="<%=basePath%>/bussiness/sxydidc/rsroom/rsroomRackDrag.js"type="text/javascript"></script>
@@ -59,10 +103,19 @@ for(int i=0;i<StatuInfo.size();i++){
   
   <body>
   <div id="top" class="roombtn"> 
-  <input type="button" class="btn" value="新建机架" onclick="newRack()">
-  <input type="button" class="btn" value="批量添加" onclick="newSomeRack()">
-  <input type="button" class="btn" value="添加柱子" onclick="newPillar()">
-  <input type="button" class="btn" value="保存位置" id="saveAllInfo">
+  <button type="button" class="btn btn-default btn-sm"  onclick="newRack()">
+              <span class="fa fa-user-plus"></span> 新建机架
+            </button>
+  <button type="button" class="btn btn-default btn-sm"  onclick="newSomeRack()">
+              <span class="fa fa-user-plus"></span> 批量添加
+            </button>
+  <button type="button" class="btn btn-default btn-sm"  onclick="newPillar()">
+              <span class="fa fa-user-plus"></span> 添加柱子
+            </button>
+  <button type="button" class="btn btn-default btn-sm"  id="saveAllInfo">
+              <span class="fa fa-user-plus"></span> 保存位置
+            </button>
+
   </div>
    <div id="main" >
    <%if(allinfo.size()>0){ 
@@ -208,7 +261,7 @@ for(int i=0;i<StatuInfo.size();i++){
   </table>
 </div>
 
-<div style="position: absolute; top: 541px; left: 26px; width: 500px; height:22px">
+<div style="position: absolute; top: 581px; left: 26px; width: 500px; height:22px">
   <div class="state"><img src="<%=basePath%>/images/rsroom/Free.jpg"/>空闲(<span id="free"><%=free %></span>)</div>
   <div class="state"><img src="<%=basePath%>/images/rsroom/SanRent.jpg"/>散租(<%=sanRent %>)</div>
   <div class="state"><img src="<%=basePath%>/images/rsroom/Preemption.jpg"/>预占(<%=Preemption %>)</div>
@@ -218,5 +271,156 @@ for(int i=0;i<StatuInfo.size();i++){
 <input type="hidden" id="markroomid" value="<%=roomid %>"/>
 <input type="hidden" id="alldevnumber" value="<%=alldevnumber %>"/>
 <input type="hidden" id="roomtype" value="<%=roomtype%>"/>
+
+<!-- 模态框（Modal） -->
+<!-- 添加-->
+<div class="modal fade" name="myModal" id="adduser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>新增机架</b></h4>
+            </div>
+            <div class="modal-body" >
+            <iframe src="<%=basePath  %>/bussiness/sxydidc/rack/rackAdd.jsp" class="smallModel" frameborder="0" scrolling="no" name="adduser_content"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" name="adduser">添加</button> 
+                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- 修改 -->
+<div class="modal fade" name="myModal" id="editInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>修改机架信息</b></h4>
+            </div>
+            <div class="modal-body" >
+            <iframe src="<%=basePath  %>/bussiness/sxydidc/rack/rackEdit.jsp" class="smallModel" frameborder="0" scrolling="no" name="edit_content"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" name="editInfo">确定</button> 
+                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- 批量添加-->
+<div class="modal fade" name="myModal" id="addsome" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>批量添加机架</b></h4>
+            </div>
+            <div class="modal-body" >
+            <iframe src="<%=basePath  %>/bussiness/sxydidc/rack/addSomeRack.jsp" class="small-amsllModel" frameborder="0" scrolling="no" name="addsome_content"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" name="addsome">添加</button> 
+                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<!-- 服务器信息-->
+<div class="modal fade" name="myModal" id="rsserverInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>服务器信息</b></h4>
+            </div>
+            <div class="modal-body" >
+            <iframe  src="<%=basePath  %>/bussiness/sxydidc/rsroom/rserviceView.jsp"   class="add-user" frameborder="0" scrolling="no" name="rsserverInfo_content"></iframe>
+            </div>
+            <div class="modal-footer"> 
+                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 设备信息-->
+<div class="modal fade" name="myModal" id="deviceInfoModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>设备信息</b></h4>
+            </div>
+            <div class="modal-body" >
+            <iframe  src="<%=basePath  %>/bussiness/sxydidc/rsroom/deviceView.jsp"   class="middleModel" frameborder="0" scrolling="no" name="device_content"></iframe>
+            </div>
+            <div class="modal-footer"> 
+                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 添加柱子-->
+<div class="modal fade" name="myModal" id="addPillar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"><b>添加柱子</b></h4>
+            </div>
+            <div class="modal-body" >
+				  <div class="form-group form-group-sm to-bottom">
+					    <label for="startRow" class="col-xs-3 control-label nopadding font-size font-padding-size">
+					添加位置
+					    </label>
+					    <div class="col-xs-9 nopadding">
+					  	 <input type="text" class="form-control" id="rowNumber" placeholder="第几行">
+					   </div>
+				  </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" name="addPillar">添加</button> 
+                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" id="myModal" name="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" id="tipContent">请选择要数据</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<div class="modal fade" name="myModal" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">确定要删除选中的数据</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="detleteinfo">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
   </body>
 </html>

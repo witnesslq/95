@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import org.apache.struts2.ServletActionContext;
+
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.dhcc.bussiness.sxydidc.rsdatacenter.RsdatacenterDao;
@@ -34,6 +36,18 @@ public class IPAction  extends AnyTypeAction<Rsip,IPModel>{
 	private IPModel ip;
 	private String sysLogTitle;//日志标题
 	private String sysLogContent;//日志内容
+	
+	private int iTotalDisplayRecords;   
+	private int iTotalRecords;  
+	private int start;   
+	private int length; 
+	private String extra_search;
+	private String search;
+	private String ipsegid;
+	private String deviceid;
+	private String customerid;
+	private String statusName;
+	
 	String userid = (String)ActionContext.getContext().getSession().get("userid");//当前用户id
 	
 
@@ -57,6 +71,76 @@ public class IPAction  extends AnyTypeAction<Rsip,IPModel>{
 	}
 	
 	
+	public String queryIpAllInfo(){
+		PageModel pm = new PageModel();
+		int currentpage=(start/length)+1;
+		pm.setCurrentPage(currentpage);
+		pm.setPerPage(length);
+		IPModel ipbean=new IPModel();
+		if(!"".equals(ipsegid)){
+			ipbean.setIpsegid(ipsegid);
+		}
+		if(!"".equals(deviceid)){
+			ipbean.setDeviceid(deviceid);
+		}
+		if(!"".equals(customerid)){
+			ipbean.setCustomerid(customerid);
+		}
+		if(!"".equals(statusName)){
+			ipbean.setStatus(statusName);
+		}		
+		if(StringUtil.isEmptyOrNull(search)){
+			if("".equals(ipsegid)&&"".equals(deviceid)&&"".equals(customerid)&&"".equals(statusName)){
+				pm = dao.queryIP(pm,needRoleFilter);
+			}else{
+				pm = dao.queryIPByCondition(pm, ipbean,true,needRoleFilter);
+			}			
+		}else{
+			pm=dao.quickSearch(pm, search,needRoleFilter);
+		}
+		JSONObject json = new JSONObject();
+        json.put("aaData", pm.getList());
+        json.put("iTotalRecords", pm.getTotalRecord());
+        json.put("iTotalDisplayRecords", pm.getTotalRecord());
+        
+	PrintWriter pw = null;
+	try {
+		ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+		pw = ServletActionContext.getResponse().getWriter();
+		pw.print(json);
+	} catch (Exception e) {
+		e.printStackTrace();
+	} finally {
+		pw.flush();
+		pw.close();
+	}
+		return SUCCESS;
+	}
+	public String queryIPInfo(){
+		List<IPModel> result=null;
+		if(StringUtil.isEmptyOrNull(key)){
+			if(ip==null){
+				result = dao.queryIP(needRoleFilter);
+			}else{
+				result = dao.queryIPByCondition(ip,ip.getNeedDevice(),needRoleFilter);
+			}			
+		}else{
+			result=dao.quickSearch(key,needRoleFilter);
+		}
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(result);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+	}
 	
 	public String deleteIPByIds(){
 		String result=dao.deleteIPByIds(ids);
@@ -227,4 +311,93 @@ public class IPAction  extends AnyTypeAction<Rsip,IPModel>{
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+	public int getiTotalDisplayRecords() {
+		return iTotalDisplayRecords;
+	}
+
+	public void setiTotalDisplayRecords(int iTotalDisplayRecords) {
+		this.iTotalDisplayRecords = iTotalDisplayRecords;
+	}
+
+	public int getiTotalRecords() {
+		return iTotalRecords;
+	}
+
+	public void setiTotalRecords(int iTotalRecords) {
+		this.iTotalRecords = iTotalRecords;
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public String getExtra_search() {
+		return extra_search;
+	}
+
+	public void setExtra_search(String extraSearch) {
+		extra_search = extraSearch;
+	}
+
+	public String getSearch() {
+		return search;
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
+	}
+
+
+	public String getIpsegid() {
+		return ipsegid;
+	}
+
+
+	public void setIpsegid(String ipsegid) {
+		this.ipsegid = ipsegid;
+	}
+
+
+	public String getDeviceid() {
+		return deviceid;
+	}
+
+
+	public void setDeviceid(String deviceid) {
+		this.deviceid = deviceid;
+	}
+
+
+	public String getCustomerid() {
+		return customerid;
+	}
+
+
+	public void setCustomerid(String customerid) {
+		this.customerid = customerid;
+	}
+
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+	
 }

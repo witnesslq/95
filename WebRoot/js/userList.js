@@ -82,7 +82,6 @@ $(function () {
 		  });
 			/**点击行事件*/
 		 $('#example1').on('click', 'tr', function (event) {
-			 console.log("11111");
 			  if($(this).find("input[name='checked_info']").is(':checked')){
 				  $(this).removeClass('selected');
 				  $(this).find("input[name='checked_info']").prop("checked",false);

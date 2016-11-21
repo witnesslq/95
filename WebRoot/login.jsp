@@ -1,123 +1,116 @@
-<%@page language="java" contentType="text/html;charset=utf-8"%>
-
+<%@ page language="java"  pageEncoding="UTF-8"%>
 <%
-	request.getSession().removeAttribute("userid");
+	String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
 %>
+<!DOCTYPE html>
+<html lang="cn">
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>山西移动IDC运营管理平台</title>
-<link  rel="stylesheet" type="text/css" href="css/login.css"/>
-<script type="text/javascript" src="include/jQuery/jquery-1.9.1.js"></script>
-<style type="text/css">
+    <head>
 
-</style>
- <script language="javascript">
-	 jQuery(function($){
-		$("#loginBtn").click(function(){
-		  if(doLogin()){
-		   	 userlogin();
-		    }
-		});
-		$("#cancelBtn").click(function(){
-		  $("#username").val("");	//用户名称
-		  $("#password").val("");	//用户密码
-		  $("#verifycode").val("");	//用户验证码
-		});
-		$("#password").keyup(function(event){
-			if(event.keyCode == 13){
-	            if(doLogin()){
-			   	 	userlogin();
-			    }
-	        }
-		});
-		$("#username").keyup(function(event){
-			if(event.keyCode == 13){
-	            if(doLogin()){
-			   	 	userlogin();
-			    }
-	        }
-		});
-		$("#verifycode").keyup(function(event){
-			if(event.keyCode == 13){
-	            if(doLogin()){
-			   	 	userlogin();
-			    }
-	        }
-		});
-	 });
-	 /*用户登录*/
-	 function userlogin(){
-		 var username = $("#username").val();		//用户名称
-		 var userpass = $("#password").val();		//用户密码
-		 var verifycode = $("#verifycode").val();	//用户验证码
-		 var userdata = {"userid":username,"password":userpass,"verifycode":verifycode};
-		$.ajax({
-			url:"ossLogin.action", 
-			data: userdata, 
-			async:false,
-			dataType:"json", 
-			type:"post",
-			success:function (data) {
-				if(data.msg == "LOGINSUCCESS"){
-					document.location.replace("index.jsp");
-				}else{
-					alert("账号、密码或验证码错误！请重新输入。");
-				}
-			}, 
-			error:function (error) {
-				alert("网络状况不佳，用户登录失败！" + error.status);
-			}
-		});
-	   }
-	 function doLogin(){
-		 var username = $("#username").val();		//用户名称
-		 var userpass = $("#password").val();		//用户密码
-		 var verifycode = $("#verifycode").val();	//用户验证码
-		 if(username == null || username == ""){
-			 alert("请输入账号!");
-	       	 return false;
-	     }else if(userpass == null || userpass == ""){
-	       	 alert("请输入密码!");
-	       	 return false;
-	     } else if(verifycode == null || verifycode == ""){
-	       	 alert("请输入验证码!");
-	       	 return false;
-	     }
-	     return  true;
-	 }
-	 function refreshRandomCode() {
-		 var rCodeImg = document.getElementById("rCodeImg");
-		 rCodeImg.src = "randomCode.do";
-	 }
-  </script>
-</head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Bootstrap Login Form Template</title>
 
-<body>
-	<div class="bg">
-     <div class="bg1">
-         <div class="dengluk">
-                    <div class="zh">
-                       <img src="images/login/zhanghao.jpg" width="31" height="31" class="tu" />
-                       <input type="text" id="username" class="zhanghao" value="" onchange="value=value.replace(/[^\w\.\/]/ig,'')" placeholder="请输入账号"/>
-                    </div>
-                    <div class="zh">
-                       <img src="images/login/mima.jpg" width="31" height="31" class="tu" />
-                       <input type="password" id="password" class="zhanghao" value="" placeholder="请输入密码"/>
-                    </div>
-                    <div class="zh">
-                       <img src="images/login/mima.jpg" width="31" height="31" class="tu" />
-                       <input type="text" id="verifycode" class="verifycode" value="" placeholder="请输入验证码"/>
-                       <img id="rCodeImg" src="randomCode.do" class="rcode" align="top" onmouseover="this.style.cursor='pointer'" onclick="refreshRandomCode()"/>
-                    </div>
-                    <div class="button">
-                         <a href="#"><div class="login" id="loginBtn"></div></a>
-                         <a href="#"><div class="cancel" id="cancelBtn"></div></a>
-                    </div>
-         </div>
-  </div>
+
+		  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css"/>
+		  <!-- Font Awesome -->
+		  <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+		  <!-- Ionicons -->
+		  <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+		  <!-- Theme style --> <!-- Theme style -->
+		  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+		  <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
+		        page. However, you can choose any other skin. Make sure you
+		        apply the skin class to the body tag so the changes take effect.
+		  -->
+		  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/skins/skin-blue.min.css">
+          <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+
+    </head>
+
+    <body class="login-background">
+
+        <!-- Top content -->
+        <div class="container">
+          <div class="col-sm-6 col-sm-offset-3 form-box">
+	       
+			 <!-- /.login-logo -->
+			  <div class="login-body">
+			   <div class="form-top">
+			   
+			         <div class="form-top-left">
+                        			<h3>IDC／ISP流量统计与质量监测系统</h3>
+                            		<p>Enter your username and password to log on:</p>
+                     </div>
+                     <div class="form-top-right">
+                        			<i class="fa fa-key"></i>
+                     </div>
+			   </div>
+			   <div class="form-bottom">
+				   
+				      <div class="form-group has-feedback">
+				        <input type="username"  id="username" class="form-control form-control-change" placeholder="请输入账号">
+				        <span class="glyphicon glyphicon-user form-control-feedback form-control-feedback-change"></span>
+				      </div>
+				      <div class="form-group has-feedback ">
+				        <input type="password" id="password" class="form-control form-control-change" placeholder="请输入密码">
+				        <span class="glyphicon glyphicon-lock form-control-feedback form-control-feedback-change"></span>
+				      </div>
+				     <div class="row">
+						     <div class="form-group has-feedback col-md-8">
+									 <input type="text" id="verifycode" class="form-control form-control-change" placeholder="验证码">
+									 <span class="glyphicon glyphicon-lock form-control-feedback form-control-feedback-change padding-right"></span>
+						     </div>
+				             <div class="col-md-4">
+				                     <img id="rCodeImg" src="randomCode.do" class="rCodeImg-psotion" onmouseover="this.style.cursor='pointer'" />  
+				             </div>
+				     </div>
+				          <button type="submit" class="login-btn" id="loginBtn">登录</button>
+				        <!-- /.col -->
+				     
+				    
+			    <!-- /.social-auth-links -->
+			      </div>
+			  </div>
+			  <!-- /.login-box-body -->
+			        
+            </div>
+        </div>
+
+<div class="modal fade" name="myModal" id="tipModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" id="tipInfo">删除数据成功</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">确定</button> 
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
-</body>
+        <!-- Javascript -->
+      <!-- jQuery 2.2.3 -->
+		<script src="<%=basePath %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+		<!-- Bootstrap 3.3.6 -->
+		<script src="<%=basePath %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+		<!-- SlimScroll -->
+		<script src="<%=basePath %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+		
+		<!-- AdminLTE App -->
+		<script src="<%=basePath %>/node_modules/admin-lte/dist/js/app.js"></script>
+        
+        <!--[if lt IE 10]>
+            <script src="assets/js/placeholder.js"></script>
+        <![endif]-->
+        <script src="<%=basePath %>/js/login.js"></script>
+    
+    </body>
+
 </html>

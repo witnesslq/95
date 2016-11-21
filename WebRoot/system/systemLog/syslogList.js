@@ -13,7 +13,9 @@ $(function () {
                  "data": function ( d ) {
                      //添加额外的参数传给服务器
                      d.extra_search = $('#reportrange span').html();
+                     d.search=d.search["value"];
                  }},
+             "bSort": false,
              "oLanguage": {//插件的汉化
              "sLengthMenu": "每页显示 _MENU_ 条记录",
              "sZeroRecords": "抱歉， 没有找到",

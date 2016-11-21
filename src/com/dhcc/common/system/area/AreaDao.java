@@ -74,7 +74,56 @@ public class AreaDao {
 		return pm;
 	}
 	
-	 
+	 /**
+     * @param sname(不分页)
+     * @param pm
+     */
+	public List<Tsarea> postQueryList(String sortname,String sortorder){
+		DBManager dbm = new DBManager();
+		List<Tsarea> list = new ArrayList<Tsarea>();
+		try {
+			String querysql = "select tp.id,tp.areaname,tp.remark,tcp.corpname as topcorpid  from tsarea tp left join tscorp tcp on tcp.id = tp.topcorpid ";
+			String userid = (String)ActionContext.getContext().getSession().get("userid");
+			String superUserId = new CommDao().queryConfigSuperUserID();//获取最大权限id
+			boolean type = userid.equals(superUserId);
+			if(type){//数据权限控制
+				querysql += " where 1 = 1 ";
+			}else{
+				String topcorpid = (String)ActionContext.getContext().getSession().get("topcorpid");
+				querysql += " where 1 = 1 and tp.topcorpid='"+topcorpid+"' ";
+			}
+			querysql += " order by tp."+sortname+" "+sortorder+" ";
+			String countsql = "select count(*) from (" + querysql + ") t";
+						/**
+			 * 分页sql构造
+			 */
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querysql);
+			pageFactory = null;
+			
+			
+			List<Tsarea> list1= dbm.getObjectList(Tsarea.class, sql);
+			if(type){
+				Tsarea modelnew;
+				for(Tsarea model:list1){
+					modelnew = new Tsarea();
+					modelnew.setId(model.getId());
+					modelnew.setAreaname(model.getAreaname()+"("+model.getTopcorpid()+")");
+					modelnew.setRemark(model.getRemark());
+					list.add(modelnew);
+				}
+			}else{
+				list = list1;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("查询岗位列表时候出错！"+e.getMessage());
+		}finally{
+			dbm.close();
+		}
+		return list;
+	}
     /**
      * 添加一个新的所属区域信息
      * @param menu

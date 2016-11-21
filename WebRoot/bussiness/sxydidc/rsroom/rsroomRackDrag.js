@@ -101,7 +101,9 @@ var RackTool = (function(){
 		},
 		removerack:function(){
 			if(this.selectedRackArray.length==0){
-				top.$.ligerDialog.alert("请选择要删除机架!");
+				$("#tipContent").html("请选择要删除机架")
+	           	   $('#myModal').modal('show');
+				
 			}else{
 			var ids=this.selectedRackArray[0].id;
 			for(var i=1;i<this.selectedRackArray.length;i++){
@@ -115,7 +117,8 @@ var RackTool = (function(){
 		 */
 		verticalAlignRacks:function(){
 			if(this.selectedRackArray.length <= 0) {
-				top.$.ligerDialog.alert('请选择两个或以上机架！');
+				$("#tipContent").html("请选择两个或以上机架")
+	           	   $('#myModal').modal('show');
 				return false;
 			}
 			var baseRack = this.selectedRackArray[0];
@@ -137,7 +140,9 @@ var RackTool = (function(){
 		 */
 		balanceFormatPos:function(){
 			if(this.selectedRackArray.length <= 1) {
-				top.$.ligerDialog.alert('请选择两个或以上机架！');
+				$("#tipContent").html("请选择两个或以上机架")
+	           	   $('#myModal').modal('show');
+
 				return false;
 			}
 			this.selectedRackArray.sort(function(a,b){
@@ -274,43 +279,14 @@ function  classchange(div){
 function removeclass(div){
 	div.className="";
 }
+var ids="";
 function deleteRack(id){
-	var freeMumber=document.getElementById("free").innerHTML;
-	var paillarMumber=document.getElementById("pillar").innerHTML;
-	var ids=RackTool.removerack();
+	ids=RackTool.removerack();
 	if(ids!=null){
-	top.$.ligerDialog.confirm('是否确定删除', function (yes) { if(yes==false){return;}else{
-	$.ajax({
-		url:"deleteSomeRack.action",
-		data:{"ids":ids},
-		dataType:"json", 
-		type:"post",
-		success:function (msg) {
-			if("error" == msg.result){
-				top.$.ligerDialog.error("删除机架失败!");
-			}else if("success" == msg.result){
-				for(var i=0;i<ids.split(",").length;i++){
-					document.getElementById(ids.split(",")[i]).removeNode(true);
-				}
-			
-				document.getElementById("free").innerHTML=parseInt(freeMumber)-parseInt(ids.split(",").length)+parseInt(msg.PillarCount);
-				document.getElementById("pillar").innerHTML=parseInt(paillarMumber)-parseInt(msg.PillarCount);
-				document.getElementById("alldevnumber").value=parseInt(document.getElementById("alldevnumber").value)-1;
-				top.$.ligerDialog.success("删除机架成功!");
-			}
-		}
-	});} });}
-	
-//	$.ajax({
-//		url:"deleteOneRack.action",
-//		data:{"id":id},
-//		dataType:"json", 
-//		type:"post",
-//		success:function (msg) {
-//			window.location.reload(true);
-//		}
-//	});
+		$('#confirm').modal('show');     
+	}
 }
+
 $(function(){
 	$("div[name='rackinfo']").mousedown(function(e){
 		if(e.which=="3"){
@@ -318,7 +294,7 @@ $(function(){
 			var rack_id = $(e.target).attr('id'); 
 			var room_id=$("#markroomid").val();
 			var X=$("#main").get(0).scrollLeft+e.pageX-10;
-	        var Y=$("#main").get(0).scrollTop+e.pageY-30;
+	        var Y=$("#main").get(0).scrollTop+e.pageY-60;
 	        if(e.pageY>429){     	 
 	        	Y=Y-70;
 	        }
@@ -350,7 +326,8 @@ $(function(){
 			dataType:"json", 
 			type:"post",
 			success:function (msg) {
-				top.$.ligerDialog.alert("保存成功!");
+				$("#tipContent").html("保存成功")
+	           	   $('#myModal').modal('show');
 			}
 		});
 		
@@ -360,4 +337,30 @@ $(function(){
 		 RackTool.selectRack("1",event);
 		}); 
 	
+	$("#detleteinfo").click(function(){
+		var freeMumber=document.getElementById("free").innerHTML;
+		var paillarMumber=document.getElementById("pillar").innerHTML;
+		$.ajax({
+			url:"deleteSomeRack.action",
+			data:{"ids":ids},
+			dataType:"json", 
+			type:"post",
+			success:function (msg) {
+				if("error" == msg.result){
+					 $("#tipContent").html("删除机架失败")
+	            	 $('#myModal').modal('show');
+				}else if("success" == msg.result){	
+					for(var i=0;i<ids.split(",").length;i++){
+						$("#"+ids.split(",")[i]).remove();			
+					}
+				
+					document.getElementById("free").innerHTML=parseInt(freeMumber)-parseInt(ids.split(",").length)+parseInt(msg.PillarCount);
+					document.getElementById("pillar").innerHTML=parseInt(paillarMumber)-parseInt(msg.PillarCount);
+					document.getElementById("alldevnumber").value=parseInt(document.getElementById("alldevnumber").value)-1;
+					$("#tipContent").html("删除机架成功")
+	           	   $('#myModal').modal('show');
+				}
+			}
+		});
+	});
 });

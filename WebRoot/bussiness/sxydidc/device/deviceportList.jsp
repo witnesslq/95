@@ -10,7 +10,7 @@ String packid = request.getParameter("packid")!=null?request.getParameter("packi
 <head>
     <title>设备板卡信息列表页面</title>
 	<jsp:include page="../common/head.jsp" flush="true"/>
-    <script  type="text/javascript"  src="deviceportList.js"></script> 	
+    <script  type="text/javascript"  src="deviceportList1.js"></script> 	
 </head>
 <body>
 	<div class="btnArea">

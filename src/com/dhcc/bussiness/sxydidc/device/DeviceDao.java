@@ -59,7 +59,41 @@ public class DeviceDao {
 		logger.info("call DeviceDao.queryDevice() finish");
 		return pm;
 	}
-	
+	public List<DeviceModel> queryDevice(String needRoleFilter){
+		List<DeviceModel> list=null;
+		dbm=new DBManager();
+		logger.info("call DeviceDao.queryDevice() start");
+		StringBuilder querySql=new StringBuilder(" select dv.*,rack.name as rackname,room.roomname as roomname,cust.name as customername,dc.name as dcname,ip.ipadd as ipadd,temp.totalport as totalPort,temp.freeport as freePort,temp.preport as prePort,temp.factport as factPort,temp.usedport as usedPort from rsdevice dv left join rsrack rack on dv.rackid=rack.id left join rsroom room on dv.roomid=room.id left join busccustomer cust on dv.customerid=cust.id left join rsdatacenter dc on dv.dcid=dc.id left join (select ip.deviceid as deviceid,group_concat(ip.ipadd) as ipadd from rsip ip group by ip.deviceid)ip on dv.id=ip.deviceid left join (");
+		querySql.append(" select pack.deviceid as devid,count(*) as totalport,sum(case port.status when '01' then 1 else 0 end) as freeport,sum(case port.status when '02' then 1 else 0 end) as preport,sum(case port.status when '03' then 1 else 0 end) as factport,sum(case port.status when '04' then 1 else 0 end) as usedport from rsnetdevport port left join rsnetdevpack pack on port.netdevpackid=pack.id  where (port.status!='99' or port.status is null) group by pack.deviceid ");
+		querySql.append(")temp on dv.id=temp.devid ");
+		querySql.append(" where dv.devicetype='01' and (dv.status!='99' or dv.status is null) and (dv.dcid='"+DataCenterUtil.getDCID()+"' ");
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql.append(" or 1=1 ");
+		}
+		querySql.append(") ");
+		querySql.append(" order by room.roomcode,rack.code,dv.code ");
+		try {
+		
+			
+			/**
+			 * 分页sql构造
+			 */
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+
+			 list =  dbm.getObjectList(DeviceModel.class, sql);
+			logger.info("call DeviceDao.queryDevice() success");
+		} catch (Exception e) {
+			logger.info("call DeviceDao.queryDevice() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call DeviceDao.queryDevice() finish");
+		return list;
+	}
 	
 	public PageModel queryFreeport(PageModel pm,String cusid){
 		dbm=new DBManager();
@@ -156,7 +190,63 @@ public class DeviceDao {
 		logger.info("call DeviceDao.queryDeviceByCondition() finish");
 		return pm;		
 	}
-	
+	public List<DeviceModel> queryDeviceByCondition(DeviceModel deviceModel,String needRoleFilter){
+		List<DeviceModel> list=null;
+		dbm=new DBManager();
+		logger.info("call ContractDao.queryDeviceByCondition() start");
+		StringBuilder querySql=new StringBuilder(" select dv.*,rack.name as rackname,room.roomname as roomname,cust.name as customername,dc.name as dcname,ip.ipadd as ipadd,temp.totalport as totalPort,temp.freeport as freePort,temp.preport as prePort,temp.factport as factPort,temp.usedport as usedPort from rsdevice dv left join rsrack rack on dv.rackid=rack.id left join rsroom room on dv.roomid=room.id left join busccustomer cust on dv.customerid=cust.id left join rsdatacenter dc on dv.dcid=dc.id left join (select ip.deviceid as deviceid,group_concat(ip.ipadd) as ipadd from rsip ip group by ip.deviceid)ip on dv.id=ip.deviceid left join (");
+		querySql.append(" select pack.deviceid as devid,count(*) as totalport,sum(case port.status when '01' then 1 else 0 end) as freeport,sum(case port.status when '02' then 1 else 0 end) as preport,sum(case port.status when '03' then 1 else 0 end) as factport,sum(case port.status when '04' then 1 else 0 end) as usedport from rsnetdevport port left join rsnetdevpack pack on port.netdevpackid=pack.id  where (port.status!='99' or port.status is null) group by pack.deviceid ");
+		querySql.append(")temp on dv.id=temp.devid ");
+		querySql.append(" where dv.devicetype='01' and (dv.status!='99' or dv.status is null) and (dv.dcid='"+DataCenterUtil.getDCID()+"' ");
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql.append(" or 1=1 ");
+		}
+		querySql.append(") ");
+		
+		StringBuilder conditionSql=new StringBuilder();
+		if(!StringUtil.isEmptyOrNull(deviceModel.getName())){
+			conditionSql.append(" and dv.name like '%").append(deviceModel.getName()).append("%' ");
+		}
+		
+		if(deviceModel.getOwner()!=0){
+			conditionSql.append(" and dv.owner=").append(deviceModel.getOwner()).append(" ");
+		}
+				
+		if(!StringUtil.isEmptyOrNull(deviceModel.getRoomid())){
+			conditionSql.append(" and dv.roomid='").append(deviceModel.getRoomid()).append("' ");
+		}	
+		
+		if(!StringUtil.isEmptyOrNull(deviceModel.getStatus())){
+			conditionSql.append(" and dv.status='").append(deviceModel.getStatus()).append("' ");
+		}
+		if(!StringUtil.isEmptyOrNull(deviceModel.getDevicetype())){
+			conditionSql.append(" and dv.devicetype='").append(deviceModel.getDevicetype()).append("' ");
+		}	
+		if(!StringUtil.isEmptyOrNull(deviceModel.getRackid())){
+			conditionSql.append(" and dv.rackid='").append(deviceModel.getRackid()).append("' ");
+		}
+		querySql=querySql.append(conditionSql.toString()).append(" order by room.roomcode,rack.code,dv.code ");
+		
+		try {
+		
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+			
+			list =  dbm.getObjectList(DeviceModel.class, sql);
+			
+			logger.info("call DeviceDao.queryDeviceByCondition() success");
+			
+		} catch (Exception e) {
+			logger.info("call DeviceDao.queryDeviceByCondition() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call DeviceDao.queryDeviceByCondition() finish");
+		return list;		
+	}
 	public PageModel quickSearch(PageModel pm,String key,String needRoleFilter){
 		dbm=new DBManager();
 		logger.info("call ContractDao.quickSearch() start");
@@ -202,6 +292,45 @@ public class DeviceDao {
 		return pm;		
 	}	
 	
+	
+	
+	public List<DeviceModel> quickSearch(String key,String needRoleFilter){
+		List<DeviceModel> list=null;
+		dbm=new DBManager();
+		logger.info("call ContractDao.quickSearch() start");
+		StringBuilder querySql=new StringBuilder(" select dv.*,rack.name as rackname,room.roomname as roomname,cust.name as customername,dv.name as dcname,ip.ipadd as ipadd,temp.totalport as totalPort,temp.freeport as freePort,temp.preport as prePort,temp.factport as factPort,temp.usedport as usedPort from rsdevice dv left join rsrack rack on dv.rackid=rack.id left join rsroom room on dv.roomid=room.id left join busccustomer cust on dv.customerid=cust.id left join rsdatacenter dc on dv.dcid=dv.id left join (select ip.deviceid as deviceid,group_concat(ip.ipadd) as ipadd from rsip ip group by ip.deviceid)ip on dv.id=ip.deviceid left join (");
+		querySql.append(" select pack.deviceid as devid,count(*) as totalport,sum(case port.status when '01' then 1 else 0 end) as freeport,sum(case port.status when '02' then 1 else 0 end) as preport,sum(case port.status when '03' then 1 else 0 end) as factport,sum(case port.status when '04' then 1 else 0 end) as usedport from rsnetdevport port left join rsnetdevpack pack on port.netdevpackid=pack.id  where (port.status!='99' or port.status is null) group by pack.deviceid ");
+		querySql.append(")temp on dv.id=temp.devid ");
+		querySql.append(" where dv.devicetype='01' and (dv.status!='99' or dv.status is null) and (dv.dcid='"+DataCenterUtil.getDCID()+"' ");
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql.append(" or 1=1 ");
+		}
+		querySql.append(") ");
+		StringBuilder conditionSql=new StringBuilder();
+		if(!StringUtil.isEmptyOrNull(key)){
+			conditionSql.append(" dv.name like '%").append(key).append("%' ");
+			conditionSql.append(" or dv.code like '%").append(key).append("%' ");
+			querySql=querySql.append(" and("+conditionSql.toString()+") ").append(" order by room.roomcode,rack.code,dv.code ");
+		}
+		try {
+
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+			
+			 list =dbm.getObjectList(DeviceModel.class, sql);
+			logger.info("call DeviceDao.quickSearch() success");
+			
+		} catch (Exception e) {
+			logger.info("call DeviceDao.quickSearch() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call DeviceDao.quickSearch() finish");
+		return list;		
+	}	
 	public PageModel queryDevicePortByCondition(PageModel pm,DeviceportModel port,String needRoleFilter){
 		dbm=new DBManager();
 		logger.info("call ContractDao.queryDevicePortByCondition() start");
@@ -262,6 +391,64 @@ public class DeviceDao {
 		return pm;		
 	}
 	
+	
+
+	public List<DeviceportModel> queryDevicePortByCondition(DeviceportModel port,String needRoleFilter){
+		dbm=new DBManager();
+		List<DeviceportModel> list=null;
+		logger.info("call ContractDao.queryDevicePortByCondition() start");
+		StringBuilder querySql=new StringBuilder(" select por.*,pack.code as netdevpackcode,dev.id as deviceid,dev.name as devicename,cust.no as customercode,cust.name as customername from rsnetdevport por left join rsnetdevpack pack on por.netdevpackid=pack.id left join rsdevice dev on pack.deviceid=dev.id left join busccustomer cust on por.customerid=cust.id left join rsdatacenter dc on por.dcid=dc.id where (por.status!='99' or por.status is null) ");
+		
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql.append(" and por.netdevpackid is not null and pack.deviceid is not null ");
+		}else{
+			querySql.append(" and por.netdevpackid is not null and pack.deviceid is not null and dev.dcid='"+DataCenterUtil.getDCID()+"'  ");
+		}
+		
+		StringBuilder conditionSql=new StringBuilder();
+		if(!StringUtil.isEmptyOrNull(port.getPortname())){
+			conditionSql.append(" and por.portname like '%").append(port.getPortname()).append("%' ");
+		}
+		if(!StringUtil.isEmptyOrNull(port.getPortcode())){
+			conditionSql.append(" and por.portcode like '%").append(port.getPortcode()).append("%' ");
+		}	
+		if(!StringUtil.isEmptyOrNull(port.getType())){
+			conditionSql.append(" and por.type='").append(port.getType()).append("' ");
+		}
+		if(!StringUtil.isEmptyOrNull(port.getStatus())){
+			conditionSql.append(" and por.status='").append(port.getStatus()).append("' ");
+		}	
+		if(!StringUtil.isEmptyOrNull(port.getCustomerid())){
+			conditionSql.append(" and cust.id='").append(port.getCustomerid()).append("' ");
+		}
+		if(!StringUtil.isEmptyOrNull(port.getTonetdevid())){
+			conditionSql.append(" and pack.deviceid='").append(port.getTonetdevid()).append("' ");
+		}
+		querySql=querySql.append(conditionSql.toString()).append(" order by pack.code,dev.code,cust.no ");
+		
+		try {
+	
+			
+			/**
+			 * 分页sql构造
+			 */
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+			
+			list =  dbm.getObjectList(DeviceportModel.class, sql);
+			logger.info("call DeviceDao.queryDevicePortByCondition() success");
+			
+		} catch (Exception e) {
+			logger.info("call DeviceDao.queryDevicePortByCondition() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call DeviceDao.queryDevicePortByCondition() finish");
+		return list;		
+	}
 	public List<DeviceModel> queryDeviceProperty(String name){
 		dbm=new DBManager();
 		logger.info("call DeviceDao.queryDeviceProperty() start");
@@ -480,6 +667,51 @@ public class DeviceDao {
 		}		
 		logger.info("call DeviceDao.queryportByDevpackId() finish");
 		return pm;
+	}
+	
+	
+	public List<DeviceportModel> queryportByDevpackId(String packId,String needRoleFilter){
+		dbm=new DBManager();
+		List<DeviceportModel> list=null;
+		logger.info("call DeviceDao.queryportByDevpackId() start");
+		String querySql=new String();
+		String countSql=new String();
+		
+		if(!StringUtil.isEmptyOrNull(packId)){
+			querySql=" select por.*,pack.code as netdevpackcode,dev.id as deviceid,dev.name as devicename,cust.no as customercode,cust.name as customername,dc.name as dcname from rsnetdevport por left join rsnetdevpack pack on por.netdevpackid=pack.id left join rsdevice dev on pack.deviceid=dev.id left join busccustomer cust on por.customerid=cust.id left join rsdatacenter dc on (por.dcid=dc.id or dev.dcid=dc.id) where por.netdevpackid='"+packId+"' and(por.status!='99' or por.status is null) ";
+		}else{
+			querySql=" select por.*,pack.code as netdevpackcode,dev.id as deviceid,dev.name as devicename,cust.no as customercode,cust.name as customername,dc.name as dcname from rsnetdevport por left join rsnetdevpack pack on por.netdevpackid=pack.id left join rsdevice dev on pack.deviceid=dev.id left join busccustomer cust on por.customerid=cust.id left join rsdatacenter dc on (por.dcid=dc.id or dev.dcid=dc.id) where (por.status!='99' or por.status is null) ";
+		}
+		
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql=querySql+" and pack.id is not null and dev.id is not null ";
+		}else{
+			querySql=querySql+" and dev.dcid='"+DataCenterUtil.getDCID()+"'  ";
+		}
+		
+		countSql=" select count(*) from ("+querySql.toString()+")temp ";
+		try {
+			
+			
+			/**
+			 * 分页sql构造
+			 */
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+
+			 list =  dbm.getObjectList(DeviceportModel.class, sql.toString());
+						
+			logger.info("call DeviceDao.queryportByDevpackId() success");
+		} catch (Exception e) {
+			logger.info("call DeviceDao.queryportByDevpackId() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}		
+		logger.info("call DeviceDao.queryportByDevpackId() finish");
+		return list;
 	}
 	public DeviceModel queryDeviceById(String id){
 		dbm=new DBManager();
