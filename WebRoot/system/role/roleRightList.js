@@ -64,7 +64,7 @@ $(function() {
   function getselectinfo(){
 	  var checkboxval=$("input[name='checked_info']"); 
       var id="";   
-      for (var i=0;i<checkboxval.length;i++ ){       
+      for (var i=0;i<checkboxval.length;i++ ){   
           if(checkboxval[i].checked){ 
               if(id=="") {
               id=id+checkboxval[i].value; 
@@ -73,6 +73,9 @@ $(function() {
                }
           }  
        }
+      if(id!=""){
+    	 id=id+","+node_id;
+      }
       return id;
   }
   function getCheckValue(role_id,node_id){
@@ -121,7 +124,8 @@ $(function() {
          	url:"roleBtnModify.action",
 			data:"ch="+btnIDStr+"&roleid="+role_id+"&menuSort="+node_id,
           success: function (data) {       
-                	  window.parent.location.href="RoleList.jsp";
+		    	 window.parent.$("#tipContent").html("操作权限修改成功！");
+				  window.parent.$("#myModal").modal('show');
           },
           error: function (XMLHttpRequest, textStatus, errorThrown) {
         	  window.parent.$("#tipContent").html("按钮权限修改出错！");

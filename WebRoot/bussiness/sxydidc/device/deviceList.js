@@ -1,482 +1,285 @@
-$(function($){
-    my_initGrid();
-    bindSearch();
-});
-/**
-初始化产品信息表格
-CustomersData：要填充的数据
-*/
-function my_initGrid(){
-	window['g']=$("#maingrid").ligerGrid({
-		checkbox: true,
-		height:'98%',
-		url:"queryDevice.action",
-		columns: [
-		{ display: '编码', name: 'code',width:'16%',
-				render: function (item){
-					if(item.name!=null){
-						return "<a href='javascript:void(0);' onclick=\"openmess('"+item.id+"');\">"+item.code+"</a>";
-					}
-				}
-		},	
-		{ display: '设备名称', name: 'name',width:'11%'},
-		{ display: '所属数据中心', name: 'dcname',width:'13%'},
-		{ display: '所属机房', name: 'roomname',width:'10%'},
-		{ display: '所属机架',   name: 'rackname'},
-		{ display: 'IP地址', name: 'ipadd',
-				render: function (item){
-					if(item.ipadd!=null){
-						return "<div title='"+item.ipadd+"'>"+item.ipadd+"</div>";
-					}else{
-						return '';
-					}
-				}
-		},
-		{ display: '端口总数', name: 'totalPort',
-				render: function (item){
-						if (item.totalPort!=''){
-							return item.totalPort;
-						}else{
-							return '0';
-						}
-				}
-		},
-		{ display: '空闲端口数', name: 'freePort',
-				render: function (item){
-						if (item.freePort!=''){
-							return item.freePort;
-						}else{
-							return '0';
-						}
-				}
-		},
-		{ display: '实占端口数', name: 'factPort',
-				render: function (item){
-						if (item.factPort!=''){
-							return item.factPort;
-						}else{
-							return '0';
-						}
-				}
-		},
-		{ display: '预占端口数', name: 'prePort',
-				render: function (item){
-						if (item.prePort!=''){
-							return item.prePort;
-						}else{
-							return '0';
-						}
-				}
-		},
-		{ display: '使用端口数', name: 'usedPort',
-				render: function (item){
-						if (item.usedPort!=''){
-							return item.usedPort;
-						}else{
-							return '0';
-						}
-				}
-		},
-		{ display: '资源所有', name: 'owner',
-				render: function (item){
-						if (item.owner =='1'){
-							return '局方设备';
-						}else if(item.status =='2'){
-							return '客户设备';
-						}
-				}
-		},
-		{ display: '查看', name: 'look',
-				render: function (item){
-					var dataname = '<a id=\''+item.id+'\' href="javascript:void(0)" onclick="openDialog(this);" style="text-decoration:none;color:blue;">设备正视图</a>';
-					return dataname;
-				}
-		}],
-		pageSize:10,
-		root:"listmodel",
-		record:"record",
-	 	rownumbers:true, 
-	 	title:"设备信息列表页面"
-       });
-}
-
-function bindSearch(){
-	$("#addBtn").bind("click", function(){
-		itemadd();
-	});
+$(function () {
 	
-	$("#editBtn").bind("click", function(){
-		itemedit();
-	});
-	
-	$("#delBtn").bind("click", function(){
-		itemdelete();
-	});
-
-	$("#searchBtn").bind("click", function(){
-		var value=$("#searchTxt").val();
-  		quicksearch(value);
-	});
+	/**
+	 加载数据
+	*/
+  $.ajax({
+		url: "queryDeviceInfo.action",
+		type: "post",
+		dataType: 'json',
+		success: function(data) {
+	    var dataSet = [];
+	   
+		for(var i=0;i<data.length;i++){
+			 var menu = [];
+		var item = data[i];
+		var owner="";
+			 if (item.owner =='1'){
+				 owner ='局方设备';
+				}else if(item.status =='2'){
+					owner= '客户设备';
+				}
+		menu.push("<input name=\"checked_info\" type=\"checkbox\" value=\""+item.id+"\">");   
+		menu.push("<a href='javascript:void(0);' name='detailInfo' id='"+item.id+"' >"+item.code+"</a>");
+		menu.push(item.name);
+		menu.push(item.dcname);
+		menu.push(item.roomname);
+		menu.push(item.rackname);
+		menu.push(item.ipadd);
 		
-	$("#queryBtn").bind("click", function(){
-		itemsearch();
-	});
-	
-	$("#searchTxt").bind("keydown", function(event){
-		if(event.keyCode==13){
-			var value=$("#searchTxt").val();
-  			quicksearch(value);
-  			return false;
+		menu.push(item.totalPort);
+		menu.push(item.freePort);
+		menu.push(item.factPort);
+		menu.push(item.prePort);
+		menu.push(item.usedPort);
+		menu.push(owner);
+		menu.push("<a href='rsroomEditorView.action?id="+item.id+"' target='blank'>设备正视图</a>");   
+		dataSet.push(menu);
 		}
-	});	
-
-}
-
-/**设备正视图*/
-function openDialog(obj){
-	var id = obj.id;  
-	var url = "bussiness/sxydidc/netdevpack/netdevpack.jsp?id="+id;
-	window.top.$.ligerDialog.open({
-		url: url, title: "网络设备正视图",
-		width: 770, height: 560
-     });
-     return false;
-	}
-
-/**
-打开添加信息窗口的方法
-*/
-function  itemadd(){
-	var url = "bussiness/sxydidc/device/deviceAdd.jsp";
-	winOpen(url,'添加设备信息',760,560,'添加','取消',function(data){
-       	$.ajax({
-			url:"saveDevice.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-       			if("error" == msg.result){
-       				top.$.ligerDialog.error("添加设备信息失败!");
-       			}else{
-	       			top.$.ligerDialog.success("添加设备信息成功!");
-	       			g.addRow(msg);
-       			}
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("添加设备信息失败!" + error.status,"错误");
-		}});
-	});
-	
-}
-
-/**
-打开添加信息窗口的方法
-*/
-function  itemedit(){
-	var selected = g.getSelected();
-	if (!selected) {  top.$.ligerDialog.warn('请选择行'); return; }
-	var id = (g.getSelectedRow()).id;  
-	var url = "bussiness/sxydidc/device/deviceEdit.jsp?id="+id;
-	winOpen(url,'设备信息编辑',760,560,'保存','取消',function(data){
-       	$.ajax({
-			url:"updateDevice.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-	       		if("error" == msg.result){
-	   				top.$.ligerDialog.error("修改设备信息失败!");
-	   			}else{
-	   				g.updateRow(selected,msg);
-       				top.$.ligerDialog.success("修改设备信息成功!","提示");
-	   			}
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("修改设备信息失败!" + error.status,"错误");
-		}});
-	});
-	
-}
-
-
-/**
-打开添加信息窗口的方法
-*/
-function  itemdelete(){
-	var selected = g.getSelected();
-    if (!selected) {  
-    	top.my_alert('请选择要删除的数据行!',"warn"); 
-    	return; 
-    }else{
-    	var rows=g.getSelectedRows();
-    	for(var i=0;i<rows.length;i++){
-    		var row=rows[i];
-    		if(row.status=='02'){
-    			top.$.ligerDialog.warn("预占状态网络设备无法删除!");
-    			return; 
-    		}else if(row.status=='03'){
-    			top.$.ligerDialog.warn("实占状态网络设备无法删除!");
-    			return; 
-    		}else if(row.status=='04'){
-    			top.$.ligerDialog.warn("使用中状态网络设备无法删除!");
-    			return; 
-    		}
-    	}
-    }
-    
-    window.top.$.ligerDialog.confirm("确定删除选择的数据", "提示", function (ok) {
-	    if (ok) {
-			var selecteds = g.getSelecteds();
-			var idstr="";//所有选择行的id
-			for(var i=0;i<selecteds.length;i++){
-				idstr = idstr + selecteds[i].id;
-				if(i!=(selecteds.length-1)){
-					idstr = idstr + ",";
-				}
-			}
+		 $("#example1").DataTable({
+			 "data": dataSet,//数据源
+			 "columns": [
+		                    { "title": "<input name=\"checked_all_info\" type=\"checkbox\" value=\"\">" },
+		                    { "title": "编码" },
+		                    { "title": "设备名称" },
+		                    { "title": "所属数据中心" },
+		                    { "title": "所属机房"},
+		                    { "title": "所属机架"},
+		                    { "title": "IP地址"},
+		                    { "title": "端口总数" },
+		                    { "title": "空闲端口数"},
+		                    { "title": "实占端口数"},
+		                    { "title": "预占端口数"},
+		                    { "title": "使用端口数"},
+		                    { "title": "资源所有"},                    
+		                    { "title": "查看"}
+		                ],
+			 "oLanguage": {//插件的汉化
+             "sLengthMenu": "每页显示 _MENU_ 条记录",
+             "sZeroRecords": "抱歉， 没有找到",
+             "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+             "sInfoEmpty": "没有数据",
+             "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+             "oPaginate": {
+                 "sFirst": "首页",
+                 "sPrevious": "前一页",
+                 "sNext": "后一页",
+                 "sLast": "尾页"
+             },
+		    "sZeroRecords": "没有检索到数据",
+            "sProcessing": "<img src='' />",
+            "sSearch": "搜索"
+		 },
+             
+		 });
+			/**点击复选框，行选中*/
+		 $('#example1').on('click', 'input[name="checked_info"]', function (event) {
+			  if($(this).is(':checked')){
+				  $(this).parent().parent().addClass('selected');  
+			  }else{	
+				  $(this).parent().parent().removeClass('selected');
+			  }
+			  event.stopPropagation();
+		  });
 			/**
-				删除数据库数据
-			 */
-			$.ajax({
-				url:"deleteDeviceByIds.action?ids="+idstr, 
-				dataType:"json", 
-				type:"post",
-				success:function (msg) {
-		       		if("error"==msg.result){
-		   				top.$.ligerDialog.error("删除设备信息失败!");
-		   			}else if("02"==msg.result){
-		   				top.$.ligerDialog.warn("网络设备下有正在使用的板卡无法删除!");
-		   			}else if("01"==msg.result){
-		   				top.$.ligerDialog.success("删除设备信息成功!");
-		   				g.deleteSelectedRow();
-		   			}
-				}, 
-				error:function (error) {
-					top.$.ligerDialog.error("删除设备信息失败!" + error.status);
-				}
-				});
-	     }
-	 });
-}
+			 全选 或取消
+			*/
+		  $("input[name='checked_all_info']").click(function(event){
+			  if($(this).is(':checked')){
+				  $("input[name='checked_info']").parent().parent().addClass('selected');  
+				  $("input[name='checked_info']").prop("checked",true);
+				  
+			  }else{
+				  $("input[name='checked_info']").prop("checked",false);
+				  $("input[name='checked_info']").parent().parent().removeClass('selected');  
+			  }
+			  event.stopPropagation();
+		  });
+		  $('#example1').on('click', 'a[name="detailInfo"]', function (event) {
+			  var id=$(this).attr("id");
+				$("iframe[name='content_info']").get(0).contentWindow.loadInfo(id);
+			  event.stopPropagation();
+		  });
+			/**点击行事件*/
+		 $('#example1').on('click', 'tr', function (event) {
 
-/**
-打开添加信息窗口的方法
-*/
-function  itemsearch(){
-	var url = "bussiness/sxydidc/device/deviceSearch.jsp";
-	winOpen(url,'设备信息查询',760,560,'查询','重置',function(formData){
-		var data =[
-			{name:"device.name",value:formData.name},
-			{name:"device.code",value:formData.code},
-			{name:"device.roomid",value:formData.roomid},
-			{name:"device.rackid",value:formData.rackid}
-		] ;
-		g.setOptions({newPage:1});
-		g.setOptions({parms:data});
-		g.loadData();
-	});
-}
-
-/**
-打开添加信息窗口的方法
-*/
-function  itemmess(){
-	var selected = g.getSelected();
-	if (!selected) {  top.$.ligerDialog.warn('请选择行'); return; }
-	var id = (g.getSelectedRow()).id;  
-	var url = "bussiness/sxydidc/device/deviceView.jsp?id="+id;
-	winDetailOpen(url,'设备信息展示',760,560,'关闭',function(data){});
-}
-
-function  openmess(id){ 
-	var url = "bussiness/sxydidc/device/deviceView.jsp?id="+id;
-	winDetailOpen(url,'设备信息展示',760,560,'关闭',function(data){});
-}
-
-/**
- * 模糊查询
- */
-function quicksearch(value){
-	var data=[{name:'key',value:value}];
-	g.setOptions({newPage:1});
-	g.setOptions({parms:data});
-	g.loadData();
-}
-
-function winOpen(url,title,width,height,button1,button2,callback){
-	window.top.$.ligerDialog.open({
-		width: width, height: height, url: url, title: title, buttons: [{
-			text: button1, onclick: function (item, dialog) {
-				var fn = dialog.frame.f_validate || dialog.frame.window.f_validate;
-				var data = fn();
-				if(data){
-					callback(data);
-					dialog.close();
-				}
-			}
-		},{
-			text: button2, onclick: function (item, dialog) {
-				dialog.close();
-			}
-		}
-		
-		]
-     });
-}
-
-/**
- * 查询设备下的板卡信息
- */
-	function f_showBoard(row, detailPanel,callback){
-		var title="("+row.name+")板卡列表页面";
-    	var grid = document.createElement('div'); 
-        $(detailPanel).append(grid);
-        window['g1']=$(grid).css('margin',5).ligerGrid({
-			checkbox: true,
-			url:"querypackDeviceById.action",
-        	columns:[
-            	{ display: "编码",name: "code"},
-            	{ display: "序列号",name: "sn"},
-            	{ display: "序号",name: "packno"},
-            	{ display: "端口类型",name: "porttype",
-					render: function (item){
-						if (item.porttype =='01'){
-							return '千兆光口';
-						}else if(item.porttype =='02'){
-							return '百兆电口';
-						}
-					}
-            	},
-            	{ display: "端口数量",name: "portcount"},
-            	
-            ],
-			pageSize:10,
-			parms:[{name:"id",value:row.id}],
-			sortname:"portcount",
-			record:"record",
-			root:"listmodel",
-			rownumbers:true, 
-	 		title:title, 
-            width: '75%',
-            columnWidth:150,
-			toolbar: { items: [
-				{ text: '增加', click: function (item){addBoard(row.id);}, icon: 'add'},
-				{ line: true },
-  				{ text: '编辑', click: editBoard, icon: 'edit'},
-  				{ line: true },
-  				{ text: '删除', click: delBoard, icon: 'delete'},
-  				{ line: true },
-  				{ text: '板卡端口列表', click: showBoard, icon: 'bookpen'}
-  			
-  			]}
-            
-        });
-	}
-
-/**
- * 添加板卡
- */
-function addBoard(deviceid){
-	var url = "bussiness/sxydidc/device/devicepackAdd.jsp?deviceId="+deviceid;
-	winOpen(url,'添加设备板卡信息',760,560,'添加','取消',function(data){
-       	$.ajax({
-			url:"savepackDevice.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-       			if("error" == msg.result){
-       				top.$.ligerDialog.error("添加设备板卡信息失败!");
-       			}else{
-	       			g.addRow(msg);
-	       			top.$.ligerDialog.success("添加设备板卡信息成功!");
-       			}
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("添加设备板卡信息失败!" + error.status,"错误");
-		}});
-	});
-}
-/**
- * 编辑板卡信息
- */
-function editBoard(){
-	var selected = g1.getSelected();
-	if (!selected) {  top.$.ligerDialog.warn('请选择行'); return; }
-	var id = (g1.getSelectedRow()).id;  
-	var url = "bussiness/sxydidc/device/devicepackEdit.jsp?id="+id;
-	winOpen(url,'设备板卡信息编辑',760,560,'保存','取消',function(data){
-       	$.ajax({
-			url:"updateDevicePack.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-	       		if("error" == msg.result){
-	   				top.$.ligerDialog.error("修改设备板卡信息失败!");
-	   			}else{
-	   				g1.updateRow(selected,msg);
-       				top.$.ligerDialog.success("修改设备板卡信息成功!","提示");
-	   			}
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("修改设备板卡信息失败!" + error.status,"错误");
-		}});
-	});
-	
-}
-
-/**
- * 板卡信息展示
- */
-function showBoard(){
-	var selected = g1.getSelected();
-	if (!selected) {  top.$.ligerDialog.warn('请选择行'); return; }
-	var id = (g1.getSelectedRow()).id;  
-	var url = "bussiness/sxydidc/device/devicepackView.jsp?id="+id;
-	winOpen(url,'设备板卡信息展示',760,560,'确定','关闭',function(data){});
-}
-
-
-/**
- * 删除板卡
- */
-function delBoard(){
-	var selected = g1.getSelected();
-    if (!selected) {  top.my_alert('请选择要删除的数据行!',"warn"); return; }
-    window.top.$.ligerDialog.confirm("确定删除选择的数据", "提示", function (ok) {
-	    if (ok) {
-	      	g1.deleteSelectedRow();
-			var selecteds = g1.getSelecteds();
-			var idstr="";//所有选择行的id
-			for(var i=0;i<selecteds.length;i++){
-				idstr = idstr + selecteds[i].id;
-				if(i!=(selecteds.length-1)){
-					idstr = idstr + ",";
-				}
-			}
-			/**
-				删除数据库数据
-			 */
-			$.ajax({
-				url:"deleteDevicepackByIds.action?ids="+idstr, 
-				dataType:"json", 
-				type:"post",
-				success:function (msg) {
-		       		if("error"==msg.result){
-		   				top.$.ligerDialog.error("删除设备板卡信息失败!");
-		   			}else if("02"==msg.result){
-		   				top.$.ligerDialog.error("该板卡下有正在使用的端口!");
-		   			}else if("01"==msg.result){
-		   				top.$.ligerDialog.success("删除设备板卡信息成功!");
-		   			}
-				}, 
-				error:function (error) {
-					top.$.ligerDialog.error("删除设备板卡信息失败!" + error.status);
-				}
+			  if($(this).find("input[name='checked_info']").is(':checked')){
+				  $(this).removeClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",false);
+			  }else{
+				  $(this).addClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",true);
+			  } 
+			  event.stopPropagation();
 			});
+		}
+		});
+
+
+  
+	/**
+	 添加信息
+	*/
+$("#add_user").click(function(){ 
+	 $("iframe[name='adduser_content']").get(0).contentWindow.loadInfo();    	  
+		});
+	
+	/**
+	 删除信息
+	*/
+  $("#detele_user").click(function(){
+	     var id=getselectinfo();
+             if(id==""){
+            	 $("#tipContent").html("请选择要删除的数据")
+            	 $('#myModal').modal('show');
+             }else{
+            	 $('#confirm').modal('show');          	 
+             }
+		});
+	
+	/**
+	 获取选中项
+	*/
+  function getselectinfo(){
+	  var checkboxval=$("input[name='checked_info']"); 
+      var id="";   
+      for (var i=0;i<checkboxval.length;i++ ){       
+          if(checkboxval[i].checked){ 
+              if(id=="") {
+              id=id+checkboxval[i].value; 
+               }else{
+                 id=id+","+checkboxval[i].value;   
+               }
+          }  
+       }
+      return id;
+  }
+  
+	/**
+	 修改信息
+	*/
+$("#edit_user").click(function(){ 
+	     var id=getselectinfo();
+	     if(id==""){
+	    	 $("#tipContent").html("请选择要修改的数据")
+	    	 $("#myModal").modal('show');	 
+	     }else if(id.indexOf(",") > 0){
+	    	 $("#tipContent").html("只能修改一条数据");
+	    	 $("#myModal").modal('show');	 
+	     }else{
+	    	 $("iframe[name='editUser_content']").get(0).contentWindow.loadInfo(id);    	 
 	     }
+	      
+		});
+	
+
+	/**
+	详细信息
+	*/
+$("#detail_user").click(function(){ 
+	 var id=getselectinfo();
+	 if(id==""){
+    	 $("#tipContent").html("请选择要查看的数据")
+    	 $("#myModal").modal('show');	 
+     }else if(id.indexOf(",") > 0){
+    	 $("#tipContent").html("只能查看一条数据详情");
+    	 $("#myModal").modal('show');	 
+     }else{
+    	$("iframe[name='content_info']").get(0).contentWindow.loadInfo(id);
+     }
+	});
+
+ $("button[name='adduser']").click(function(){
+	 $("iframe[name='adduser_content']").get(0).contentWindow.submit();
+ });
+ $("button[name='editUser']").click(function(){ 
+	 $("iframe[name='editUser_content']").get(0).contentWindow.submit();
+ });
+ //所属机房点击添加按钮
+ $("button[name='getRoomInfo']").click(function(){
+	var id=$("iframe[name='room_info']").get(0).contentWindow.getselectinfo();
+	if(id==null||id==""){
+		 $("#tipContent").html("请选择所属机房");
+    	 $("#myModal").modal('show');	
+	}else{
+		 $("iframe[name='adduser_content']").get(0).contentWindow.setInfo(id);
+		$("#RoomInfo").modal('hide');		
+	}
+ });
+ //IP地址点击添加按钮
+ $("button[name='getIpInfo']").click(function(){
+		var id=$("iframe[name='ip_info']").get(0).contentWindow.getselectinfo();
+		if(id==null||id==""){
+			 $("#tipContent").html("请选择IP地址");
+	    	 $("#myModal").modal('show');	
+		}else{
+			 $("iframe[name='adduser_content']").get(0).contentWindow.setInfo(id);
+			
+			 $("#IpInfo").modal('hide');		
+		}
 	 });
+ 
+//所属机架击添加按钮
+ $("button[name='getRackInfo']").click(function(){
+ 		var id=$("iframe[name='rack_info']").get(0).contentWindow.getselectinfo();
+ 		if(id==null||id==""){
+ 			 $("#tipContent").html("请选择IP地址");
+ 	    	 $("#myModal").modal('show');	
+ 		}else{
+ 			 $("iframe[name='adduser_content']").get(0).contentWindow.setInfo(id);
+ 			$("#RackInfo").modal('hide');		
+ 		} 
+ 	 });
+  });
+
+
+
+/**
+删除选中项
+*/
+function detletedate(){
+
+	var idstr=getselectinfo();
+	var counr=idstr.split(",").length;
+	var Dtable = $('#example1').DataTable();
+	 Dtable.rows('.selected').remove().draw(false);
+	 $.ajax({
+			url:"deleteRoomByIds.action?ids="+idstr, 
+			dataType:"json", 
+			type:"post",
+			success:function (msg) {
+	       		if("error"==msg.result){
+	       			$("#tipContent").html("删除机房信息失败");
+		 			$("#myModal").modal('show');	
+	   			}else if("01"==msg.result){
+	   				$("#tipContent").html("您删除了"+counr+"条数据");
+		 			$("#myModal").modal('show');
+	   		
+	   			}else if("02"==msg.result){
+	   				$("#tipContent").html("机房中有正在使用的机架无法删除");
+		 			$("#myModal").modal('show');
+	   			}
+			}, 
+			error:function (error) {
+				$("#tipContent").html("删除机房信息失败");
+	 			$("#myModal").modal('show');
+			}
+			});
 }
-
-
+/**
+获取选中项
+*/
+function getselectinfo(){
+ var checkboxval=$("input[name='checked_info']"); 
+ var id="";   
+ for (var i=0;i<checkboxval.length;i++ ){       
+     if(checkboxval[i].checked){ 
+         if(id=="") {
+         id=id+checkboxval[i].value; 
+          }else{
+            id=id+","+checkboxval[i].value;   
+          }
+     }  
+  }
+ return id;
+}

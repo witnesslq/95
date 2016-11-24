@@ -1,166 +1,185 @@
-jQuery(function($){
-    my_initGrid();
-});
-/**
-初始化表格
-CustomersData：要填充的数据
-*/
-function my_initGrid(){
-	window['g']=$("#maingrid").ligerGrid({
-		checkbox: true,
-		rowHeight:22,
-		url:"configQuery.action",
-		columns: [
-			{ display: '类别', name: 'dtype', width:"20%",isSort:true},
-			{ display: '代码', name: 'dkey',  width:"20%" },
-			{ display: '值', name: 'dvalue',  width:"25%" },
-			{ display: '备注', name: 'remark',  width:"30%" }
-		],
-		pageSize:10,
-		root:"listmodel",
-		record:"record",
-		rownumbers:false,
-		title:"系统配置",
-		toolbar: { items: [
-			{ text: '增加', click: itemclick, icon: 'add' },
-			{ line: true },
-			{ text: '修改', click: itemedit, icon: 'modify' },
-			{ line: true },
-			{ text: '删除', click: itemdelete, icon: 'delete'},
-			{ line: true },
-			{ text: '查询', click: itemcx, icon: 'search2'}
-			//{ text: '查询', click: itemcx, img: '../../include/LigerUI/skins/icons/search2.gif'}
-		]}
-	});
-}
-   
-   /**
-     打开添加信息窗口的方法
-   */
-function  itemclick(){
-	var url = "system/config/ConfigAdd.jsp";
-	winOpen(url,'添加系统配置',450,280,'添加','取消',function(data){
-       	$.ajax({
-			url:"configAdd.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (mm) {
-       			if("error"==mm.result){
-       				top.my_alert("添加系统配置信息失败!");
-       			}else{
-	       			g.addRow(mm);
-	       			top.$.ligerDialog.success("添加系统配置信息成功!","success");
-       			}
-			}, 
-			error:function (error) {
-				top.my_alert("添加系统配置信息失败!" + error.status,"error");
-		}});
-	});
-}
-   
-    /**
-     打开修改信息窗口的方法
-   */
-function  itemedit(){
-	var selected = g.getSelected();
-	if (!selected) {  top.my_alert('请选择行',"warn"); return; }
-	var id = (g.getSelectedRow()).id; 
-	var url = "system/config/ConfigEdit.jsp?id="+id;
-	winOpen(url,'修改系统配置',450,280,'修改','取消',function(data){
-       	$.ajax({
-			url:"configEdit.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (mm) {
-	       		if("error"==mm.result){
-	   				top.my_alert("修改系统配置信息失败!");
-	   			}else{
-	   				g.updateRow(selected,mm);
-       				top.$.ligerDialog.success("修改系统配置信息成功!","提示");
-	   			}
-			}, 
-			error:function (error) {
-				top.my_alert("修改系统配置信息失败!" + error.status,"error");
-		}});
-	});
-}
-   
-   
-   /**
-    删除信息的方法
-   */
-function  itemdelete(){
-	var selected = g.getSelected();
-    if (!selected) {  top.my_alert('请选择要删除的数据行!',"warn"); return; }
-    window.top.$.ligerDialog.confirm("确定删除选择的数据", "提示", function (ok) {
-	    if (ok) {
-	      	g.deleteSelectedRow();
-			var selecteds = g.getSelecteds();
-			var idstr="";//所有选择行的id
-			for(var i=0;i<selecteds.length;i++){
-				idstr = idstr + selecteds[i].id;
-				if(i!=(selecteds.length-1)){
-					idstr = idstr + ",";
-				}
-			}
+$(function () {
+	
+	/**
+	 加载数据
+	*/
+  $.ajax({
+		url: "configInfoQuery",
+		type: "post",
+		dataType: 'json',
+		success: function(data) {
+	    var dataSet = []; 
+		for(var i=0;i<data.length;i++){
+		var menu = [];
+		var item = data[i];
+		menu.push("<input name=\"checked_info\" type=\"checkbox\" value=\""+item.id+"\">");   
+		menu.push(item.dtype);
+		menu.push(item.dkey);
+		menu.push(item.dvalue);
+		menu.push(item.remark);
+		
+		dataSet.push(menu);
+		}		
+		 $("#example1").DataTable({
+			 "data": dataSet,//数据源
+			 "columns": [
+		                    { "title": "<input name=\"checked_all_info\" type=\"checkbox\" value=\"\">" },
+		                    { "title": "类别" },
+		                    { "title": "代码" },
+		                    { "title": "值"},
+		                    { "title": "备注"}
+		                ],
+			 "oLanguage": {//插件的汉化
+             "sLengthMenu": "每页显示 _MENU_ 条记录",
+             "sZeroRecords": "抱歉， 没有找到",
+             "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+             "sInfoEmpty": "没有数据",
+             "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+             "oPaginate": {
+                 "sFirst": "首页",
+                 "sPrevious": "前一页",
+                 "sNext": "后一页",
+                 "sLast": "尾页"
+             },
+		    "sZeroRecords": "没有检索到数据",
+            "sProcessing": "..处理中",
+            "sSearch": "搜索"
+		 },
+             
+		 });
+			/**点击复选框，行选中*/
+		 $('#example1').on('click', 'input[name="checked_info"]', function (event) {
+			  if($(this).is(':checked')){
+				  $(this).parent().parent().addClass('selected');  
+			  }else{	
+				  $(this).parent().parent().removeClass('selected');
+			  }
+			  event.stopPropagation();
+		  });
 			/**
-				删除数据库数据
-			 */
-			$.ajax({
-				url:"configDel.action?ids="+idstr, 
-				dataType:"json", 
-				type:"post",
-				success:function (mm) {
-		       		if("error"==mm.result){
-		   				top.my_alert("删除系统配置信息失败!");
-		   			}else{
-		   				top.my_alert("删除系统配置信息成功!");
-		   			}
-				}, 
-				error:function (error) {
-					top.my_alert("删除系统配置信息失败!" + error.status);
-			}});
-	     }
-	 });
-}
-   /**
-      查询的方法
-   */
-function  itemcx(){
-	$.ligerDialog.open({ title:"查询",target: $("#searchDict"),allowClose:true,isHidden:true,
-		buttons: [{ text: '查询', onclick: function (item, dialog) { 
-			var dtype = $("#dtype").val();
-			var dvalue = $("#dvalue").val();
-			g.setOptions({newPage:1});
-			g.setOptions({
-				parms: [
-					{ name: 'dtype', value: dtype },
-					{ name: 'dvalue', value: dvalue }
-				]
+			 全选 或取消
+			*/
+		  $("input[name='checked_all_info']").click(function(event){
+			  if($(this).is(':checked')){
+				  $("input[name='checked_info']").parent().parent().addClass('selected');  
+				  $("input[name='checked_info']").prop("checked",true);
+				  
+			  }else{
+				  $("input[name='checked_info']").prop("checked",false);
+				  $("input[name='checked_info']").parent().parent().removeClass('selected');  
+			  }
+			  event.stopPropagation();
+		  });
+			/**点击行事件*/
+		 $('#example1').on('click', 'tr', function (event) {
+			 console.log("11111");
+			  if($(this).find("input[name='checked_info']").is(':checked')){
+				  $(this).removeClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",false);
+			  }else{
+				  $(this).addClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",true);
+			  } 
+			  event.stopPropagation();
 			});
-			g.loadData();
 		}
-		}]
-    });
+		});
+
+
+  
+	/**
+	 添加信息
+	*/
+$("#add_user").click(function(){ 
+	     $("#adduser").modal('show');   
+		});
+	
+	/**
+	 删除信息
+	*/
+  $("#detele_user").click(function(){
+	     var id=getselectinfo();
+             if(id==""){
+            	 $("#tipContent").html("请选择要删除的数据")
+            	 $('#myModal').modal('show');
+             }else{     	
+            		 $('#confirm').modal('show'); 	          	 
+             }
+		});
+
+	/**
+	 获取选中项
+	*/
+  function getselectinfo(){
+	  var checkboxval=$("input[name='checked_info']"); 
+      var id="";   
+      for (var i=0;i<checkboxval.length;i++ ){       
+          if(checkboxval[i].checked){ 
+              if(id=="") {
+              id=id+checkboxval[i].value; 
+               }else{
+                 id=id+","+checkboxval[i].value;   
+               }
+          }  
+       }
+      return id;
+  }
+  
+	/**
+	 修改信息
+	*/
+$("#edit_user").click(function(){ 
+	     var id=getselectinfo();
+	     if(id==""){
+	    	 $("#tipContent").html("请选择要修改的数据")
+	    	 $("#myModal").modal('show');	 
+	     }else if(id.indexOf(",") > 0){
+	    	 $("#tipContent").html("只能修改一条数据");
+	    	 $("#myModal").modal('show');	 
+	     }else{
+	    	 $("iframe[name='editUser_content']").get(0).contentWindow.loadInfo(id);    	 
+	     }
+	      
+		});
+	
+
+ $("button[name='adduser']").click(function(){
+	 $("iframe[name='adduser_content']").get(0).contentWindow.submit();
+ });
+ $("button[name='editUser']").click(function(){ 
+	 $("iframe[name='editUser_content']").get(0).contentWindow.submit();
+ });
+  });
+/**
+删除选中项
+*/
+function detletedate(){
+
+	var idstr=getselectinfo();
+	var counr=idstr.split(",").length;
+	var Dtable = $('#example1').DataTable();
+	 Dtable.rows('.selected').remove().draw(false);
+	 $.post("configDel.action", { ids: idstr},
+				function(){
+		 			$("#tipContent").html("您删除了"+counr+"条数据");
+		 			$("#myModal").modal('show');
+				});
+	  
 }
- 
-function winOpen(url,title,width,height,button1,button2,callback){
-	window.top.$.ligerDialog.open({
-		width: width, height: height, url: url, title: title, buttons: [{
-			text: button1, onclick: function (item, dialog) {
-				var fn = dialog.frame.f_validate || dialog.frame.window.f_validate;
-				var data = fn();
-				if(data){
-					callback(data);
-					dialog.close();
-				}
-			}
-		},{
-			text: button2, onclick: function (item, dialog) {
-				dialog.close();
-			}
-		}]
-     });
+/**
+获取选中项
+*/
+function getselectinfo(){
+ var checkboxval=$("input[name='checked_info']"); 
+ var id="";   
+ for (var i=0;i<checkboxval.length;i++ ){       
+     if(checkboxval[i].checked){ 
+         if(id=="") {
+         id=id+checkboxval[i].value; 
+          }else{
+            id=id+","+checkboxval[i].value;   
+          }
+     }  
+  }
+ return id;
 }

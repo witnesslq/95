@@ -8,6 +8,10 @@
 		<action name="queryRoom" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomAction" method="queryRoom">
 			<result type="json"></result>
 		</action>
+		<!-- 机房信息查询 -->
+		<action name="queryRoomInfo" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomAction" method="queryRoomInfo">
+			<result type="json"></result>
+		</action>
 		<!-- 根据id查机房 -->
 		<action name="queryRoomById" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomAction" method="queryRoomById">
 			<result type="json"></result>
@@ -73,7 +77,7 @@
 		<!-- 机房信息编辑 -->
 		<action name="rsroomEditorView" class="com.dhcc.bussiness.sxydidc.rsroom.RsroomCheckout" method="checkoutRoom">
 		<result name="success">
-					bussiness/sxydidc/rsroom/rsroomViewEditor.jsp
+					rsroomViewEditor.jsp
 				 </result>
 		</action>
 		<!-- 拖动保存 -->

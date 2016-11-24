@@ -1,7 +1,11 @@
 package com.dhcc.bussiness.sxydidc.useat;
 
 import java.io.PrintWriter;
+import java.util.List;
+
 import org.apache.struts2.ServletActionContext;
+
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.dhcc.common.util.AnyTypeAction;
 import com.dhcc.modal.sxydidc.ip.Rsip;
@@ -40,6 +44,29 @@ public class USeatAction  extends AnyTypeAction<Rsip,USeatModel>{
 		return SUCCESS;
 	}
 	
+	
+	public String queryUSeatInfo(){
+		List<USeatModel> result=null;
+		if(useat==null){
+			result = dao.queryUSeat(needRoleFilter);
+		}else{
+			result = dao.queryUSeatByCondition(useat,needRoleFilter);
+		}
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(result);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+
+		return SUCCESS;
+	}
 	
 	public String deleteUSeatByIds(){
 		 dao.deleteUSeatByIds(ids);

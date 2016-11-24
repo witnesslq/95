@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import org.apache.struts2.ServletActionContext;
+
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.dhcc.common.util.AnyTypeAction;
 
@@ -52,6 +54,31 @@ public class RackAction  extends AnyTypeAction<Rsip,RackModel>{
 	}
 	
 	
+	public String queryInfoRack(){
+		List<RackModel> result=null;
+		if(StringUtil.isEmptyOrNull(key)){
+			if(rack==null){
+				result=dao.queryRack(needRoleFilter);
+			}else{
+				result = dao.queryRackByCondition(rack,needRoleFilter);
+			}			
+		}else{
+			result=dao.quickSearch(key,needRoleFilter);
+		}
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(result);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+	}
 	public String queryRackProperty(){
 		PageModel pm = new PageModel();
 		List<RackModel> list=dao.queryRackProperty(rack.getName());

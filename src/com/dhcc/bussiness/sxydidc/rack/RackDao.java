@@ -62,6 +62,44 @@ public class RackDao {
 		logger.info("call RackDao.queryRack() finish");
 		return pm;
 	}
+	
+	public List<RackModel> queryRack(String needRoleFilter){
+		dbm=new DBManager();
+		List<RackModel> list =null;
+		logger.info("call RackDao.queryRack() start");
+		StringBuilder querySql=null;
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql=new StringBuilder(" select rack.*,room.roomname as roomname,temp.name as customername,dc.name as dcname,temp.totalu as totalU,temp.freeu as freeU,temp.disrentu as disRentU,temp.whlrentu as whlRentU,temp.preu as preU from rsrack rack left join rsroom room on rack.roomid=room.id left join rsdatacenter dc on room.dcid=dc.id left join (");	
+			querySql.append(" select u.rackid as rackid,group_concat(distinct(cust.name)) as name,count(*) as totalu,sum(case u.status when '01' then 1 else 0 end) as freeu,sum(case u.status when '02' then 1 else 0 end) as disrentu,sum(case u.status when '03' then 1 else 0 end) as whlrentu,sum(case u.status when '04' then 1 else 0 end) as preu from rsuseat u left join busccustomer cust on cust.id=u.customerid where (u.status!='99' or u.status is null) group by u.rackid " );
+			querySql.append(")temp on rack.id=temp.rackid ");
+			querySql.append(" where (rack.status!='99' or rack.status is null) and rack.typeid!='05' and rack.roomid is not null ");
+		}else{
+			querySql=new StringBuilder(" select rack.*,room.roomname as roomname,temp.name as customername,dc.name as dcname,temp.totalu as totalU,temp.freeu as freeU,temp.disrentu as disRentU,temp.whlrentu as whlRentU,temp.preu as preU from rsrack rack left join rsroom room on rack.roomid=room.id left join rsdatacenter dc on rack.dcid=dc.id left join (");	
+			querySql.append(" select u.rackid as rackid,group_concat(distinct(cust.name)) as name,count(*) as totalu,sum(case u.status when '01' then 1 else 0 end) as freeu,sum(case u.status when '02' then 1 else 0 end) as disrentu,sum(case u.status when '03' then 1 else 0 end) as whlrentu,sum(case u.status when '04' then 1 else 0 end) as preu from rsuseat u left join busccustomer cust on cust.id=u.customerid where (u.status!='99' or u.status is null) group by u.rackid " );
+			querySql.append(")temp on rack.id=temp.rackid ");
+			querySql.append(" where (rack.status!='99' or rack.status is null) and rack.typeid!='05' and rack.roomid is not null and room.dcid='"+DataCenterUtil.getDCID()+"' ");
+						
+		}
+		querySql.append(" order by room.roomcode,rack.name ");
+		try {
+
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+
+			 list =  dbm.getObjectList(RackModel.class, sql);
+
+			logger.info("call RackDao.queryRack() success");
+		} catch (Exception e) {
+			logger.info("call RackDao.queryRack() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call RackDao.queryRack() finish");
+		return list;
+	}
 	public PageModel queryFreeRack(PageModel pm,String cusid){
 		dbm=new DBManager();
 		logger.info("call RackDao.queryRack() start");
@@ -193,6 +231,79 @@ public class RackDao {
 		}
 		logger.info("call RackDao.queryRackByCondition() finish");
 		return pm;		
+	}
+	
+	
+	public List<RackModel> queryRackByCondition(RackModel rackModel,String needRoleFilter){
+		List<RackModel> list=null;
+		dbm=new DBManager();
+		logger.info("call RackDao.queryRackByCondition() start");
+		StringBuilder querySql=null;
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql=new StringBuilder(" select rack.*,room.roomname as roomname,cust.name as customername,dc.name as dcname,temp.totalu as totalu,temp.freeu as freeu,temp.disrentu as disrentu,temp.whlrentu as whlrentu,temp.preu as preu from rsrack rack left join rsroom room on rack.roomid=room.id left join busccustomer cust on rack.customerid=cust.id left join rsdatacenter dc on rack.dcid=dc.id left join (");	
+			querySql.append(" select u.rackid as rackid,group_concat(distinct(cust.name)) as name,count(*) as totalu,sum(case u.status when '01' then 1 else 0 end) as freeu,sum(case u.status when '02' then 1 else 0 end) as disrentu,sum(case u.status when '03' then 1 else 0 end) as whlrentu,sum(case u.status when '04' then 1 else 0 end) as preu from rsuseat u left join busccustomer cust on cust.id=u.customerid where (u.status!='99' or u.status is null) group by u.rackid " );
+			querySql.append(")temp on rack.id=temp.rackid ");
+			querySql.append(" where (rack.status!='99' or rack.status is null) and rack.roomid is not null ");
+		}else{
+			querySql=new StringBuilder(" select rack.*,room.roomname as roomname,cust.name as customername,dc.name as dcname,temp.totalu as totalu,temp.freeu as freeu,temp.disrentu as disrentu,temp.whlrentu as whlrentu,temp.preu as preu from rsrack rack left join rsroom room on rack.roomid=room.id left join busccustomer cust on rack.customerid=cust.id left join rsdatacenter dc on rack.dcid=dc.id left join (");	
+			querySql.append(" select u.rackid as rackid,group_concat(distinct(cust.name)) as name,count(*) as totalu,sum(case u.status when '01' then 1 else 0 end) as freeu,sum(case u.status when '02' then 1 else 0 end) as disrentu,sum(case u.status when '03' then 1 else 0 end) as whlrentu,sum(case u.status when '04' then 1 else 0 end) as preu from rsuseat u left join busccustomer cust on cust.id=u.customerid where (u.status!='99' or u.status is null) group by u.rackid " );
+			querySql.append(")temp on rack.id=temp.rackid ");
+			querySql.append(" where (rack.status!='99' or rack.status is null) and rack.roomid is not null and room.dcid='"+DataCenterUtil.getDCID()+"' ");
+		}
+		
+		StringBuilder conditionSql=new StringBuilder();
+		
+		if(!StringUtil.isEmptyOrNull(rackModel.getName())){
+			conditionSql.append(" and rack.name like '%").append(rackModel.getName()).append("%' ");
+		}
+				
+		if(!StringUtil.isEmptyOrNull(rackModel.getCode())){
+			conditionSql.append(" and rack.code like '%").append(rackModel.getCode()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(rackModel.getTypeid())){
+			conditionSql.append(" and rack.typeid='").append(rackModel.getTypeid()).append("' ");
+		}		
+				
+		if(rackModel.getUcount()!=null&&rackModel.getUcount()!=0){
+			conditionSql.append(" and rack.ucount=").append(rackModel.getUcount()).append(" ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(rackModel.getRoomid())){
+			conditionSql.append(" and rack.roomid='").append(rackModel.getRoomid()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(rackModel.getCustomerid())){
+			conditionSql.append(" and rack.customerid='").append(rackModel.getCustomerid()).append("' ");
+		}
+		
+		if(!rackModel.getNeedFilter()){
+			if(!StringUtil.isEmptyOrNull(rackModel.getStatus())){
+				conditionSql.append(" and rack.status='").append(rackModel.getStatus()).append("' ");
+			}			
+		}else{
+			conditionSql.append(" and rack.status!='03' ");
+		}
+		querySql=querySql.append(conditionSql.toString()).append(" order by room.roomcode,rack.name ");
+		
+		try {
+
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+			
+			 list =  dbm.getObjectList(RackModel.class, sql);
+			logger.info("call RackDao.queryRackByCondition() success");
+			
+		} catch (Exception e) {
+			logger.info("call RackDao.queryRackByCondition() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call RackDao.queryRackByCondition() finish");
+		return list;		
 	}
 	
 	public PageModel queryFreeRackByCondition(PageModel pm,RackModel rackModel){
@@ -483,6 +594,70 @@ public class RackDao {
 		return pm;		
 	}
 	
+	
+	public List<RackModel> quickSearch(String key,String needRoleFilter){
+		List<RackModel> list=null;
+		dbm=new DBManager();
+		logger.info("call RackDao.quickSearch() start");
+		List<Tsdict> dics=new ArrayList<Tsdict>();
+		StringBuilder keys=new StringBuilder("");
+		
+		StringBuilder querySql=null;
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql=new StringBuilder(" select rack.*,room.roomname as roomname,cust.name as customername,dc.name as dcname,temp.totalu as totalu,temp.freeu as freeu,temp.disrentu as disrentu,temp.whlrentu as whlrentu,temp.preu as preu from rsrack rack left join rsroom room on rack.roomid=room.id left join rsdatacenter dc on rack.dcid=dc.id left join busccustomer cust on rack.customerid=cust.id left join (");	
+			querySql.append(" select u.rackid as rackid,group_concat(distinct(cust.name)) as name,count(*) as totalu,sum(case u.status when '01' then 1 else 0 end) as freeu,sum(case u.status when '02' then 1 else 0 end) as disrentu,sum(case u.status when '03' then 1 else 0 end) as whlrentu,sum(case u.status when '04' then 1 else 0 end) as preu from rsuseat u left join busccustomer cust on cust.id=u.customerid where (u.status!='99' or u.status is null) group by u.rackid " );
+			querySql.append(")temp on rack.id=temp.rackid ");
+			querySql.append(" where (rack.status!='99' or rack.status is null) and rack.typeid!='05' and rack.roomid is not null ");
+
+		}else{
+			querySql=new StringBuilder(" select rack.*,room.roomname as roomname,cust.name as customername,dc.name as dcname,temp.totalu as totalu,temp.freeu as freeu,temp.disrentu as disrentu,temp.whlrentu as whlrentu,temp.preu as preu from rsrack rack left join rsroom room on rack.roomid=room.id left join rsdatacenter dc on rack.dcid=dc.id left join busccustomer cust on rack.customerid=cust.id left join (");	
+			querySql.append(" select u.rackid as rackid,group_concat(distinct(cust.name)) as name,count(*) as totalu,sum(case u.status when '01' then 1 else 0 end) as freeu,sum(case u.status when '02' then 1 else 0 end) as disrentu,sum(case u.status when '03' then 1 else 0 end) as whlrentu,sum(case u.status when '04' then 1 else 0 end) as preu from rsuseat u left join busccustomer cust on cust.id=u.customerid where (u.status!='99' or u.status is null) group by u.rackid " );
+			querySql.append(")temp on rack.id=temp.rackid ");
+			querySql.append(" where (rack.status!='99' or rack.status is null) and rack.typeid!='05' and rack.roomid is not null and room.dcid='"+DataCenterUtil.getDCID()+"' ");
+		}
+		
+		StringBuilder conditionSql=new StringBuilder();
+		
+		if(!StringUtil.isEmptyOrNull(key)){
+			conditionSql.append(" rack.name like '%").append(key).append("%' ");
+			conditionSql.append(" or rack.code like '%").append(key).append("%' ");
+			conditionSql.append(" or rack.typeid like '%").append(key).append("%' ");
+			
+			dics=this.queryDicIds(dbm, key);
+			for(Tsdict dic:dics){
+				if(dics.lastIndexOf(dic)!=dics.size()-1){
+					keys.append("'").append(dic.getDkey()).append("',");
+				}else{
+					keys.append("'").append(dic.getDkey()).append("'");
+				}
+			}
+
+			if(!StringUtil.isEmptyOrNull(keys.toString())){
+				conditionSql.append(" or rack.status in(").append(keys.toString()).append(") ");
+			}
+		}
+		
+		querySql=querySql.append(" and ("+conditionSql.toString()+") ").append(" order by room.roomcode,rack.name ");
+		
+		try {
+
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+			
+			 list =  dbm.getObjectList(RackModel.class, sql);
+			logger.info("call RackDao.quickSearch() success");
+			
+		} catch (Exception e) {
+			logger.info("call RackDao.quickSearch() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call RackDao.quickSearch() finish");
+		return list;		
+	}
 	private List<Tsdict> queryDicIds(DBManager dbm,String dvalue){
 		List<Tsdict> list=new ArrayList<Tsdict>();
 		try {

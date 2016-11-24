@@ -57,6 +57,37 @@ public class IPDao {
 		logger.info("call IPDao.queryIP() finish");
 		return pm;
 	}
+
+	public List<IPModel> queryIP(String needRoleFilter){
+		List<IPModel> list=null;
+		dbm=new DBManager();
+		logger.info("call IPDao.queryIP() start");
+		StringBuilder countSql=new StringBuilder(" select count(*) from rsip ip left join busccustomer cust on ip.customerid=cust.id left join rsipseg seg on ip.ipsegid=seg.id left join rsdevice device on ip.deviceid=device.id left join rsdatacenter dc on ip.dcid=dc.id where (ip.status!='99' or ip.status is null) and (ip.dcid='"+DataCenterUtil.getDCID()+"' ");
+		StringBuilder querySql=new StringBuilder(" select ip.*,cust.name as customername,dc.name as dcname,seg.name as ipsegname,device.name as devicename from rsip ip left join busccustomer cust on ip.customerid=cust.id left join rsipseg seg on ip.ipsegid=seg.id left join rsdevice device on ip.deviceid=device.id left join rsdatacenter dc on ip.dcid=dc.id where (ip.status!='99' or ip.status is null) and (ip.dcid='"+DataCenterUtil.getDCID()+"' ");
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			countSql.append(" or 1=1 ");
+			querySql.append(" or 1=1 ");
+		}
+		countSql.append(") ");
+		querySql.append(") ");
+		querySql.append(" order by ip.ipsegid,ip.ipadd desc ");
+		try {
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+
+			 list =  dbm.getObjectList(IPModel.class, sql);
+			logger.info("call IPDao.queryIP() success");
+		} catch (Exception e) {
+			logger.info("call IPDao.queryIP() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call IPDao.queryIP() finish");
+		return list;
+	}
 	/**
 	 * 资源调度页面查询ip
 	 * */
@@ -235,6 +266,65 @@ public class IPDao {
 		return pm;		
 	}
 	
+	
+	public List<IPModel>  queryIPByCondition(IPModel iPModel,boolean needDevice,String needRoleFilter){
+		List<IPModel>  list = null;
+		dbm=new DBManager();
+		logger.info("call ContractDao.queryContractByCondition() start");
+		StringBuilder countSql=new StringBuilder("  select count(*) from rsip ip left join busccustomer cust on ip.customerid=cust.id left join rsipseg seg on ip.ipsegid=seg.id left join rsdevice device on ip.deviceid=device.id left join rsdatacenter dc on ip.dcid=dc.id where (ip.dcid='"+DataCenterUtil.getDCID()+"'  ");
+		StringBuilder querySql=new StringBuilder("  select ip.*,cust.name as customername,dc.name as dcname,seg.name as ipsegname,device.name as devicename from rsip ip left join busccustomer cust on ip.customerid=cust.id left join rsipseg seg on ip.ipsegid=seg.id left join rsdevice device on ip.deviceid=device.id left join rsdatacenter dc on ip.dcid=dc.id where (ip.dcid='"+DataCenterUtil.getDCID()+"'  ");
+		
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			countSql.append(" or 1=1 ");
+			querySql.append(" or 1=1 ");
+		}
+		countSql.append(") ");
+		querySql.append(") ");
+		
+		StringBuilder conditionSql=new StringBuilder();
+		if(!StringUtil.isEmptyOrNull(iPModel.getIpadd())){
+			conditionSql.append(" and ip.ipadd like '%").append(iPModel.getIpadd()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(iPModel.getStatus())){
+			conditionSql.append(" and ip.status='").append(iPModel.getStatus()).append("' ");
+		}else{
+			conditionSql.append(" and (ip.status!='99' or ip.status is null) ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(iPModel.getIpsegid())){
+			conditionSql.append(" and ip.ipsegid='").append(iPModel.getIpsegid()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(iPModel.getDeviceid())){
+			conditionSql.append(" and ip.deviceid='").append(iPModel.getDeviceid()).append("' ");
+		}		
+		
+		if(!StringUtil.isEmptyOrNull(iPModel.getCustomerid())){
+			conditionSql.append(" and ip.customerid='").append(iPModel.getCustomerid()).append("' ");
+		}
+
+		countSql=countSql.append(conditionSql.toString());
+		querySql=querySql.append(conditionSql.toString()+" order by ip.ipsegid,ip.ipadd desc ");
+		
+		try {
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+			
+			list =  dbm.getObjectList(IPModel.class, sql);
+			logger.info("call IPDao.queryIPByCondition() success");
+			
+		} catch (Exception e) {
+			logger.info("call IPDao.queryIPByCondition() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call IPDao.queryIPByCondition() finish");
+		return list;		
+	}
 	public List<IPModel> queryIPProperty(String ipadd){
 		dbm=new DBManager();
 		logger.info("call IPDao.queryIPProperty() start");
@@ -428,6 +518,64 @@ public class IPDao {
 		return pm;		
 	}
 	
+	
+	public List<IPModel>  quickSearch(String key,String needRoleFilter){
+		List<IPModel>  list=null;
+		dbm=new DBManager();
+		logger.info("call IPDao.quickSearch() start");
+		List<Tsdict> dics=new ArrayList<Tsdict>();
+		StringBuilder keys=new StringBuilder("");
+		String countSql="  select count(*) from rsip ip left join busccustomer cust on ip.customerid=cust.id left join rsipseg seg on ip.ipsegid=seg.id left join rsdevice device on ip.deviceid=device.id left join rsdatacenter dc on ip.dcid=dc.id where (ip.status!='99' or ip.status is null) and (ip.dcid='"+DataCenterUtil.getDCID()+"' ";
+		String querySql="  select ip.*,cust.name as customername,dc.name as dcname,seg.name as ipsegname,device.name as devicename from rsip ip left join busccustomer cust on ip.customerid=cust.id left join rsipseg seg on ip.ipsegid=seg.id left join rsdevice device on ip.deviceid=device.id left join rsdatacenter dc on ip.dcid=dc.id where (ip.status!='99' or ip.status is null) and (ip.dcid='"+DataCenterUtil.getDCID()+"' ";
+		
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			countSql=countSql+" or 1=1 ";
+			querySql=querySql+" or 1=1 ";
+		}
+		countSql=countSql+") ";
+		querySql=querySql+") ";
+		
+		StringBuilder conditionSql=new StringBuilder();
+		if(!StringUtil.isEmptyOrNull(key)){
+			conditionSql.append(" ip.ipadd like '%").append(key).append("%' ");
+			conditionSql.append(" or seg.name like '%").append(key).append("%' ");
+			dics=this.queryDicIds(dbm, key);
+			for(Tsdict dic:dics){
+				if(dics.lastIndexOf(dic)!=dics.size()-1){
+					keys.append("'").append(dic.getDkey()).append("',");
+				}else{
+					keys.append("'").append(dic.getDkey()).append("'");
+				}
+			}
+
+			if(!StringUtil.isEmptyOrNull(keys.toString())){
+				conditionSql.append(" or ip.status in(").append(keys.toString()).append(") ");
+			}			
+			conditionSql.append(" or device.name like '%").append(key).append("%' ");
+			conditionSql.append(" or cust.name like '%").append(key).append("%' ");
+		}
+
+		countSql=countSql+" and ("+conditionSql.toString()+") ";
+		querySql=querySql+" and ("+conditionSql.toString()+") order by ip.ipsegid,ip.ipadd desc ";
+		
+		try {
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql);
+			pageFactory = null;
+			
+			list =  dbm.getObjectList(IPModel.class, sql);
+			logger.info("call IPDao.quickSearch() success");
+			
+		} catch (Exception e) {
+			logger.info("call IPDao.quickSearch() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call IPDao.quickSearch() finish");
+		return list;		
+	}
 	private List<Tsdict> queryDicIds(DBManager dbm,String dvalue){
 		List<Tsdict> list=new ArrayList<Tsdict>();
 		try {

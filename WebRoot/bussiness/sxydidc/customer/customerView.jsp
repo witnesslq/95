@@ -1,473 +1,255 @@
-<%@ page language="java"  pageEncoding="UTF-8"%>
+
+<%@ page import="com.dhcc.bussiness.sxydidc.datacenter.DataCenterModel" language="java"  pageEncoding="UTF-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String id = request.getParameter("id");
-String type = request.getParameter("type");
-
-String busOrdCount=request.getParameter("busOrdCount")!=null?request.getParameter("busOrdCount").toString():"0";
-String serOrdCount=request.getParameter("serOrdCount")!=null?request.getParameter("serOrdCount").toString():"0";
-
-String serverCount=request.getParameter("serverCount")!=null?request.getParameter("serverCount").toString():"0";
-String rackCount=request.getParameter("rackCount")!=null?request.getParameter("rackCount").toString():"0";
-String useatCount=request.getParameter("useatCount")!=null?request.getParameter("useatCount").toString():"0";
-String ipsegCount=request.getParameter("ipsegCount")!=null?request.getParameter("ipsegCount").toString():"0";
-String ipCount=request.getParameter("ipCount")!=null?request.getParameter("ipCount").toString():"0";
-String portCount=request.getParameter("portCount")!=null?request.getParameter("portCount").toString():"0";
-
-String preServerCount=request.getParameter("preServerCount")!=null?request.getParameter("preServerCount").toString():"0";
-String preRackCount=request.getParameter("preRackCount")!=null?request.getParameter("preRackCount").toString():"0";
-String preUseatCount=request.getParameter("preUseatCount")!=null?request.getParameter("preUseatCount").toString():"0";
-String preIpsegCount=request.getParameter("preIpsegCount")!=null?request.getParameter("preIpsegCount").toString():"0";
-String preIpCount=request.getParameter("preIpCount")!=null?request.getParameter("preIpCount").toString():"0";
-String prePortCount=request.getParameter("prePortCount")!=null?request.getParameter("prePortCount").toString():"0";
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
+DataCenterModel dc=(DataCenterModel)request.getSession(true).getAttribute("dc");
 %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-	<base href="<%=basePath%>"/>
-    <title>客户信息展示</title>
-	<jsp:include page="../common/head.jsp" flush="true"/>
-	<link    rel="stylesheet" type="text/css" href="<%=basePath %>css/flowStyle.css"/>
-    <script type="text/javascript">
-        var form; 
-        var navtab;
-        var prenavtab;
-        var bustab;
-        $(function (){
-  			$("#main").ligerPanel({
-                 title:'客户信息',
-                 width:'98%',
-                 height:'670' 
-             });
-             
-  			$("#orderPanel").ligerPanel({
-                 title:'客户工单信息',
-                 width:'98%',
-                 height:'358'  
-             });
-             
-  			$("#productPanel").ligerPanel({
-                 title:'客户产品信息',
-                 width:'98%',
-                 height:'300',
-                 url:'<%=basePath%>bussiness/sxydidc/product/custProduct.jsp?custid=<%=id%>&orderid='
-             }); 
-  			$("#contractPanel").ligerPanel({
-                 title:'客户合同信息',
-                 width:'98%',
-                 height:'300',
-                 url:'<%=basePath%>bussiness/sxydidc/contract/custContract.jsp?custid=<%=id%>&orderid='
-             }); 
- 
-   			$("#resPanel").ligerPanel({
-                 title:'客户资源信息',
-                 width:'98%',
-                 height:'358'
-             }); 
-         
-   			$("#occupiedResPanel").ligerPanel({
-                 title:'客户预占资源信息',
-                 width:'98%',
-                 height:'358'
-             });                        
-                                               
-        	form = $("#form").ligerForm({
-        		inputWidth: 180, 
-        		labelWidth: 120, 
-        		space: 40, 
-				validate : true,
-				readonly:true,
-                fields: [ 
-               		{ label: "客户编号",name: "no",newline: true},
-                    { label: "客户类型",name: "type",newline: false,type: "select",
-                        editor:{
-                    		data:queryDictionary('CUSTOMERTYPE',null),
-                    		initValue:"",
-                    		readonly:true
-                    	}
-                    },
-                    { label: "客户级别",name: "customerlevel",newline: true,type: "select",
-                         editor:{
-                    		data:queryDictionary('CUSTOMERLEVEL',null),
-                    		initValue:"1",
-                    		readonly:true
-                    	}                   
-                    },               		
-                    { label: "客户名称",name: "name",newline: false, type: "text"},
-                    { label: "客户简称",name: "sortname",newline: true,type: "text"},
-                    { label: "客户性质",name: "customerproperty",newline: false,type: "select",
-                        editor:{
-                    		data:queryDictionary('CUSTOMERPROPERTY',null),
-                    		initValue:"",
-                    		readonly:true
-                    	}
-                    },
-                    { label: "上级客户",name: "parentid",newline: true,type: "text"},                             
-                    { label: "客户省份",name: "province",newline: false,type: "select",
-						editor:{
-                    		data:[{id:'BEIJING',text:'北京市'},                        
-								{id:'HEBEI',text:'河北省'},
-								{id:'HENAN',text:'河南省'},
-								{id:'YUNNAN',text:'云南省'},
-								{id:'LIAONING',text:'辽宁省'},
-								{id:'HEILONGJIANG',text:'黑龙江省'},
-								{id:'HUNAN',text:'湖南省'},
-								{id:'ANHUI',text:'安徽省'},
-								{id:'SHANDONG',text:'山东省'},
-								{id:'XINJIANG',text:'新疆省'},
-								{id:'JIANGSU',text:'江苏省'},
-								{id:'ZHEJIANG',text:'浙江省'},
-								{id:'JIANGXI',text:'江西省'},
-								{id:'HUBEI',text:'湖北省'},
-								{id:'GUANGXI',text:'广西省'},
-								{id:'GANSU',text:'甘肃省'},
-								{id:'SHANXI',text:'山西省'},
-								{id:'NEIMENG',text:'内蒙古'},
-								{id:'SHAANXI',text:'陕西省'},
-								{id:'JILING',text:'吉林省'},
-								{id:'FUJIAN',text:'福建省'},
-								{id:'GUIZHOU',text:'贵州省'},
-								{id:'GUANGDONG',text:'广东省'},
-								{id:'QINGHAI',text:'青海省'},
-								{id:'XIZANG',text:'西藏'},
-								{id:'SICHUAN',text:'四川省'},
-								{id:'NINGXIA',text:'宁夏省'},
-								{id:'HAINAN',text:'海南省'},
-								{id:'TAIWAN',text:'台湾省'},
-								{id:'XIANGGANG',text:'香港'},
-								{id:'AOMEN',text:'澳门'}
-							],
-                    		initValue:"SHANXI",
-                    		readonly:true
-                    	}                     
-                    },
-                     { label: "客户经理",name: "manager",newline: true,type: "popupedit",
-						editor: {
-                			condition: {
-                   			 	prefixID: 'condtion_',
-                    			fields: [{ name: 'loginname',type:'text', label: '客户经理' }]
-                			},
-                			readonly:true,
-                			grid: selectManager(true),
-                			valueField: 'id',
-                			textField: 'loginname',
-                			width: 600,
-                			onButtonClick:function(){
-                				$.ligerui.get("manager").clear();
-                			}       									
-						}
-                    
-                    },
-                    { label: "客户经理手机",name: "managermobile",newline: false,type: "text"},
-                    { label: "客户联系人",name: "contactname",newline: true,type: "text"},
-                    { label: "客户联系人手机",name: "mobilephone",newline: false,type: "text"},
-                    { label: "座机号码",name: "contactphone",newline: true,type: "text"},
-                    { label: "法人代表",name: "corporate",newline: false,type: "text"},
-                    { label: "通讯地址",name: "contactaddress",newline: true,type:"text",width:520},
-                    { label: "客户域级",name: "customerfield",newline: true,type: "select",
-                         editor:{
-                    		data:queryDictionary('CUSTFIELD',null),
-                    		readonly:true,
-                    		initValue:""
-                    	}                   
-                    },                    
-                    { label: "ICP证号",name: "icpno",newline: false,type: "text"}, 
-                    { label: "网站名称",name: "sitename",newline: true,type: "text"},
-                    { label: "网站主域名",name: "domainname",newline: false,type: "text"},
-                    { label: "技术负责人",name: "skillpeople",newline: true,type: "text"},
-                    { label: "引用内容域名",name: "subdomain",newline: false, type: "text"},
-                    { label: "引用内容",name: "content",newline: true,type: "text"},
-                    { label: "带宽要求",name: "bandwidth",newline: false,type: "text"},
-                    { label: "引用方式",name: "method",newline: true,type: "text"},
-                    { label: "调度方式",name: "dispatch",newline: false,type: "text"},   
-                    { label: "主要协议",name: "prot",newline: true,type: "text"}, 
-                    
-                    { label: "开户属地",name: "regionid",newline: false,type: "select",
-						editor: {
-							width : 180, 
-							selectBoxWidth: 190,
-							selectBoxHeight: 190, 
-							valueField: 'id',
-							treeLeafOnly: false,
-							readonly:true,
-							tree: { 
-								url:"cropDeptTreeQuery.action", 
-								ajaxType:'post',
-								idFieldName: 'id',
-								parentIDFieldName: 'pid',
-								checkbox: false								
-							}							
-						}                    
-                    },   
-                    { label: "备案名称",name: "registername",newline: true,type: "text"},
-                    { label: "公司名称",name: "companyname",newline: false,type: "text"},
-                    { label: "合同终止日期",name: "enddate",newline: true,type: "date",readonly:true}, 
-                    { label: "SLA",name: "slano",newline: true,width:520,type: "textarea"},                                                                                 
-                    { label: "备注", name: "remark", newline: true, width:520,type:"textarea", validate: { maxlength: 200 }}
-                ]
-            });
-             
-            $("#busTab").ligerTab({
-           		onAfterSelectTabItem:function(tabid){
-           			var url;
-					switch (tabid+"-bus"){
-               			 case "home-bus":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/custOrder.jsp?custid=<%=id%>&orderid=&type=<%=type%>'></iframe>";
-                    	 	break;					
-               			 case "tabitem1-bus":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/serverOrder.jsp?custid=<%=id%>'></iframe>";
-                    	 	break;                      	 	                    	 	                    	 	                    	 	
-                    };
-           			$("#"+tabid+"-bus").html(url);
-           			bustab.reload(bustab.getSelectedTabItemID()+"-bus");
-           		}
-            });
-            bustab = $("#busTab").ligerGetTabManager();           
-            
-            $("#tab").ligerTab({
-           		onAfterSelectTabItem:function(tabid){
-           			var url;
-					switch (tabid){
-               			 case "home":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/orderRes.jsp?restype=SERVER&custid=<%=id%>&orderid='></iframe>";
-                    	 	break;					
-               			 case "tabitem1":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/orderRes.jsp?restype=RACK&custid=<%=id%>&orderid='></iframe>";
-                    	 	break; 
-               			 case "tabitem2":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/orderRes.jsp?restype=USEAT&custid=<%=id%>&orderid='></iframe>";
-                    	 	break; 
-               			 case "tabitem3":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/orderRes.jsp?restype=IPSEG&custid=<%=id%>&orderid='></iframe>";
-                    	 	break; 
-               			 case "tabitem4":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/orderRes.jsp?restype=IP&custid=<%=id%>&orderid='></iframe>";
-                    	 	break; 
-               			 case "tabitem5":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/orderRes.jsp?restype=PORT&custid=<%=id%>&orderid='></iframe>";
-                    	 	break;                     	 	                    	 	                    	 	                    	 	
-                    };
-           			$("#"+tabid).html(url);
-           			navtab.reload(navtab.getSelectedTabItemID());
-           		}
-            }); 
-            navtab = $("#tab").ligerGetTabManager();
-            
-            $("#preTab").ligerTab({
-           		onAfterSelectTabItem:function(tabid){
-           			var url;
-					switch (tabid+"-pre"){
-               			 case "home-pre":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/occupiedRes.jsp?restype=SERVER&custid=<%=id%>&orderid='></iframe>";
-                    	 	break;					
-               			 case "tabitem1-pre":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/occupiedRes.jsp?restype=RACK&custid=<%=id%>&orderid='></iframe>";
-                    	 	break; 
-               			 case "tabitem2-pre":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/occupiedRes.jsp?restype=USEAT&custid=<%=id%>&orderid='></iframe>";
-                    	 	break; 
-               			 case "tabitem3-pre":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/occupiedRes.jsp?restype=IPSEG&custid=<%=id%>&orderid='></iframe>";
-                    	 	break; 
-               			 case "tabitem4-pre":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/occupiedRes.jsp?restype=IP&custid=<%=id%>&orderid='></iframe>";
-                    	 	break; 
-               			 case "tabitem5-pre":
-               			 	url="<iframe frameborder='0' src='<%=basePath%>bussiness/sxydidc/order/occupiedRes.jsp?restype=PORT&custid=<%=id%>&orderid='></iframe>";
-                    	 	break;                     	 	                    	 	                    	 	                    	 	
-                    };
-           			$("#"+tabid+"-pre").html(url);
-           			prenavtab.reload(prenavtab.getSelectedTabItemID()+"-pre");
-           		}
-            });
-            prenavtab = $("#preTab").ligerGetTabManager();
-              
-            getCustomerInfo();
-            init();
-        });
-		
-		/**供回调方法使用*/
-		function f_validate(){ 
-			if(form.valid()){
-				return datePost();
-			}else{
-			    form.showInvalid();
-			}
-		}
-		
-		/**获取表单要保存的数据以json格式返回*/
-		function datePost(){
-			var formData = form.getData();		
-			var data = {"customer.id":"<%=id %>",
-						"customer.no":formData.no,
-						"customer.name":formData.name,
-						"customer.type":formData.type,
-						"customer.customerlevel":formData.customerlevel,
-						"customer.contactname":formData.contactname,
-						"customer.mobilephone":formData.mobilephone,
-						"customer.contactphone":formData.contactphone,
-						"customer.contactaddress":formData.contactaddress,
-						"customer.customerproperty":formData.customerproperty,
-						"customer.parentid":formData.parentid,			
-						"customer.sortname":formData.sortname,			
-						"customer.corporate":formData.corporate,			
-						"customer.customerfield":formData.customerfield,	
-						"customer.icpno":formData.icpno,					
-						"customer.sitename":formData.sitename,				
-						"customer.domainname":formData.domainname,			
-						"customer.skillpeople":formData.skillpeople,		
-						"customer.subdomain":formData.subdomain,			
-						"customer.content":formData.content,				
-						"customer.bandwidth":formData.bandwidth,			
-						"customer.method":formData.method,					
-						"customer.dispatch":formData.dispatch,	
-						"customer.prot":formData.prot,				
-						"customer.province":formData.province,				
-						"customer.regionid":formData.regionid,				
-						"customer.registername":formData.registername,		
-						"customer.companyname":formData.companyname,		
-						"customer.slano":formData.slano,
-						"customer.enddate":formData.enddate,
-						"customer.remark":formData.remark
-			};
-			return data;
-		}
-		
-		/**表单赋值函数*/
-		function getCustomerInfo(){
-		  $.ajax({
-			url:"queryCustomerById.action", 
-			data:{"id":"<%=id%>","type":"<%=type%>"}, 
-			async:false,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-		       liger.get("form").setData({
-					no:msg.no,
-					name:msg.name,
-					type:msg.type,
-					customerlevel:msg.customerlevel,
-					contactname:msg.contactname,
-					mobilephone:msg.mobilephone,
-					contactphone:msg.contactphone,
-					contactaddress:msg.contactaddress,
-					customerproperty:msg.customerproperty,
-					parentid:msg.parentid,			
-					sortname:msg.sortname,			
-					corporate:msg.corporate,			
-					customerfield:msg.customerfield,	
-					icpno:msg.icpno,					
-					sitename:msg.sitename,				
-					domainname:msg.domainname,			
-					skillpeople:msg.skillpeople,		
-					subdomain:msg.subdomain,			
-					content:msg.content,				
-					bandwidth:msg.bandwidth,			
-					method:msg.method,					
-					dispatch:msg.dispatch,	
-					prot:msg.prot,				
-					province:msg.province,				
-					regionid:msg.regionid,				
-					registername:msg.registername,		
-					companyname:msg.companyname,		
-					slano:msg.slano,
-					enddate:msg.enddate,
-					remark:msg.remark,
-					managermobile:msg.managermobile			
-				});
-				$.ligerui.get("manager").setText(msg.managername);
-			}, 
-			error:function (error) {
-				alert("获取客户信息失败" + error.status);
-			}
-			});
-		}
-		
-		function init(){
-			var regionid=$.ligerui.get("regionid").getValue();
-			if($.trim(regionid).length==0){
-				$.ligerui.get("regionid").setText('');
-			}			
-		};
-		
-		function selectManager(checkbox){
-            var options = {
-            	url: "UserQueryList.action",
-            	checkbox: checkbox,
-				columns: [
-					{ display: 'ID', name: 'id', align: 'left',minWidth: 10,width: 10,hide:true,isAllowHide:false},
-					{ display: '登陆名', name: 'loginname', minWidth:30 ,width:100,isSort:true},
-					{ display: '用户姓名', name: 'username', minWidth: 30 ,width:100,isSort:true},
-					{ display: '性别', name: 'sex', minWidth: 20 ,width:80,
-						render: function (item){
-							if (item.sex == 'M'){ 
-								return '男';
-							}else{
-								return '女';
-							} 
-		        		}
-					},
-					{ display: '手机', name: 'mobileprivate', minWidth: 110 ,width:100,isSort:true},
-					{ display: '邮箱', name: 'emailprivate', minWidth: 120 ,width:200,isSort:true},
-					{ display: '备注', name: 'remark', minWidth: 150,width:200 }
-				], 
-                pageSize: 10,
-				rownumbers:true,
-				root:"listmodal",
-				record:"record"                
-             };
-             return options;			
-		}		
-				
-    </script>
-    <style type="text/css">
-        html,body{ 
-	        margin:0;
-	        padding:0;
-        	font-size:14px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>IDC／ISP流量统计与质量监测系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+   <!-- bootstrap datepicker -->
+   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/datepicker3.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 </head>
-<body style="padding:10px">
-	   <div style="text-align: center;width:98%;margin-bottom: 10px;" ><font size="5em">客户信息展示</font></div>
-	   <div id="main">
-	   		<form id="form"></form>
-	   </div>
-       <div id="orderPanel" style="margin-top:5px;" >
-       		<div id="busTab" style="padding:2px;overflow:hidden; border:1px solid #A3C0E8;"> 
-       			<div  tabid="home-bus" title="业务单信息(<%=busOrdCount%>)" style="height:300px;">
-       				<iframe frameborder="0" src="<%=basePath%>bussiness/sxydidc/order/custOrder.jsp?custid=<%=id%>&orderid=&type=<%=type%>"></iframe>
-       			</div>
-       			<div id="tabitem1-bus" title="服务单信息(<%=serOrdCount%>)" style="height:300px;"></div>                                                     
-    		</div>       
-       </div>	   	
-       <div id="productPanel" style="margin-top:5px;" ></div>	   	  
-       <div id="contractPanel"  style="margin-top:5px;"></div>
-       <div id="resPanel"  style="margin-top:5px;">
-       		<div id="tab" style="padding:2px;overflow:hidden; border:1px solid #A3C0E8;"> 
-       			<div  tabid="home" title="业务服务器(<%=serverCount%>)" style="height:300px;">
-       				<iframe frameborder="0" src="<%=basePath%>bussiness/sxydidc/order/orderRes.jsp?restype=SERVER&custid=<%=id%>&orderid="></iframe>
-       			</div>
-       			<div id="tabitem1" title="机架(<%=rackCount%>)" style="height:300px;"></div> 
-       			<div id="tabitem2" title="U位(<%=useatCount%>)" style="height:300px"></div>
-      	 		<div id="tabitem3" title="IP段(<%=ipsegCount%>)" style="height:300px"></div> 
-       			<div id="tabitem4" title="IP地址(<%=ipCount%>)" style="height:300px"></div>
-       			<div id="tabitem5" title="端口(<%=portCount%>)" style="height:300px"></div>                                                     
-    		</div>       
-       </div>
-       <div id="occupiedResPanel"  style="margin-top:5px;">
-       		<div id="preTab" style="padding:2px;overflow:hidden; border:1px solid #A3C0E8;"> 
-       			<div  tabid="home-pre" title="业务服务器(<%=preServerCount%>)" style="height:300px;">
-       				<iframe frameborder="0" src="<%=basePath%>bussiness/sxydidc/order/occupiedRes.jsp?restype=SERVER&custid=<%=id%>&orderid="></iframe>
-       			</div>
-       			<div id="tabitem1-pre" title="机架(<%=preRackCount%>)" style="height:300px;"></div> 
-       			<div id="tabitem2-pre" title="U位(<%=preUseatCount%>)" style="height:300px"></div>
-      	 		<div id="tabitem3-pre" title="IP段(<%=preIpsegCount%>)" style="height:300px"></div> 
-       			<div id="tabitem4-pre" title="IP地址(<%=preIpCount%>)" style="height:300px"></div>
-       			<div id="tabitem5-pre" title="端口(<%=prePortCount%>)" style="height:300px"></div>                                                     
-    		</div>       
-       </div>       
+<body class="hold-transition">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+ 
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content-header">
+      <h1>
+        客户信息展示
+      
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 工作台</a></li>
+        <li class="active"><a href="customerList.jsp" target="content">我的客户</a></li>   
+        <li class="active"><a href="#">  客户信息展示</a></li>
+      </ol>
+    </section>
+    <section class="content">
+   <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">集团客户信息</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>  
+              </div>
+            </div>
+            <div class="box-body">
+                <form  class="form-horizontal" role="form">
+                  <div class="form-group form-group-sm customer-content-side">
+				    <label for="no" class="col-xs-2 control-label nopadding font-size font-padding-size">客户编号
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	   <input type="text" class="form-control" id="no" readonly>
+				    </div>
+				   
+				    <label for="type" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户类型</label>
+				   	<div class="col-xs-4 nopadding"> 
+				      	<input type="text" class="form-control" id="type" readonly>   
+				   	</div> 
+				  </div>
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="customerlevel" class="col-xs-2 control-label nopadding font-size font-padding-size">客户级别
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				      <input type="text" class="form-control" id="customerlevel" readonly>    	  
+				    </div> 
+				    <label for="name" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户名称</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <input type="text" class="form-control" id="name" readonly>
+				   	</div> 
+				  </div> 
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="sortname" class="col-xs-2 control-label nopadding font-size font-padding-size">客户简称
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="sortname" readonly>
+				    </div>
+				   
+				    <label for="customerproperty" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户性质</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	  <input type="text" class="form-control" id="customerproperty" readonly> 
+				   	</div> 
+				  </div>
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="parentid" class="col-xs-2 control-label nopadding font-size font-padding-size">上级客户
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="parentid" readonly>
+				    </div>
+				   
+				    <label for="manager" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户经理</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <input type="text" class="form-control" id="manager" readonly> 	  
+				   	</div> 
+				  </div>
+				  
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="corporate" class="col-xs-2 control-label nopadding font-size font-padding-size">法人代表
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="corporate" readonly>
+				    </div>
+				   
+				    <label for="province" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户省份</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	     <input type="text" class="form-control" id="province" readonly>
+				   	  
+				   	</div> 
+				  </div>
+				  
+				  
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="contactname" class="col-xs-2 control-label nopadding font-size font-padding-size">客户联系人
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	   <input type="text" class="form-control" id="contactname" readonly>
+				    </div>
+				   
+				    <label for="mobilephone" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户手机号码</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <input type="text" class="form-control" id="mobilephone" readonly>
+				   	</div> 
+				  </div>
+				  
+				  
+				   <div class="form-group form-group-sm customer-content-side">
+				    <label for="contactphone" class="col-xs-2 control-label nopadding font-size font-padding-size">座机号码
+				    </label>
+				    <div class="col-xs-10 nopadding">
+				  	   <input type="text" class="form-control" id="contactphone" readonly>
+				    </div>
+				  </div> 	
+				  
+				  
+				    
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="contactaddress" class="col-xs-2 control-label nopadding font-size font-padding-size">通讯地址
+				    </label>
+				    <div class="col-xs-10 nopadding">
+				  	    <input type="text" class="form-control" id="contactaddress" readonly>
+				    </div>
+				  </div>
+				  
+				  
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="customerfield" class="col-xs-2 control-label nopadding font-size font-padding-size">客户域级
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				        <select class="form-control" id="customerfield" readonly>
+			            </select>
+				    </div>
+				   
+				    <label for="icpno" class="col-xs-2 control-label nopadding1 font-size font-padding-size">ICP证号</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <input type="text" class="form-control" id="icpno" readonly>
+				   	</div> 
+				  </div>
+				  
+				    <div class="form-group form-group-sm customer-content-side">
+				    <label for="registername" class="col-xs-2 control-label nopadding font-size font-padding-size">备案名称
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="registername" readonly>
+				    </div>
+				   
+				    <label for="companyname" class="col-xs-2 control-label nopadding1 font-size font-padding-size">公司名称</label>
+				   	<div class="col-xs-4 nopadding">  	  
+			            <input type="text" class="form-control" id="companyname" readonly>
+				   	</div> 
+				  </div>
+				  
+				  
+				  <div class="form-group form-group-sm customer-content-side">	    
+				    <label for="enddate" class="col-xs-2 control-label nopadding font-size font-padding-size">合同终止日期</label>
+		            <div class="col-xs-4 nopadding">
+				      <input type="text" class="form-control" id="enddate" readonly>
+			         </div>  
+			        <label for="regionid" class="col-xs-2 control-label nopadding1 font-size font-padding-size">开户属地</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	  <input type="text" class="form-control" id="regionid" readonly>
+				   	</div> 
+				  </div>
+				  
+				  
+				    
+				  <div class="form-group form-group-sm customer-content-side">
+					    <label for="slano" class="col-xs-2 control-label nopadding font-size font-padding-size">SLA</label>
+					    <div class="col-xs-10 nopadding">
+						   <textarea class="form-control" rows="3"  id="slano"></textarea>
+						</div>
+				  </div>
+				  
+				  
+				  <div class="form-group form-group-sm customer-content-side">
+					    <label for="remark" class="col-xs-2 control-label nopadding font-size font-padding-size">备注</label>
+					    <div class="col-xs-10 nopadding">
+						   <textarea class="form-control" rows="3"  id="remark"></textarea>
+						</div>
+				  </div>
+                </form>
+            </div>
+              <!-- /.box-body -->
+          </div>
+          
+          <button type="button" class="btn btn-default" data-dismiss="modal"  id="save_all">关闭</button>
+                
+    </section>
+</div>
+
+
+<!-- jQuery 2.2.3 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+ <!-- bootstrap datepicker -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script> 
+
+<script src="<%=basePath  %>bussiness/sxydidc/js/common.js"></script>
+<script src="customerView.js"></script>
+<!-- page script -->
+
 </body>
 </html>

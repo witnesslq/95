@@ -47,7 +47,7 @@ public class QRCodeAction extends ActionSupport {
 				if(!file.exists()) {
 					qrCode.generateQRCode(path, rack.getId(), rack.getId(), rack.getName(), 500, 500);	
 				}
-				json.append("\"imgPath\":\"http://192.168.0.162/95/qrcode/" + rack.getId() + ".png\"");
+				json.append("\"imgPath\":\"http://localhost/95/qrcode/" + rack.getId() + ".png\"");
 				json.append("}");
 				
 				if(i + 1 != racks.size()) {

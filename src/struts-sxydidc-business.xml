@@ -4,6 +4,14 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 	<package name="customer" extends="json-default">
+		<!-- 客户预占资源数量统计 -->
+		<action name="queryOccuipedResourceCount" class="com.dhcc.bussiness.sxydidc.order.OrderAction" method="queryOccuipedResourceCount">
+			<result type="json"></result>
+		</action>
+			<!-- 订单资源信息查询 -->
+		<action name="queryOrderResourceCount" class="com.dhcc.bussiness.sxydidc.order.OrderAction" method="queryOrderResourceCount">
+			<result type="json"></result>
+		</action>	
 		<!-- 客户密钥查询 --> 
 		<action name="customerKey" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="queryCustomerKey">
 			<result type="json"></result>
@@ -33,7 +41,10 @@
 		<action name="queryCustomerByUser" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="queryCustomerByUser">
 			<result type="json"></result>
 		</action>		
-		
+		<!-- 根据条件筛选客户信息 （不分页）-->
+		<action name="queryCustomerInfoByUser" class="com.dhcc.bussiness.sxydidc.customer.CustomerAction" method="queryCustomerInfoByUser">
+			<result type="json"></result>
+		</action>	
 				
 		
 		<!-- 代办中详情页面查询客户信息 -->

@@ -185,7 +185,37 @@ public class RsroomDao {
 		logger.info("call RsroomDao.queryRoom() finish");
 		return pm;
 	}
-	
+	//不分页
+	public List<RsroomModel>  queryRoom(String needRoleFilter){
+		this.init();
+		List<RsroomModel> list=null;
+		logger.info("call RsroomDao.queryRoom() start");
+		StringBuilder querySql=new StringBuilder("select room.*,area.areaname as area,dc.name as dcname,corp.corpname as deptname,temp.* from rsroom room left join tsarea area on room.areaid=area.id left join rsdatacenter dc on room.dcid=dc.id left join tscorp corp on room.deptid=corp.id left join (");
+		querySql.append(" select rack.roomid as roomid,rack.typeid,sum(case when rack.status in('01','02','03','04') then 1 else 0 end) as totalRack,sum(case rack.status when '01' then 1 else 0 end) as freeRack,sum(case rack.status when '02' then 1 else 0 end) as disRentRack,sum(case rack.status when '03' then 1 else 0 end) as whlRentRack,sum(case rack.status when '04' then 1 else 0 end) as preRack from rsrack rack where (rack.status!='99' or rack.status is null and cast(rack.typeid as unsigned int)>10) group by rack.roomid  ");
+		querySql.append(")temp on room.id=temp.roomid ");
+		querySql.append(" where (room.status!='99' or room.status is null) and (room.dcid='"+DataCenterUtil.getDCID()+"' ");
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql.append(" or 1=1 ");
+		}
+		querySql.append(") ");
+		querySql.append(" order by area.id,room.deptid ");
+		
+		try {
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+			list =  dbm.getObjectList(RsroomModel.class, sql);
+			
+			logger.info("call RsroomDao.queryRoom() success");
+		} catch (Exception e) {
+			logger.info("call RsroomDao.queryRoom() fail");
+			e.printStackTrace();
+		}finally{
+			this.destory();
+		}
+		logger.info("call RsroomDao.queryRoom() finish");
+		return list;
+	}
 	public PageModel queryRoomByCondition(PageModel pm,RsroomModel rsroom,String needRoleFilter){
 		this.init();
 		logger.info("call RsroomDao.queryRoom() start");
@@ -239,7 +269,57 @@ public class RsroomDao {
 		logger.info("call RsroomDao.queryRoom() finish");
 		return pm;
 	}
-	
+	//不分页
+	public List<RsroomModel>  queryRoomByCondition(RsroomModel rsroom,String needRoleFilter){
+		this.init();
+		List<RsroomModel>  list=null;
+		logger.info("call RsroomDao.queryRoom() start");
+		StringBuilder querySql=new StringBuilder("select room.*,area.areaname as area,dc.name as dcname,corp.corpname as deptname,temp.* from rsroom room left join tsarea area on room.areaid=area.id left join rsdatacenter dc on room.dcid=dc.id left join tscorp corp on room.deptid=corp.id left join (");
+		querySql.append(" select rack.roomid as roomid,rack.typeid,sum(case when rack.status in('01','02','03','04') then 1 else 0 end) as totalRack,sum(case rack.status when '01' then 1 else 0 end) as freeRack,sum(case rack.status when '02' then 1 else 0 end) as disRentRack,sum(case rack.status when '03' then 1 else 0 end) as whlRentRack,sum(case rack.status when '04' then 1 else 0 end) as preRack from rsrack rack where (rack.status!='99' or rack.status is null and cast(rack.typeid as unsigned int)>10) group by rack.roomid  ");
+		querySql.append(")temp on room.id=temp.roomid ");
+		querySql.append(" where (room.status!='99' or room.status is null) and (room.dcid='"+DataCenterUtil.getDCID()+"' ");
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql.append(" or 1=1 ");
+		}
+		querySql.append(") ");
+		
+		
+		if(!StringUtil.isEmptyOrNull(rsroom.getRoomcode())){
+			querySql.append(" and room.roomcode like '%").append(rsroom.getRoomcode()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(rsroom.getRoomname())){
+			querySql.append(" and room.roomname like '%").append(rsroom.getRoomname()).append("%' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(rsroom.getStatus())){
+			querySql.append(" and room.status='").append(rsroom.getStatus()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(rsroom.getRacktype())){
+			querySql.append(" and room.racktype='").append(rsroom.getRacktype()).append("' ");;
+		}
+		
+		
+		querySql.append(" order by area.id,room.deptid ");
+		
+		try {
+			int count = dbm.executeQueryCount(" select count(*) from ("+querySql.toString()+")tempa ");
+
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+			list =  dbm.getObjectList(RsroomModel.class, sql);
+			logger.info("call RsroomDao.queryRoom() success");
+		} catch (Exception e) {
+			logger.info("call RsroomDao.queryRoom() fail");
+			e.printStackTrace();
+		}finally{
+			this.destory();
+		}
+		logger.info("call RsroomDao.queryRoom() finish");
+		return list;
+	}
 	public 	boolean updateRsroom(RsroomModel roomModel){
 		dbm=new DBManager();
 		logger.info("call RsroomDao.updateRsroom start");
@@ -321,7 +401,59 @@ public class RsroomDao {
 		logger.info("call RsroomDao.quickSearch() finish");
 		return pm;
 	}
-	
+	//不分页
+	public List<RsroomModel>  quickSearch(String key,String needRoleFilter){
+		this.init();
+		List<RsroomModel> list=null;
+		logger.info("call RsroomDao.quickSearch() start");
+		List<Tsdict> dics=new ArrayList<Tsdict>();
+		StringBuilder keys=new StringBuilder("");
+		StringBuilder querySql=new StringBuilder("select room.*,area.areaname as area,dc.name as dcname,corp.corpname as deptname,temp.* from rsroom room left join tsarea area on room.areaid=area.id left join rsdatacenter dc on room.dcid=dc.id left join tscorp corp on room.deptid=corp.id left join (");
+		querySql.append(" select rack.roomid as roomid,rack.typeid,sum(case when rack.status in('01','02','03','04') then 1 else 0 end) as totalRack,sum(case rack.status when '01' then 1 else 0 end) as freeRack,sum(case rack.status when '02' then 1 else 0 end) as disRentRack,sum(case rack.status when '03' then 1 else 0 end) as whlRentRack,sum(case rack.status when '04' then 1 else 0 end) as preRack from rsrack rack where (rack.status!='99' or rack.status is null and cast(rack.typeid as unsigned int)>10) group by rack.roomid  ");
+		querySql.append(")temp on room.id=temp.roomid ");
+		querySql.append(" where (room.status!='99' or room.status is null) and (room.dcid='"+DataCenterUtil.getDCID()+"' ");
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			querySql.append(" or 1=1 ");
+		}
+		querySql.append(") ");
+		
+		StringBuilder conditionSql=new StringBuilder();
+		if(!StringUtil.isEmptyOrNull(key)){
+			conditionSql.append(" room.roomname like '%").append(key).append("%' ");
+			conditionSql.append(" or room.roomcode like '%").append(key).append("%' ");
+			dics=this.queryDicIds(dbm, key);
+			for(Tsdict dic:dics){
+				if(dics.lastIndexOf(dic)!=dics.size()-1){
+					keys.append("'").append(dic.getDkey()).append("',");
+				}else{
+					keys.append("'").append(dic.getDkey()).append("'");
+				}
+			}
+
+			if(!StringUtil.isEmptyOrNull(keys.toString())){
+				conditionSql.append(" or room.grade in(").append(keys.toString()).append(") ");
+			}
+			
+			conditionSql.append(" or corp.corpname like '%").append(key).append("%' ");
+			conditionSql.append(" or area.areaname like '%").append(key).append("%' ");
+		}
+		querySql=querySql.append(" and ("+conditionSql.toString()+") ").append("  order by area.id,room.deptid ");
+		try {
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+			list =  dbm.getObjectList(RsroomModel.class, sql);
+			logger.info(list.size());
+			logger.info("call RsroomDao.quickSearch() success");
+		} catch (Exception e) {
+			logger.info("call RsroomDao.quickSearch() fail");
+			e.printStackTrace();
+		}finally{
+			this.destory();
+		}
+		logger.info("call RsroomDao.quickSearch() finish");
+		return list;
+	}
 	private boolean batchAddRack(DBManager dbm,RsroomModel room){
 		boolean result=false;	
 		logger.info("call RsroomDao.batchAddRack() start");

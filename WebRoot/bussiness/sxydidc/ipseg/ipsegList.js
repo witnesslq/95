@@ -1,399 +1,128 @@
-$(function($){
-    my_initGrid();
-    bindSearch();
-});
-/**
-初始化产品信息表格
-CustomersData：要填充的数据
-*/
-function my_initGrid(){
-	window['g']=$("#maingrid").ligerGrid({
-		checkbox: true,
-		height:'98%',
-		url:"queryIPSeg.action",
-		columns: [
-		{ display: 'IP段名称', name: 'name',width:'12%',
-				render: function (item){
-					if(item.name!=null){
-						return "<a href='javascript:void(0);' onclick=\"itemmess('"+item.id+"');\">"+item.name+"</a>";
-					}
+$(function () {
+	
+	/**
+	 加载数据
+	*/	
+	table= $("#example1").DataTable({	
+             "processing": true,//开启读取服务器数据时显示正在加载中……特别是大数据量的时开启此功能比较好
+             "serverSide": true,//开启服务器模式，使用服务器端处理配置datatable。
+             "processing": true,//是否显示处理状态(排序的时候，数据很多耗费时间长的话，也会显示这个)
+//             "sAjaxSource": "sysLogInfoQuery.action", //给服务器发请求的url
+             "searching": false,    //禁用原生搜索
+             "ajax": {
+                 "url":"queryIPSegInfo.action",
+                 "data": function ( d ) {
+                     //添加额外的参数传给服务器       
+                     d.search=$("#searchinfo").val();	
+//              				 d.ipsegid=$("#ipsegid").val(),
+//                             d.deviceid=$("#deviceid").val(),
+//                       		 d.customerid=$("#customerid").val(),
+//                       		 d.statusName=$("#statusName").val()
+              		 
+                 }},
+             "bSort": false,
+             
+             "oLanguage": {//插件的汉化
+             "sLengthMenu": "每页显示 _MENU_ 条记录",
+             "sZeroRecords": "抱歉， 没有找到",
+             "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+             "sInfoEmpty": "没有数据",
+             "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+             "oPaginate": {
+                 "sFirst": "首页",
+                 "sPrevious": "前一页",
+                 "sNext": "后一页",
+                 "sLast": "尾页"
+             }, 
+		    "sZeroRecords": "没有检索到数据",
+            "sProcessing": "处理中...",
+            "sSearch": "模糊查询",
+             },
+            "aoColumns": [ //这个属性下的设置会应用到所有列，按顺序没有是空
+                           {"mData": function(obj){
+                        	   return '<input name="checked_info" type="checkbox" value="'+obj.id+'">';}},
+                           {"mData": 'name'}, //listmodel 表示发请求时候本列的列明，返回的数据中相同下标名字的数据会填充到这一列
+                           {"mData": 'startip'},
+                           {"mData": 'endip'},
+                           {"mData": 'netmask'},
+                           {"mData": 'customername'},
+                           {"mData": 'dcname'},
+                           {"mData": function(obj){
+                        	   return getstatus( obj.status);
+                           }},
+                           {"mData": 'totalIP'},
+                           {"mData": 'freeIP'},
+                           
+                           {"mData": 'preIP'},
+                           {"mData": 'factIP'}
+                          ] ,                    
+
+		 });
+
+		 function getstatus(status){
+			 if (status =='01'){
+					return '空闲';
+				}else if(status =='02'){
+					return '散租';
+				}else if(status =='03'){
+					return '整租';
+				}else if(status =='04'){
+					return '预占';
 				}
-		},
-		{ display: '起始IP', name: 'startip'},
-		{ display: '终止IP', name: 'endip'},
-		{ display: '子网掩码', name: 'netmask'},
-		{ display: '所属客户', name: 'customername'},
-		{ display: '所属数据中心', name: 'dcname'},
-		{ display: '状态', name: 'status',
-				render: function (item){
-						if (item.status =='01'){
-							return '空闲';
-						}else if(item.status =='02'){
-							return '散租';
-						}else if(item.status =='03'){
-							return '整租';
-						}else if(item.status =='04'){
-							return '预占';
-						}
-				}
-		},
-		{ display: '总IP数', name: 'totalIP'},
-		{ display: '空闲IP数', name: 'freeIP'},
-		{ display: '预占IP数', name: 'preIP'},
-		{ display: '实占IP数', name: 'factIP'}
-		],
-		pageSize:10,
-		root:"listmodel",
-		sortname:"no",
-		record:"record",
-	 	rownumbers:true, 
-	 	title:"IP段信息列表页面"
-       });
-}
-
-function bindSearch(){
-	$("#addBtn").bind("click", function(){
-		itemadd();
-	});
-	
-	$("#editBtn").bind("click", function(){
-		itemedit();
-	});
-	
-	$("#delBtn").bind("click", function(){
-		itemdelete();
-	});
-	
-	
-	$("#splitBtn").bind("click", function(){
-		itemsplit();
-	});
-	
-	$("#mergeBtn").bind("click", function(){
-		itemmerge();
-	});
-	
-	$("#queryBtn").bind("click", function(){
-		itemsearch();
-	});
-	
-	$("#searchBtn").bind("click", function(){
-		var value=$("#searchTxt").val();
-  		quicksearch(value);
-	});
-	
-	$("#searchTxt").bind("keydown", function(event){
-		if(event.keyCode==13){
-			var value=$("#searchTxt").val();
-  			quicksearch(value);
-  			return false;
-		}
-	});
-}
-
-function itemsplit(){
-	var selected = g.getSelected();
-	if (!selected) {  
-		top.$.ligerDialog.warn('请选择行'); 
-		return; 
-	}else{
-		var row=g.getSelectedRow();
-    	if(row.preIP!='0'){
-    		top.$.ligerDialog.warn("有预占状态IP地址的网段无法进行拆分!");
-    		return; 
-    	}else if(row.factIP!='0'){
-    		top.$.ligerDialog.warn("有实占状态IP地址的网段无法进行拆分!");
-    		return; 
-    	}
-	}
-	
-	var id = (g.getSelectedRow()).id;  
-	var url = "ipsegSplit.jsp?id="+id;
-	$.ligerDialog.open({
-		title:'IP段拆分操作',
-		url: url,
-		height:400,
-		width:760,
-		buttons: [
-			{
-				text: '确定', 
-				onclick: function (item, dialog){
-					var fn = dialog.frame.datePost || dialog.frame.window.datePost;
-					var data = fn();
-					dialog.close();
-					addIPSeg(data);
-				} 
-			},
-			{ 
-				text: '取消',
-				onclick: function (item, dialog){ 
-					dialog.close(); 
-				} 
-			}
-		] 
-	});
-}
-
-/**
- * 批量添加网段
-*/
-function addIPSeg(data){
-	$.ajax({
-		url:"addBatchIPSeg.action", 
-		data:{"splitArray":JSON.stringify(data.splitArray)},
-		dataType:"json", 
-		type:"post",
-		success:function (msg) {
-       		if("error" == msg.result){
-       			top.$.ligerDialog.error("拆分IP网段信息失败!");
-       		}else{
-	       		top.$.ligerDialog.success("拆分IP网段信息成功!");
-	       		my_initGrid();
-       		}
-		}, 
-		error:function (error) {
-			top.$.ligerDialog.error("拆分IP网段信息失败!" + error.status,"错误");
-		}
-	});
-}
-
-function itemmerge(){
-	var selected = g.getSelected();
-    if (!selected) {  
-    	top.my_alert('请选择要合并的数据!',"warn"); 
-    	return; 
-    }else{
-    	var rows=g.getSelectedRows();
-    	if(rows.length<2){
-    		top.my_alert('请至少选择2条以上数据进行合并!',"warn"); 
-    		return;
-    	}else{
-    		for(var i=0;i<rows.length;i++){
-    			var row=rows[i];
-    			if(row.preIP!='0'){
-    				top.$.ligerDialog.warn("有预占状态IP地址的网段无法进行拆分!");
-    				return; 
-    			}else if(row.factIP!='0'){
-    				top.$.ligerDialog.warn("有实占状态IP地址的网段无法进行拆分!");
-    				return; 
-    			}
-    		}
-    	}
-
-	}
-    window.top.$.ligerDialog.confirm("确定选择合并的数据", "提示", function (ok) {
-	    if (ok) {
-	      	g.deleteSelectedRow();
-			var selecteds = g.getSelecteds();
-			var idstr="";//所有选择行的id
-			for(var i=0;i<selecteds.length;i++){
-				idstr = idstr + selecteds[i].id;
-				if(i!=(selecteds.length-1)){
-					idstr = idstr + ",";
-				}
-			}
+		 }
+		 
+			
+		 $("#btn-simple-search").click(function(){
+		        //出发dt的重新加载数据的方法
+		        table.ajax.reload();
+		        //获取dt请求参数
+		        var args = table.ajax.params(); 
+		    });
+		 $("#btn-advanced-search").click(function(){
+			  //出发dt的重新加载数据的方法
+		        table.ajax.reload();
+		        //获取dt请求参数
+		        var args = table.ajax.params(); 
+		 });
+//		 $("#toggle-advanced-search").click(function(){
+//				$("i",this).toggleClass("fa-angle-double-down fa-angle-double-up");
+//				$("#div-advanced-search").slideToggle("fast");
+//			});
+		 
+			/**点击复选框，行选中*/
+		 $('#example1').on('click', 'input[name="checked_info"]', function (event) {
+			  if($(this).is(':checked')){
+				  $(this).parent().parent().addClass('selected');  
+			  }else{	
+				  $(this).parent().parent().removeClass('selected');
+			  }
+			  event.stopPropagation();
+		  });
 			/**
-				合并数据库数据
-			 */
-			$.ajax({
-				url:"mergeIPSegByIds.action?ids="+idstr, 
-				dataType:"json", 
-				type:"post",
-				success:function (msg) {
-		       		if("error"==msg.result){
-		   				top.$.ligerDialog.error("合并IP段信息失败!");
-		   				return; 
-		   			}else{
-		   				top.$.ligerDialog.success("合并IP段信息成功!");
-		   				my_initGrid();
-		   				return; 
-		   				 
-		   			}
-				}, 
-				error:function (error) {
-					top.$.ligerDialog.error("合并IP段信息失败!" + error.status);
-					return; 
-				}
-				});
-	     }
-	 });
-}
+			 全选 或取消
+			*/
+		  $("input[name='checked_all_info']").click(function(event){
+			  if($(this).is(':checked')){
+				  $("input[name='checked_info']").parent().parent().addClass('selected');  
+				  $("input[name='checked_info']").prop("checked",true);
+				  
+			  }else{
+				  $("input[name='checked_info']").prop("checked",false);
+				  $("input[name='checked_info']").parent().parent().removeClass('selected');  
+			  }
+			  event.stopPropagation();
+		  });
+		  
+			/**点击行事件*/
+		 $('#example1').on('click', 'tr', function (event) {
 
-/**
-打开添加信息窗口的方法
-*/
-function  itemadd(){
-	var url = "bussiness/sxydidc/ipseg/ipsegAdd.jsp";
-	winOpen(url,'添加IP段信息',760,560,'添加','取消',function(data){
-       	$.ajax({
-			url:"saveIPSeg.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-       			if("error" == msg.result){
-       				top.$.ligerDialog.error("添加IP段信息失败!");
-       			}else{
-	       			g.addRow(msg);
-	       			top.$.ligerDialog.success("添加IP段信息成功!");
-       			}
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("添加IP段信息失败!" + error.status,"错误");
-		}});
-	});
-	
-}
-
-/**
-打开添加信息窗口的方法
-*/
-function  itemedit(){
-	var selected = g.getSelected();
-	if (!selected) {  top.$.ligerDialog.warn('请选择行'); return; }
-	var id = (g.getSelectedRow()).id;  
-	var url = "bussiness/sxydidc/ipseg/ipsegEdit.jsp?id="+id;
-	winOpen(url,'IP段信息编辑',760,560,'保存','取消',function(data){
-       	$.ajax({
-			url:"updateIPSeg.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (msg) {
-	       		if("error" == msg.result){
-	   				top.$.ligerDialog.error("修改IP段信息失败!");
-	   			}else{
-	   				g.updateRow(selected,msg);
-       				top.$.ligerDialog.success("修改IP段信息成功!","提示");
-	   			}
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("修改IP段信息失败!" + error.status,"错误");
-		}});
-	});
-	
-}
-
-
-/**
-打开添加信息窗口的方法
-*/
-function  itemdelete(){
-	var selected = g.getSelected();
-    if (!selected) {  
-    	top.my_alert('请选择要删除的数据行!',"warn"); 
-    	return; 
-    }else{
-    	var rows=g.getSelectedRows();
-    	for(var i=0;i<rows.length;i++){
-    		var row=rows[i];
-    		if(row.status=='02'){
-    			top.$.ligerDialog.warn("散租状态网段无法删除!");
-    			return; 
-    		}else if(row.status=='03'){
-    			top.$.ligerDialog.warn("整租状态网段无法删除!");
-    			return; 
-    		}
-    	}
-    }
-    
-    window.top.$.ligerDialog.confirm("确定删除选择的数据", "提示", function (ok) {
-	    if (ok) {
-	      	g.deleteSelectedRow();
-			var selecteds = g.getSelecteds();
-			var idstr="";//所有选择行的id
-			for(var i=0;i<selecteds.length;i++){
-				idstr = idstr + selecteds[i].id;
-				if(i!=(selecteds.length-1)){
-					idstr = idstr + ",";
-				}
-			}
-			/**
-				删除数据库数据
-			 */
-			$.ajax({
-				url:"deleteIPSegByIds.action?ids="+idstr, 
-				dataType:"json", 
-				type:"post",
-				success:function (msg) {
-		       		if("error"==msg.result){
-		   				top.$.ligerDialog.error("删除网段信息失败!");
-		   			}else if("02"==msg.result){
-		   				top.$.ligerDialog.warn("网段下有非空闲状态IP地址无法删除!");
-		   			}else if("01"==msg.result){
-		   				top.$.ligerDialog.success("删除网段信息成功!");
-		   			}
-				}, 
-				error:function (error) {
-					top.$.ligerDialog.error("删除IP段信息失败!" + error.status);
-				}
-				});
-	     }
-	 });
-}
-
-/**
-打开添加信息窗口的方法
-*/
-function  itemsearch(){
-	var url = "bussiness/sxydidc/ipseg/ipsegSearch.jsp";
-	winOpen(url,'IP段信息查询',760,560,'查询','重置',function(formData){
-		var data =[
-			{name:"ipseg.name",value:formData.name},
-			{name:"ipseg.startip",value:formData.startip},
-			{name:"ipseg.endip",value:formData.endip},
-			{name:"ipseg.netmask",value:formData.netmask},
-			{name:"ipseg.gatewayip",value:formData.gatewayip},
-			{name:"ipseg.customerid",value:formData.customerid},
-			{name:"ipseg.status",value:formData.status},
-			{name:"ipseg.areaid",value:formData.areaid},
-			{name:"ipseg.vlanno",value:formData.vlanno},
-			{name:"ipseg.dns1",value:formData.dns1},
-			{name:"ipseg.dns2",value:formData.dns2}];
-		g.setOptions({newPage:1});
-		g.setOptions({parms:data});
-		g.loadData();
-	});
-}
-
-/**
-打开添加信息窗口的方法
-*/
-function  itemmess(id){ 
-	var url = "bussiness/sxydidc/ipseg/ipsegView.jsp?id="+id;
-	winDetailOpen(url,'IP段信息展示',760,560,'关闭',function(data){});
-}
-
-/**
- * 模糊查询
- */
-function quicksearch(value){
-	var data=[{name:'key',value:value}];
-	g.setOptions({newPage:1});
-	g.setOptions({parms:data});
-	g.loadData();
-}
-
-function winOpen(url,title,width,height,button1,button2,callback){
-	window.top.$.ligerDialog.open({
-		width: width, height: height, url: url, title: title, buttons: [{
-			text: button1, onclick: function (item, dialog) {
-				var fn = dialog.frame.f_validate || dialog.frame.window.f_validate;
-				var data = fn();
-				if(data){
-					callback(data);
-					dialog.close();
-				}
-			}
-		},{
-			text: button2, onclick: function (item, dialog) {
-				dialog.close();
-			}
-		}
-		
-		]
-     });
-}
-
-
-
+			  if($(this).find("input[name='checked_info']").is(':checked')){
+				  $(this).removeClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",false);
+			  }else{
+				  $(this).addClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",true);
+			  } 
+			  event.stopPropagation();
+			});
+		});

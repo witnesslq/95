@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.dhcc.bussiness.sxydidc.rsroom.RsroomModel;
 import com.dhcc.common.util.AnyTypeAction;
@@ -25,6 +27,33 @@ public class RsroomAction extends AnyTypeAction<Rsroom,RsroomModel> {
 	private String key;
 	private String needRoleFilter="false";//是否需要根据角色过滤综合查询模块里的数据true：需要，false：不需要
 	
+	public String queryRoomInfo(){
+		List<RsroomModel>  result=null;
+		if(StringUtil.isEmptyOrNull(key)){
+			if(rsroom==null){
+				 result=dao.queryRoom(needRoleFilter);
+			}else{
+				 result=dao.queryRoomByCondition(rsroom,needRoleFilter);
+			}
+			
+		}else{
+			result= dao.quickSearch(key,needRoleFilter);
+		}
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(result);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+	}
+	
 	public String queryRoom(){
 		PageModel pm = new PageModel();
 		pm.setCurrentPage(super.getPage());
@@ -45,7 +74,6 @@ public class RsroomAction extends AnyTypeAction<Rsroom,RsroomModel> {
 		super.setListmodel(pm.getList());
 		return SUCCESS;
 	}
-	
 	public String saveRoom(){
 		dao.saveRoom(rsroom);
 		rsroom = dao.queryRoomById(rsroom.getId());

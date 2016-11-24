@@ -1,9 +1,15 @@
 package com.dhcc.common.system.area;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.json.JSONArray;
+
+import org.apache.struts2.ServletActionContext;
+
 import com.dhcc.modal.system.PageModel;
+import com.dhcc.modal.system.Tsarea;
 import com.opensymphony.xwork2.ActionSupport;
 
 
@@ -38,7 +44,25 @@ public class AreaQueryListAction extends ActionSupport {
 		listmodal = pm.getList();
 		return SUCCESS;
 	}
-
+	public String areaInfoQueryList() throws Exception {
+		AreaDao md = new AreaDao();
+	
+		List<Tsarea> result=md.postQueryList(sortname,sortorder);
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(result);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+	}
+	
 	public List getListmodal() {
 		return listmodal;
 	}

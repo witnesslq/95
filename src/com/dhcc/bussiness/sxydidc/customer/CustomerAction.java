@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.*;
+
 import org.apache.struts2.ServletActionContext;
+
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.dhcc.common.util.AnyTypeAction;
 import com.dhcc.common.util.CreateNum;
@@ -116,6 +119,32 @@ public class CustomerAction extends AnyTypeAction<Busccustomer, CustomerModel> {
 		return SUCCESS;
 	}	
 	
+	@SuppressWarnings("unchecked")
+	public String queryCustomerInfoByUser(){
+		List<CustomerModel> result=null;
+		if(customer==null){
+			customer=new CustomerModel();
+		}
+		customer.setManager(ActionContext.getContext().getSession().get("userid").toString());
+		if(StringUtil.isEmptyOrNull(key)){
+			result = dao.queryCustomerByCondition( customer ,customerType);			
+		}else{
+			result=dao.quickSearch( customer,key);
+		}
+		PrintWriter pw = null;
+		try {
+			JSONArray json = JSONArray.fromObject(result);
+			ServletActionContext.getResponse().setCharacterEncoding("UTF-8");
+			pw = ServletActionContext.getResponse().getWriter();
+			pw.print(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+		}
+		return SUCCESS;
+	}
 	public String queryCusByflownum() throws SQLException{
 		String jsonString = dao.queryCusByflownum(flownumber);
 		ServletActionContext.getResponse().setCharacterEncoding("UTF-8");

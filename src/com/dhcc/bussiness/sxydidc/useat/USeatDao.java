@@ -58,6 +58,37 @@ public class USeatDao {
 		return pm;
 	}
 	
+	public List<USeatModel> queryUSeat(String needRoleFilter){
+		List<USeatModel> list=null;
+		dbm=new DBManager();
+		logger.info("call SeatDao.queryUSeat() start");
+		StringBuilder querySql=null;
+		StringBuilder countSql=null;
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			countSql=new StringBuilder(" select count(*) from rsuseat useat left join rsrack rack on useat.rackid=rack.id left join rsroom room on rack.roomid=room.id left join rsdevice device on useat.deviceid=device.id left join busccustomer cust on useat.customerid=cust.id ");
+			querySql=new StringBuilder(" select useat.*,rack.name as rackname,room.id as roomid,room.roomname as roomName,device.name as devicename,cust.name as customername from rsuseat useat left join rsrack rack on useat.rackid=rack.id left join rsroom room on rack.roomid=room.id left join rsdevice device on useat.deviceid=device.id left join busccustomer cust on useat.customerid=cust.id order by rack.roomid,rack.id,useat.no ");
+		}else{
+			countSql=new StringBuilder(" select count(*) from rsuseat useat left join rsrack rack on useat.rackid=rack.id left join rsroom room on rack.roomid=room.id left join rsdevice device on useat.deviceid=device.id left join busccustomer cust on useat.customerid=cust.id  where room.dcid='"+DataCenterUtil.getDCID()+"' ");
+			querySql=new StringBuilder(" select useat.*,rack.name as rackname,room.id as roomid,room.roomname as roomName,device.name as devicename,cust.name as customername from rsuseat useat left join rsrack rack on useat.rackid=rack.id left join rsroom room on rack.roomid=room.id left join rsdevice device on useat.deviceid=device.id left join busccustomer cust on useat.customerid=cust.id where room.dcid='"+DataCenterUtil.getDCID()+"' order by rack.roomid,rack.id,useat.no ");
+		}
+	
+		try {
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql.toString());
+			pageFactory = null;
+
+			 list =  dbm.getObjectList(USeatModel.class, sql);
+			logger.info("call USeatDao.queryUSeat() success");
+		} catch (Exception e) {
+			logger.info("call USeatDao.queryUSeat() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call USeatDao.queryUSeat() finish");
+		return list;
+	}
 	public PageModel queryFreeUSeat(PageModel pm,String cusid){
 		dbm=new DBManager();
 		logger.info("call SeatDao.queryUSeat() start");
@@ -164,6 +195,73 @@ public class USeatDao {
 		return pm;		
 	}
 	
+	
+	public List<USeatModel> queryUSeatByCondition(USeatModel useatModel,String needRoleFilter){
+		List<USeatModel> list=null;
+		dbm=new DBManager();
+		logger.info("call USeatDao.queryUSeatByCondition() start");
+		String countSql=null;
+		String querySql=null;
+		if(Boolean.parseBoolean(needRoleFilter)&&DataCenterUtil.queryAllData()){
+			countSql="  select count(*) from rsuseat useat left join rsrack rack on useat.rackid=rack.id left join rsroom room on rack.roomid=room.id left join rsdevice device on useat.deviceid=device.id left join busccustomer cust on useat.customerid=cust.id where 1=1 ";
+			querySql="  select useat.*,rack.name as rackname,room.id as roomid,room.roomname as roomName,device.name as devicename,cust.name as customername from rsuseat useat left join rsrack rack on useat.rackid=rack.id left join rsroom room on rack.roomid=room.id left join rsdevice device on useat.deviceid=device.id left join busccustomer cust on useat.customerid=cust.id where 1=1 ";			
+		}else{
+			countSql="  select count(*) from rsuseat useat left join rsrack rack on useat.rackid=rack.id left join rsroom room on rack.roomid=room.id left join rsdevice device on useat.deviceid=device.id left join busccustomer cust on useat.customerid=cust.id where room.dcid='"+DataCenterUtil.getDCID()+"' ";
+			querySql="  select useat.*,rack.name as rackname,room.id as roomid,room.roomname as roomName,device.name as devicename,cust.name as customername from rsuseat useat left join rsrack rack on useat.rackid=rack.id left join rsroom room on rack.roomid=room.id left join rsdevice device on useat.deviceid=device.id left join busccustomer cust on useat.customerid=cust.id where room.dcid='"+DataCenterUtil.getDCID()+"' ";
+		}
+
+		StringBuilder conditionSql=new StringBuilder();
+		if(!StringUtil.isEmptyOrNull(useatModel.getRackid())){
+			conditionSql.append(" and useat.rackid='").append(useatModel.getRackid()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(useatModel.getRoomid())){
+			conditionSql.append(" and rack.roomid='").append(useatModel.getRoomid()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(useatModel.getStatus())){
+			conditionSql.append(" and useat.status='").append(useatModel.getStatus()).append("' ");
+		}		
+				
+		if(!StringUtil.isEmptyOrNull(useatModel.getDeviceid())){
+			conditionSql.append(" and useat.deviceid='").append(useatModel.getDeviceid()).append("' ");
+		}
+		
+		if(!StringUtil.isEmptyOrNull(useatModel.getCustomerid())){
+			conditionSql.append(" and useat.customerid='").append(useatModel.getCustomerid()).append("' ");
+		}
+		if(!useatModel.getNeedFilter()){
+			if(useatModel.getNo()!=null&&useatModel.getNo()!=0){
+				conditionSql.append(" and useat.no=").append(useatModel.getNo()).append(" ");
+			}			
+		}else{
+			conditionSql.append(" and useat.no>5 ");
+			conditionSql.append(" and useat.status='01' ");
+		}
+
+
+		countSql=countSql+conditionSql.toString();
+		querySql=querySql+conditionSql.toString()+" order by rack.roomid,rack.id,useat.no ";
+		
+		try {
+
+			PageFactory pageFactory = new PageFactory();
+			String sql = pageFactory.createPageSQL(querySql);
+			pageFactory = null;
+			
+			 list =  dbm.getObjectList(USeatModel.class, sql);
+			logger.info("call USeatDao.queryUSeatByCondition() success");
+			
+		} catch (Exception e) {
+			logger.info("call USeatDao.queryUSeatByCondition() fail");
+			e.printStackTrace();
+		}finally{
+			dbm.close();
+			dbm=null;
+		}
+		logger.info("call USeatDao.queryUSeatByCondition() finish");
+		return list;		
+	}
 	public boolean deleteUSeatByIds(String ids){
 		dbm=new DBManager();
 		logger.info("call USeatDao.deleteUSeatByIds() start");

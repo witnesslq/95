@@ -8,7 +8,15 @@
 		<action name="queryIP" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="queryIP">
 			<result type="json"></result>
 		</action>	
+		<!-- IP信息查询（datatable分页） -->
+		<action name="queryIpAllInfo" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="queryIpAllInfo">
+			<result type="json"></result>
+		</action>	
 		
+			<!-- IP信息查询(不分页) -->
+		<action name="queryIPInfo" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="queryIPInfo">
+			<result type="json"></result>
+		</action>	
 		<!-- 资源调度IP信息查询 -->
 		<action name="queryFreeIP" class="com.dhcc.bussiness.sxydidc.ip.IPAction" method="queryFreeIP">
 			<result type="json"></result>
@@ -43,6 +51,11 @@
 		<action name="queryIPSeg" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="queryIPSeg">
 			<result type="json"></result>
 		</action>	
+		<!-- IP段信息查询 -->
+		<action name="queryIPSegInfo" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="queryIPSegInfo">
+			<result type="json"></result>
+		</action>
+		
 		<!-- IP段资源调度信息查询 -->
 		<action name="queryFreeIPSeg" class="com.dhcc.bussiness.sxydidc.ipseg.IPSegAction" method="queryFreeIPSeg">
 			<result type="json"></result>
@@ -94,7 +107,10 @@
 		<action name="queryUSeat" class="com.dhcc.bussiness.sxydidc.useat.USeatAction" method="queryUSeat">
 			<result type="json"></result>
 		</action>
-		
+			<!-- U位信息查询 -->
+		<action name="queryUSeatInfo" class="com.dhcc.bussiness.sxydidc.useat.USeatAction" method="queryUSeatInfo">
+			<result type="json"></result>
+		</action>
 		<!-- 资源调度U位信息查询 -->
 		<action name="queryFreeUSeat" class="com.dhcc.bussiness.sxydidc.useat.USeatAction" method="queryFreeUSeat">
 			<result type="json"></result>
@@ -126,6 +142,10 @@
 		<action name="queryDevice" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryDevice">
 			<result type="json"></result>
 		</action>
+		<!-- 设备信息查询 -->
+		<action name="queryDeviceInfo" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryDeviceInfo">
+			<result type="json"></result>
+		</action>
 		<!-- 设备属性信息查询 -->
 		<action name="queryDeviceProperty" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryDeviceProperty">
 			<result type="json"></result>
@@ -153,6 +173,10 @@
 		
 		<!-- 根据板卡ID查询端口信息 -->
 		<action name="queryportByDevpackId" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryportByDevpackId">
+			<result type="json"></result>
+		</action>
+			<!-- 根据板卡ID查询端口信息(不分页) -->
+		<action name="queryportInfoByDevpackId" class="com.dhcc.bussiness.sxydidc.device.DeviceAction" method="queryportInfoByDevpackId">
 			<result type="json"></result>
 		</action>
 		
@@ -234,6 +258,10 @@
 	<package name="rack" extends="json-default">
 		<!-- 机柜信息查询 -->
 		<action name="queryRack" class="com.dhcc.bussiness.sxydidc.rack.RackAction" method="queryRack">
+			<result type="json"></result>
+		</action>
+		<!-- 机柜信息查询 -->
+		<action name="queryInfoRack" class="com.dhcc.bussiness.sxydidc.rack.RackAction" method="queryInfoRack">
 			<result type="json"></result>
 		</action>
 		<!-- 资源调度查询空闲机柜 -->

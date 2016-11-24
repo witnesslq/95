@@ -190,6 +190,10 @@
 		<action name="configQuery" class="com.dhcc.common.system.config.ConfigQueryListAction">
 			<result type="json"></result>
 		</action>
+		<!-- 系统配置列表 (不分页)-->
+		<action name="configInfoQuery" class="com.dhcc.common.system.config.ConfigQueryListAction" method="configInfoQuery">
+			<result type="json"></result>
+		</action>
 		<!-- 系统配置添加 -->
 		<action name="configAdd" class="com.dhcc.common.system.config.ConfigManagerAction"  method="configAdd">
 			<result type="json"></result>
@@ -435,6 +439,10 @@
 		
 		<!-- 所属区域列表查询 -->
 		<action name="areaQueryList" class="com.dhcc.common.system.area.AreaQueryListAction">
+			<result type="json"></result>
+		</action>
+		<!-- 所属区域列表查询 （不分页）-->
+		<action name="areaInfoQueryList" class="com.dhcc.common.system.area.AreaQueryListAction" method="areaInfoQueryList">
 			<result type="json"></result>
 		</action>
 		<!-- 所属区域的添加 -->

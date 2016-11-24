@@ -112,7 +112,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
                 <h4 class="modal-title" id="myModalLabel"><b>修改职务信息</b></h4>
             </div>
             <div class="modal-body" >
-            <iframe src="postEdit.jsp" class="postAdd" frameborder="0" scrolling="no" name="editUser_content"></iframe>
+            <iframe src="postEdit.jsp" class="smallModel" frameborder="0" scrolling="no" name="editUser_content"></iframe>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" name="editUser">修改</button> 

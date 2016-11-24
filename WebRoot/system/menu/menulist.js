@@ -1,173 +1,219 @@
-jQuery(function($){
-    my_initGrid();
-});
-
-/**
-初始化表格
-CustomersData：要填充的数据
-*/
-function my_initGrid(){
-	window['g']=$("#maingrid").ligerGrid({
-		checkbox: true,
-		rowHeight:22,
-		height:"100%",
-		heightDiff:-8,
-		url:"menuQueryList.action",
-		columns: [
-		{ display: '菜单名', name: 'title', width:"40%"},
-		{ display: '序号', name: 'ordernum', width:"10%"},
-		{ display: '菜单状态', name: 'whetherpublic', width:"10%",
-			render: function (item){
-	    	if (item.whetherpublic == '01') return '公开页面';
-	        return '私有页面';
-    	}
-		},
-		{ display: '描述', name: 'remark', width:"35%"}
-		],
-		root:"listmodal",
-		sortname:"ordernum",
-		record:"record",
-		rownumbers:false,
-		usePager:false,
-		title:"系统菜单列表",
-		tree: { 
-               	columnName: 'title', 
-               	idField: 'id',
-                parentIDField: 'pid',
-                isExpand:false
-	           },
-        onAfterShowData: function(currentData){
-        	itemss();
-        },
-		toolbar: { items: [
-			{ text: '增加', click: itemclick, icon: 'add' },
-			{ line: true },
-			{ text: '修改', click: itemedit, icon: 'modify' },
-			{ line: true },
-			{ text: '删除', click: itemdelete, icon: 'delete'},
-			{ line: true },
-			{ text: '展开全部', click: itemzk, icon: 'communication'},
-			{ line: true },
-			{ text: '收缩全部', click: itemss, icon: 'communication'}
-			]
+$(function () {
+	
+	/**
+	 加载数据
+	*/
+  $.ajax({
+		url: "menuQueryList",
+		type: "post",
+		dataType: 'json',
+		success: function(data) {
+	    var str=""
+		for(var i=0;i<data.listmodal.length;i++){
+			var ifpublic="公开页面";
+			if(data.listmodal[i].whetherpublic=="02"){
+				 ifpublic="私有页面";
 			}
-	});
-}
+			if(data.listmodal[i].pid=="0"){
+				str+="<tr><td class='font-center'><input name='checked_info' value='"+data.listmodal[i].id+"' type='checkbox' /></td><td >&nbsp;&nbsp;&nbsp;<div name='showChildren' id='"+data.listmodal[i].id+"' class='fa fa-plus-square' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+data.listmodal[i].title+"</t><td class='font-center'>"+data.listmodal[i].ordernum+"</td> <td class='font-center'>"+ifpublic+"</td><td class='font-center'>"+data.listmodal[i].remark+"</td><tr>"	
+			     for(var j=0;j<data.listmodal.length;j++){
+			    	 if(data.listmodal[i].id==data.listmodal[j].pid){
+			    			str+="<tr style='display:none;' class='childrenRows' name='"+data.listmodal[j].pid+"'><td class='font-center'><input name='checked_info' value='"+data.listmodal[j].id+"' type='checkbox' /></td><td class='font-center'>"+data.listmodal[j].title+"</t><td class='font-center'>"+data.listmodal[j].ordernum+"</td> <td class='font-center'>"+ifpublic+"</td><td class='font-center'>"+data.listmodal[j].remark+"</td><tr>"			 					     
+			    	 }	
+			     }
+			}	
+		}		
+		$("#example1").append(str);
+			/**点击复选框，行选中*/
+		 $('#example1').on('click', 'input[name="checked_info"]', function (event) {
+			  if($(this).is(':checked')){
+				  $(this).parent().parent().addClass('selected');  
+			  }else{	
+				  $(this).parent().parent().removeClass('selected');
+			  }
+			  event.stopPropagation();
+		  });
+			/**展开，折叠子列*/
+		 $('#example1').on('click', 'div[name="showChildren"]', function (event) {
+			  var thisClass=$(this).attr("class");
+			  var pid=$(this).attr("id");
+			  if(thisClass=="fa fa-plus-square"){
+				  $(this).removeClass();
+				  $(this).addClass("fa fa-minus-square-o");
+				  $("tr[name='"+pid+"']").show();
+			  }else{
+				  $(this).removeClass();
+				  $(this).addClass("fa fa-plus-square");
+				  $("tr[name='"+pid+"']").hide();
+			  }
+			  event.stopPropagation();
+		  });
+			/**
+			 全选 或取消
+			*/
+		  $("input[name='checked_all_info']").click(function(event){
+			  if($(this).is(':checked')){
+				  $("input[name='checked_info']").parent().parent().addClass('selected');  
+				  $("input[name='checked_info']").prop("checked",true);
+				  
+			  }else{
+				  $("input[name='checked_info']").prop("checked",false);
+				  $("input[name='checked_info']").parent().parent().removeClass('selected');  
+			  }
+			  event.stopPropagation();
+		  });
+			/**点击行事件*/
+		 $('#example1').on('click', 'tr', function (event) {
+			  if($(this).find("input[name='checked_info']").is(':checked')){
+				  $(this).removeClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",false);
+			  }else{
+				  $(this).addClass('selected');
+				  $(this).find("input[name='checked_info']").prop("checked",true);
+			  } 
+			  event.stopPropagation();
+			});
+		}
+		});
 
 
-function itemzk(){//展开全部
-	g.expandAll();
-}
-
-function itemss(){//收缩全部
- 	g.collapseAll();
-}
-   
-function  itemclick(){
-	var url = "system/menu/MenuAdd.jsp";
-	winOpen(url,'添加菜单',490,400,'添加','取消',function(data){
-       	$.ajax({
-			url:"menuAdd.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (mm) {
-				if(mm.result == "success"){
-					g.addRow(mm.modal);
-	       			top.$.ligerDialog.success("添加菜单信息成功!");
-				}else{
-					top.$.ligerDialog.error("添加菜单信息失败!");
-				}
-       			
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("添加菜单信息失败!" + error.status);
-		}});
-	});
-}
-   
   
-   function  itemedit(){
-      var selected = g.getSelected();
-      if (!selected) { $.ligerDialog.warn('请选择行'); return; }
-      var id = (g.getSelectedRow()).id; 
-      var url = "system/menu/MenuEdit.jsp?id="+id;
-      winOpen(url,'修改菜单信息',490,400,'保存','取消',function(data){
-       	$.ajax({
-			url:"menuEdit.action", 
-			data:data,
-			dataType:"json", 
-			type:"post",
-			success:function (mm) {
-				if(mm.result == "success"){
-					 var selected = g.getSelected();
-      				 g.updateRow(selected,mm.modal);
-	       			 top.$.ligerDialog.success("修改菜单信息成功!");
-				}else{
-					top.$.ligerDialog.error("修改菜单信息失败!");
-				}
-       			
-			}, 
-			error:function (error) {
-				top.$.ligerDialog.error("添加菜单信息失败!" + error.status);
-		}});
+	/**
+	 添加信息
+	*/
+$("#add_user").click(function(){ 
+	     $("#adduser").modal('show');   
+		});
+	
+	/**
+	 删除信息
+	*/
+  $("#detele_user").click(function(){
+	     var id=getselectinfo();
+             if(id==""){
+            	 $("#tipContent").html("请选择要删除的数据")
+            	 $('#myModal').modal('show');
+             }else{
+            	 if(QueryIsDelete("post",id)=="true"){        		 
+            		 $("#tipContent").html("删除数据失败，含有子菜单不能删除")
+                	 $('#myModal').modal('show');
+            	 }
+            	 else{
+            		 $('#confirm').modal('show'); 
+            	 }
+            	          	 
+             }
+		});
+  /**
+	验证是否可以删除信息
+*/
+function  QueryIsDelete(type,id){
+ 	var dataPost = {"type":type,"ids":id};
+ 	var dataMM;
+	$.ajax({
+		url:"menuQueryHasChildren.action", 
+		data:dataPost, 
+		async:false,
+		dataType:"json", 
+		type:"post",
+		success:function (mm) {
+			dataMM = mm.result; 
+		}, 
+		error:function (error) {
+			dataMM = false;
+		}
 	});
-   }
-   
-   function  itemdelete(){
-    var selected = g.getSelected();
-    if (!selected) {  top.my_alert('请选择要删除的数据行!',"warn"); return; }
-    window.top.$.ligerDialog.confirm("确定删除选择的数据?数据删除后不可恢复！", "提示", function (ok) {
-	if (ok) {
-      var selecteds = g.getSelecteds();
-      var idstr="";//所有选择行的id
-      for(var i=0;i<selecteds.length;i++){
-         idstr = idstr + selecteds[i].id;
-         if(i!=(selecteds.length-1)){
-         idstr = idstr + ",";
-         }
-        }
-      $.post("menuQueryHasChildren.action", { ids: idstr},//判断是否含有子菜单
-       function(data){
-	       if(data.result == "false"){
-		          /**
-			           删除数据库数据
-			        */
-			      $.post("menuDel.action", { ids: idstr},
-			       function(data){
-				       if(data.result == "success"){
-					        g.deleteSelectedRow();
-					       top.$.ligerDialog.success("删除数据成功!");
-				        }else{
-				        	top.$.ligerDialog.error("删除数据失败！");
-				        }
-			      },"json");
-	        }else{
-	        	top.$.ligerDialog.error("删除数据失败！该菜单含有子菜单");
-	        }
-      },"json");
-     }
-     });
-   }
+	return dataMM;
+}
+	/**
+	 获取选中项
+	*/
+  function getselectinfo(){
+	  var checkboxval=$("input[name='checked_info']"); 
+      var id="";   
+      for (var i=0;i<checkboxval.length;i++ ){       
+          if(checkboxval[i].checked){ 
+              if(id=="") {
+              id=id+checkboxval[i].value; 
+               }else{
+                 id=id+","+checkboxval[i].value;   
+               }
+          }  
+       }
+      return id;
+  }
+  
+	/**
+	 修改信息
+	*/
+$("#edit_user").click(function(){ 
+	     var id=getselectinfo();
+	     if(id==""){
+	    	 $("#tipContent").html("请选择要修改的数据")
+	    	 $("#myModal").modal('show');	 
+	     }else if(id.indexOf(",") > 0){
+	    	 $("#tipContent").html("只能修改一条数据");
+	    	 $("#myModal").modal('show');	 
+	     }else{
+	    	 $("iframe[name='editUser_content']").get(0).contentWindow.loadInfo(id);    	 
+	     }
+	      
+		});
+	
 
- /**
- 打开窗口的方法
- */
- function winOpen(url,title,width,height,button1,button2,callback){
-		window.top.$.ligerDialog.open({
-			width: width, height: height, url: url, title: title, buttons: [{
-				text: button1, onclick: function (item, dialog) {
-					var fn = dialog.frame.f_validate || dialog.frame.window.f_validate;
-					var data = fn();
-					if(data){
-						callback(data);
-						dialog.close();
-					}
-				}
-			},{
-				text: button2, onclick: function (item, dialog) {
-					dialog.close();
-				}
-			}]
-	     });
-	}
+ $("button[name='adduser']").click(function(){
+	 $("iframe[name='adduser_content']").get(0).contentWindow.submit();
+ });
+ $("button[name='editUser']").click(function(){ 
+	 $("iframe[name='editUser_content']").get(0).contentWindow.submit();
+ });
+ //收缩全部
+ $("#compress").click(function(){
+	$('div[name="showChildren"]').removeClass().addClass("fa  fa-plus-square"); 
+	$(".childrenRows").hide();
+
+ });
+ //展开全部
+ $("#expand").click(function(){
+	 $('div[name="showChildren"]').removeClass().addClass("fa fa-minus-square-o");  
+	 $(".childrenRows").show();
+ });
+  });
+/**
+删除选中项
+*/
+function detletedate(){
+
+	var idstr=getselectinfo();
+	var counr=idstr.split(",").length;
+	$('#example1').find('.selected').remove();
+	 $.post("menuDel.action", { ids: idstr},
+			 function(data){
+	       if(data.result == "success"){
+	    		$("#tipContent").html("您删除了"+counr+"条数据");
+	 			$("#myModal").modal('show');
+	        }else{
+	        	$("#tipContent").html("删除了失败");
+	 			$("#myModal").modal('show');
+	        }
+    },"json");
+	  
+}
+/**
+获取选中项
+*/
+function getselectinfo(){
+ var checkboxval=$("input[name='checked_info']"); 
+ var id="";   
+ for (var i=0;i<checkboxval.length;i++ ){       
+     if(checkboxval[i].checked){ 
+         if(id=="") {
+         id=id+checkboxval[i].value; 
+          }else{
+            id=id+","+checkboxval[i].value;   
+          }
+     }  
+  }
+ return id;
+}
+

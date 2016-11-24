@@ -1,211 +1,356 @@
-<%@ page language="java"  pageEncoding="UTF-8"%>
+
+<%@ page import="com.dhcc.bussiness.sxydidc.datacenter.DataCenterModel" language="java"  pageEncoding="UTF-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String id = request.getParameter("id");
-String type = request.getParameter("type");
-String userid=request.getSession().getAttribute("userid").toString();
-String username=request.getSession().getAttribute("username").toString();
+String userid=(String)request.getSession().getAttribute("userid");//用户id
+String username=(String)request.getSession().getAttribute("username");//用户名
+DataCenterModel dc=(DataCenterModel)request.getSession(true).getAttribute("dc");
 %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-	<base href="<%=basePath %>"/>
-    <title>添加客户信息</title>
-    <jsp:include page="../common/head.jsp" flush="true"/>
-    <script type="text/javascript">
-        var form;
-        var groupicon="<%=basePath%>include/LigerUI/skins/icons/communication.gif"; 
-        $(function (){
-        	form = $("#form").ligerForm({
-        		inputWidth: 180, 
-        		labelWidth: 120, 
-        		space: 40, 
-				validate : true,
-                fields: [ 
-               		{ label: "客户编号",name: "no",newline: true,type: "text",options:{disabled:true},group: "客户基础信息", groupicon: groupicon,
-                    	validate: {required: true,maxlength:12}
-               		},
-                    { label: "客户类型",name: "type",newline: false,type: "select",options:{disabled:true},
-                        editor:{
-                    		data:[{id:'03',text:'互联网客户'}],
-                    		initValue:"03"
-                    	},
-						validate: {required: true}
-                    },
-                    { label: "客户级别",name: "customerlevel",newline: true,type: "select",
-                         editor:{
-                    		data:queryDictionary('CUSTOMERLEVEL',null),
-                    		initValue:""
-                    	},
-                    	validate: {required: true}                   
-                    },               		
-                    { label: "客户名称",name: "name",newline: false, type: "text",validate: {required: true,maxlength:255}},
-                    { label: "客户简称",name: "sortname",newline: true,type: "text"},
-                    { label: "客户性质",name: "customerproperty",newline: false,type: "select",
-                         editor:{
-                    		data:queryDictionary('CUSTOMERPROPERTY',null),
-                    		initValue:""
-                    	}                   
-                    },
-                    { label: "上级客户",name: "parentid",newline: true,type: "text"},
-                    { label: "客户经理",name: "manager",newline: false,type: "select",options:{disabled:true},
-                         editor:{
-                    		initValue:'<%=userid%>'
-                    	}                    
-                    },
-                    { label: "法人代表",name: "corporate",newline: true,type: "text"},
-                    { label: "客户省份",name: "province",newline: false,type: "select",
-						editor:{
-                    		data:[{id:'BEIJING',text:'北京市'},                        
-								{id:'HEBEI',text:'河北省'},
-								{id:'HENAN',text:'河南省'},
-								{id:'YUNNAN',text:'云南省'},
-								{id:'LIAONING',text:'辽宁省'},
-								{id:'HEILONGJIANG',text:'黑龙江省'},
-								{id:'HUNAN',text:'湖南省'},
-								{id:'ANHUI',text:'安徽省'},
-								{id:'SHANDONG',text:'山东省'},
-								{id:'XINJIANG',text:'新疆省'},
-								{id:'JIANGSU',text:'江苏省'},
-								{id:'ZHEJIANG',text:'浙江省'},
-								{id:'JIANGXI',text:'江西省'},
-								{id:'HUBEI',text:'湖北省'},
-								{id:'GUANGXI',text:'广西省'},
-								{id:'GANSU',text:'甘肃省'},
-								{id:'SHANXI',text:'山西省'},
-								{id:'NEIMENG',text:'内蒙古'},
-								{id:'SHAANXI',text:'陕西省'},
-								{id:'JILING',text:'吉林省'},
-								{id:'FUJIAN',text:'福建省'},
-								{id:'GUIZHOU',text:'贵州省'},
-								{id:'GUANGDONG',text:'广东省'},
-								{id:'QINGHAI',text:'青海省'},
-								{id:'XIZANG',text:'西藏'},
-								{id:'SICHUAN',text:'四川省'},
-								{id:'NINGXIA',text:'宁夏省'},
-								{id:'HAINAN',text:'海南省'},
-								{id:'TAIWAN',text:'台湾省'},
-								{id:'XIANGGANG',text:'香港'},
-								{id:'AOMEN',text:'澳门'}
-							],
-                    		initValue:"SHANXI",
-                    		options:{disabled:true}
-                    	}                    
-                    },
-                    
-                    { label: "联系人",name: "contactname",newline: true,type: "text",group: "联系人信息", groupicon: groupicon},
-                    { label: "手机号码",name: "mobilephone",newline: false,type: "text"},
-                    { label: "座机号码",name: "contactphone",newline: true,type: "text"},
-                    { label: "通讯地址",name: "contactaddress",newline: true,type:"text",width:520},
-                    
-                    { label: "客户域级",name: "customerfield",newline: true,type: "select",group: "其他信息", groupicon: groupicon,
-                         editor:{
-                    		data:queryDictionary('CUSTFIELD',null),
-                    		initValue:""
-                    	}                    
-                    },
-                    { label: "ICP证号",name: "icpno",newline: false,type: "text"}, 
-                    { label: "网站名称",name: "sitename",newline: true,type: "text"},
-                    { label: "网站主域名",name: "domainname",newline: false,type: "text"},
-                    { label: "技术负责人",name: "skillpeople",newline: true,type: "text"},
-                    { label: "引用内容域名",name: "subdomain",newline: false, type: "text"},
-                    { label: "引用内容",name: "content",newline: true,type: "text"},
-                    { label: "带宽要求",name: "bandwidth",newline: false,type: "text"},
-                    { label: "引用方式",name: "method",newline: true,type: "text"},
-                    { label: "调度方式",name: "dispatch",newline: false,type: "text"},   
-                    { label: "主要协议",name: "prot",newline: true,type: "text"}, 
-                    
-                    { label: "开户属地",name: "regionid",newline: false,type: "select",initValue:"请选择", 
-						editor: {
-							width : 180, 
-							selectBoxWidth: 190,
-							selectBoxHeight: 190, 
-							valueField: 'id',
-							treeLeafOnly: false,
-							tree: { 
-								url:"cropDeptTreeQuery.action", 
-								ajaxType:'post',
-								idFieldName: 'id',
-								parentIDFieldName: 'pid',
-								checkbox: false				
-							}							
-						}                    
-                    },   
-                    { label: "备案名称",name: "registername",newline: true,type: "text"},
-                    { label: "公司名称",name: "companyname",newline: false,type: "text"},
-                    { label: "合同终止日期",name: "enddate",newline: true,type: "date",readonly:true},
-                    { label: "SLA",name: "slano",newline: true,width:520,type: "textarea"},                                                                                 
-                    { label: "备注", name: "remark", newline: true, width:520,type:"textarea", validate: { maxlength: 200 }}
-                ]
-            }); 
-            initCode();            
-        });
-		
-		/**供回调方法使用*/
-		function f_validate(){ 
-			if(form.valid()){
-				return datePost();
-			}else{
-			    form.showInvalid();
-			}
-		}
-		
-		/**获取表单要保存的数据以json格式返回*/
-		function datePost(){
-			var formData = form.getData();		
-			var data = {"customer.id":"<%=id %>",
-						"customer.no":formData.no,
-						"customer.name":formData.name,
-						"customer.type":formData.type,
-						"customer.customerlevel":formData.customerlevel,
-						"customer.contactname":formData.contactname,
-						"customer.mobilephone":formData.mobilephone,
-						"customer.contactphone":formData.contactphone,
-						"customer.contactaddress":formData.contactaddress,
-						"customer.customerproperty":formData.customerproperty,
-						"customer.parentid":formData.parentid,
-						"customer.manager":formData.manager,			
-						"customer.sortname":formData.sortname,			
-						"customer.corporate":formData.corporate,			
-						"customer.customerfield":formData.customerfield,	
-						"customer.icpno":formData.icpno,					
-						"customer.sitename":formData.sitename,				
-						"customer.domainname":formData.domainname,			
-						"customer.skillpeople":formData.skillpeople,		
-						"customer.subdomain":formData.subdomain,			
-						"customer.content":formData.content,				
-						"customer.bandwidth":formData.bandwidth,			
-						"customer.method":formData.method,					
-						"customer.dispatch":formData.dispatch,	
-						"customer.prot":formData.prot,				
-						"customer.province":formData.province,				
-						"customer.regionid":formData.regionid,				
-						"customer.registername":formData.registername,		
-						"customer.companyname":formData.companyname,		
-						"customer.slano":formData.slano,
-						"customer.enddate":$("input[name=enddate]").val(),
-						"customer.remark":formData.remark
-			};
-			return data;
-		}
-		
-		function initCode(){
-			$("input[name='no']").val(createCode('CUSTNO'));
-			$.ligerui.get("manager").setData([{id:'<%=userid%>',text:'<%=username%>'}]);
-		}
-		
-    </script>
-    <style type="text/css">
-        html,body{ 
-	        margin:0;
-	        padding:0;
-        	font-size:14px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>IDC／ISP流量统计与质量监测系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<%=basePath  %>/node_modules/ionicons/dist/css/ionicons.min.css">
+   <!-- DataTables -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+   <!-- bootstrap datepicker -->
+   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/datepicker3.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 </head>
-<body style="padding:10px">   
-	<form id="form"></form> 
+<body class="hold-transition">
+<div class="wrapper">
+  <!-- Content Wrapper. Contains page content -->
+ 
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content-header">
+      <h1>
+        添加客户信息
+      
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 工作台</a></li>
+        <li class="active"><a href="customerList.jsp" target="content">我的客户</a></li>   
+        <li class="active"><a href="#">添加客户信息</a></li>
+      </ol>
+    </section>
+    <section class="content">
+   <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">客户基础信息</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>  
+              </div>
+            </div>
+            <div class="box-body">
+                <form  class="form-horizontal" role="form">
+                  <div class="form-group form-group-sm customer-content-side">
+				    <label for="no" class="col-xs-2 control-label nopadding font-size font-padding-size">客户编号<font class="muststyle">(必填)</font>
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	   <input type="text" class="form-control" id="no" readonly>
+				    </div>
+				   
+				    <label for="type" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户类型<font class="muststyle">(必填)</font></label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <select class="form-control" id="type" readonly>
+			            </select>
+				   	</div> 
+				  </div>
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="customerlevel" class="col-xs-2 control-label nopadding font-size font-padding-size">客户级别<font class="muststyle">(必填)</font>
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <select class="form-control" id="customerlevel">
+			            </select>
+				    </div>
+				   
+				    <label for="name" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户名称<font class="muststyle">(必填)</font></label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <input type="text" class="form-control" id="name">
+				   	</div> 
+				  </div> 
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="sortname" class="col-xs-2 control-label nopadding font-size font-padding-size">客户简称
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="sortname">
+				    </div>
+				   
+				    <label for="customerproperty" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户性质</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <select class="form-control" id="customerproperty">
+			            </select>
+				   	</div> 
+				  </div>
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="parentid" class="col-xs-2 control-label nopadding font-size font-padding-size">上级客户
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="parentid">
+				    </div>
+				   
+				    <label for="manager" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户经理</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <select class="form-control" id="manager" readonly>
+				   	     <option value=<%=userid %>><%=username %></option>
+			            </select>
+				   	</div> 
+				  </div>
+				  
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="corporate" class="col-xs-2 control-label nopadding font-size font-padding-size">法人代表
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="corporate">
+				    </div>
+				   
+				    <label for="province" class="col-xs-2 control-label nopadding1 font-size font-padding-size">客户省份</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <select class="form-control" id="province"> 
+			            </select>
+				   	</div> 
+				  </div>
+                </form>
+            </div>
+              <!-- /.box-body -->
+          </div>
+          
+          
+          <div class="box">
+             <div class="box-header with-border">
+              <h3 class="box-title">联系人信息</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>  
+              </div>
+            </div>
+            <div class="box-body">
+                <form  class="form-horizontal" role="form">
+                  <div class="form-group form-group-sm customer-content-side">
+				    <label for="contactname" class="col-xs-2 control-label nopadding font-size font-padding-size">联系人
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	   <input type="text" class="form-control" id="contactname" >
+				    </div>
+				   
+				    <label for="mobilephone" class="col-xs-2 control-label nopadding1 font-size font-padding-size">手机号码</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <input type="text" class="form-control" id="mobilephone">
+				   	</div> 
+				  </div>
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="contactphone" class="col-xs-2 control-label nopadding font-size font-padding-size">座机号码
+				    </label>
+				    <div class="col-xs-10 nopadding">
+				  	   <input type="text" class="form-control" id="contactphone">
+				    </div>
+				  </div> 				  
+				  
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="contactaddress" class="col-xs-2 control-label nopadding font-size font-padding-size">通讯地址
+				    </label>
+				    <div class="col-xs-10 nopadding">
+				  	    <input type="text" class="form-control" id="contactaddress">
+				    </div>
+				  </div>
+                </form>
+            </div>
+           </div>
+            
+         
+         
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">其它信息</h3>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>  
+              </div>
+            </div>
+            <div class="box-body">
+                <form  class="form-horizontal" role="form">
+                  <div class="form-group form-group-sm customer-content-side">
+				    <label for="customerfield" class="col-xs-2 control-label nopadding font-size font-padding-size">客户域级
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				        <select class="form-control" id="customerfield">
+			            </select>
+				    </div>
+				   
+				    <label for="icpno" class="col-xs-2 control-label nopadding1 font-size font-padding-size">ICP证号</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <input type="text" class="form-control" id="icpno">
+				   	</div> 
+				  </div>
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="sitename" class="col-xs-2 control-label nopadding font-size font-padding-size">网站名称
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				        <input type="text" class="form-control" id="sitename">
+				    </div>
+				   
+				    <label for="domainname" class="col-xs-2 control-label nopadding1 font-size font-padding-size">网站主域名</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <input type="text" class="form-control" id="domainname">
+				   	</div> 
+				  </div> 
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="skillpeople" class="col-xs-2 control-label nopadding font-size font-padding-size">技术负责人
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="skillpeople">
+				    </div>
+				   
+				    <label for="subdomain" class="col-xs-2 control-label nopadding1 font-size font-padding-size">引用内容域名</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <input type="text" class="form-control" id="subdomain">	  
+				   	</div> 
+				  </div>
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="content" class="col-xs-2 control-label nopadding font-size font-padding-size">引用内容
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="content">
+				    </div>
+				   
+				    <label for="bandwidth" class="col-xs-2 control-label nopadding1 font-size font-padding-size">带宽要求</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <input type="text" class="form-control" id="bandwidth">			   	   
+				   	</div> 
+				  </div>
+				  
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="method" class="col-xs-2 control-label nopadding font-size font-padding-size">引用方式
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="method">
+				    </div>
+				   
+				    <label for="dispatch" class="col-xs-2 control-label nopadding1 font-size font-padding-size">调度方式</label>
+				   	<div class="col-xs-4 nopadding"> 
+				     	<input type="text" class="form-control" id="dispatch">
+				   	</div> 
+				  </div>
+				  
+				  
+				   <div class="form-group form-group-sm customer-content-side">
+				    <label for="prot" class="col-xs-2 control-label nopadding font-size font-padding-size">主要协议
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="prot">
+				    </div>
+				   
+				    <label for="regionid" class="col-xs-2 control-label nopadding1 font-size font-padding-size">开户属地</label>
+				   	<div class="col-xs-4 nopadding"> 
+				   	   <select class="form-control" id="regionid">
+			            </select>
+				   	</div> 
+				  </div>
+				  
+				  
+				  
+				  <div class="form-group form-group-sm customer-content-side">
+				    <label for="registername" class="col-xs-2 control-label nopadding font-size font-padding-size">备案名称
+				    </label>
+				    <div class="col-xs-4 nopadding">
+				  	    <input type="text" class="form-control" id="registername">
+				    </div>
+				   
+				    <label for="companyname" class="col-xs-2 control-label nopadding1 font-size font-padding-size">公司名称</label>
+				   	<div class="col-xs-4 nopadding">  	  
+			            <input type="text" class="form-control" id="companyname">
+				   	</div> 
+				  </div>
+				  
+				  
+				  
+				   
+				  <div class="form-group form-group-sm customer-content-side">	    
+				    <label for="enddate" class="col-xs-2 control-label nopadding font-size font-padding-size">合同终止日期</label>
+		            <div class="col-xs-4 nopadding">
+				       <div class="input-group date ">
+		                  <div class="input-group-addon">
+		                    <i class="fa fa-calendar"></i>
+		                  </div>
+		                  <input type="text" class="form-control pull-right" id="enddate">
+		                </div>
+			         </div>
+				  </div>
+				  
+				  
+				  
+				  
+				  
+				  <div class="form-group form-group-sm customer-content-side">
+					    <label for="slano" class="col-xs-2 control-label nopadding font-size font-padding-size">SLA</label>
+					    <div class="col-xs-10 nopadding">
+						   <textarea class="form-control" rows="3"  id="slano"></textarea>
+						</div>
+				  </div>
+				  
+				  
+				  <div class="form-group form-group-sm customer-content-side">
+					    <label for="remark" class="col-xs-2 control-label nopadding font-size font-padding-size">备注</label>
+					    <div class="col-xs-10 nopadding">
+						   <textarea class="form-control" rows="3"  id="remark"></textarea>
+						</div>
+				  </div>
+                </form>
+            </div>
+              <!-- /.box-body -->
+          </div> 
+          
+          <button type="button" class="btn btn-default" data-dismiss="modal"  id="save_all">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="return_back">取消</button>
+    </section>
+</div>
+
+
+<!-- jQuery 2.2.3 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=basePath  %>/node_modules/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<%=basePath  %>/node_modules/admin-lte/dist/js/demo.js"></script>
+ <!-- bootstrap datepicker -->
+<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script> 
+
+<script src="<%=basePath  %>bussiness/sxydidc/js/common.js"></script>
+<script src="customerAdd.js"></script>
+<!-- page script -->
+
 </body>
 </html>
