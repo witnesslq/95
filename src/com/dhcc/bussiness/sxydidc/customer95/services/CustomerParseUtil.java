@@ -45,14 +45,14 @@ public class CustomerParseUtil {
 				ContractHeaderField.LOWEST_BANDWIDTH,
 				ContractHeaderField.START_TIME,
 				ContractHeaderField.TRAFFIC_CHARGE_RULE,
-				ContractHeaderField.TRAFFIC_UNIT_PRICE }), PRODUCT(new Field[] {
+				ContractHeaderField.TRAFFIC_UNIT_PRICE,ContractHeaderField.NONE }), PRODUCT(new Field[] {
 				ProductHeaderField.CONTRACT_ID,
 				ProductHeaderField.PRODUCT_CHARACTER,
 				ProductHeaderField.PRODUCT_COUNT,
 				ProductHeaderField.PRODUCT_NAME, ProductHeaderField.IP,
 				ProductHeaderField.IS_CHARGE,
 				ProductHeaderField.PRODUCT_UNIT_PRICE,
-				ProductHeaderField.SETTING_BANDWIDTH }), NONE(new Field[0]);
+				ProductHeaderField.SETTING_BANDWIDTH ,ProductHeaderField.NONE}), NONE(new Field[0]);
 
 		private final Field[] fields;
 
@@ -97,7 +97,7 @@ public class CustomerParseUtil {
 	private enum ContractHeaderField implements Field {
 		CONTRACT_ID("合同编号"), CONTRACT_MONEY("合同金额"), DISCOUNT("折扣率"), TRAFFIC_UNIT_PRICE(
 				"流量单价"), START_TIME("开始时间"), CONTRACT_PERIOD("合同周期"), TRAFFIC_CHARGE_RULE(
-				"流量计费规则"), LOWEST_BANDWIDTH("保底带宽");
+				"流量计费规则"), LOWEST_BANDWIDTH("保底带宽"),NONE("");
 
 		private final String name;
 
@@ -107,7 +107,7 @@ public class CustomerParseUtil {
 
 		@Override
 		public boolean equals(String name) {
-			return this.name.equals(name);
+			return this.name.trim().equals(name.trim());
 		}
 
 	}
@@ -118,7 +118,7 @@ public class CustomerParseUtil {
 	private enum ProductHeaderField implements Field {
 		CONTRACT_ID("合同编号"), PRODUCT_NAME("产品名称"), PRODUCT_CHARACTER("产品性质"), PRODUCT_COUNT(
 				"产品数量"), PRODUCT_UNIT_PRICE("产品单价"), IP("IP"), SETTING_BANDWIDTH(
-				"配置带宽"), IS_CHARGE("是否计费");
+				"配置带宽"), IS_CHARGE("是否计费"),NONE("");
 
 		private final String name;
 
@@ -128,7 +128,7 @@ public class CustomerParseUtil {
 
 		@Override
 		public boolean equals(String name) {
-			return this.name.equals(name);
+			return this.name.trim().equals(name.trim());
 		}
 
 	}
@@ -180,7 +180,21 @@ public class CustomerParseUtil {
 			this.row = row;
 			init();
 		}
-
+		
+		/*
+		 * 判断此excel表格行是否是空行
+		 */
+		public boolean isEmptyRow(){
+			for(String value:fieldNameList){
+				
+				//只要有任意一个单元格的值不是空串，则认为不是空行
+				if(!"".equals(value.trim())){
+					return false;
+				}
+			}
+			return true;
+		}
+		
 		private void init() {
 
 			/*
@@ -236,7 +250,7 @@ public class CustomerParseUtil {
 						Double.class));
 			} else if (o instanceof Product) {
 				Product product = (Product) o;
-
+				log.info(fieldNameList);
 				product.setProductId(UUID.randomUUID().toString());
 				product.setContract(new Contract(fieldNameList.get(0)));
 				product.setProductName(fieldNameList.get(1));
@@ -452,7 +466,7 @@ public class CustomerParseUtil {
 			 */
 			// 判断行是否是表头行
 			EnhancedRow enhancedRow = new EnhancedRow(row);
-
+			if(enhancedRow.isEmptyRow()) continue;
 			if (Header.CONTRACT.equals(enhancedRow)) { // 合同表头行
 
 				currentHeader = Header.CONTRACT;
