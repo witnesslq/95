@@ -27,6 +27,8 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.log4j.Logger;
 
+import com.dhcc.common.util.SystemConfig;
+
 /**
  * 
  * @author tiger
@@ -56,6 +58,19 @@ public class DBManager {
 			logger.error("无法连接到数据库!", e);
 		}
 	}
+	
+	public DBManager(String flag) {
+		logger.info("开始创建一个数据库连接.........");
+		SystemConfig.setFlag("oracle");
+		try {
+			init();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("无法连接到数据库!", e);
+		}
+	}
+	
+	
 
 	/**
 	 * 
@@ -65,6 +80,27 @@ public class DBManager {
 	 * @功能如下 初始化连接池连接和Statement
 	 */
 	private void init() {
+
+		
+		conn = DBConnectionManager.getConnection();
+		try {
+			conn.setAutoCommit(false);
+		} catch (SQLException e1) {
+			logger.error("设置自动提交为false出现异常");
+			e1.printStackTrace();
+		}
+		try {
+			stmt = conn.createStatement();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			logger.error("获取连接出现异常");
+			
+		}
+
+	}
+	
+private void initOracle() {
 
 		
 		conn = DBConnectionManager.getConnection();
