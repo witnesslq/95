@@ -61,7 +61,7 @@ public class DBManager {
 	
 	public DBManager(String flag) {
 		logger.info("开始创建一个数据库连接.........");
-		SystemConfig.setFlag("oracle");
+		SystemConfig.setFlag(flag);
 		try {
 			init();
 		} catch (Exception e) {
