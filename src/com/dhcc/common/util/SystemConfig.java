@@ -10,11 +10,11 @@ import org.apache.log4j.Logger;
  */
 public class SystemConfig {
 	private static final Logger logger = Logger.getLogger(SystemConfig.class);
-	private static String flag="";
+	
     static String configFile = "SystemConfigResources";
     public static String getConfigInfomation(String itemIndex) {
         try {
-            ResourceBundle resource = ResourceBundle.getBundle(flag+configFile);
+            ResourceBundle resource = ResourceBundle.getBundle(configFile);
             return resource.getString(itemIndex);
         } catch (Exception e) {
             return "";
@@ -30,19 +30,7 @@ public class SystemConfig {
         }
     }
     
-    
-    
-    
-    
-	public static String getFlag() {
-		return flag;
-	}
-
-	public static void setFlag(String flag) {
-		SystemConfig.flag = flag;
-	}
-
-	public static void main(String arg[])
+    public static void main(String arg[])
     {
     	logger.info(SystemConfig.getConfigInfomation("DATABASE_PASSWORD"));
     }
