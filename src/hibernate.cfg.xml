@@ -28,5 +28,16 @@
         <mapping resource="com/dhcc/bussiness/sxydidc/customer95/resources/Contract.hbm.xml" />
         <mapping resource="com/dhcc/bussiness/sxydidc/customer95/resources/ProductIp.hbm.xml" />
         <mapping resource="com/dhcc/bussiness/sxydidc/customer95/resources/Customer.hbm.xml" />
+   		
+   		<!-- 端口、采集点数据 -->
+   		<mapping resource="com/dhcc/bussiness/sxydidc/quality/resources/Portips.hbm.xml" />
+        <mapping resource="com/dhcc/bussiness/sxydidc/quality/resources/TopoHostNode.hbm.xml" />
+        <mapping resource="com/dhcc/bussiness/sxydidc/quality/resources/TopoInterface.hbm.xml" />
+  		
+  		<!-- 原生SQL执行需要映射的实体类 -->
+  		<!-- 
+  		 <mapping resource="com/dhcc/bussiness/sxydidc/customer95/resources/CustomerSummary.hbm.xml" />
+    	<mapping resource="com/dhcc/bussiness/sxydidc/alarm/resources/AlarmStatistic.hbm.xml" />
+    -->
     </session-factory>
 </hibernate-configuration>

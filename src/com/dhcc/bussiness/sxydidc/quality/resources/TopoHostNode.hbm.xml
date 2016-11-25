@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-18 9:47:54 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.bussiness.sxydidc.quality.models.TopoHostNode" table="TOPO_HOST_NODE" schema="IPS" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="ID" precision="5" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="ipAddress" type="string">
+            <column name="IP_ADDRESS" length="15" />
+        </property>
+        <property name="ipLong" type="string">
+            <column name="IP_LONG" length="10" />
+        </property>
+        <property name="sysName" type="string">
+            <column name="SYS_NAME" length="50" />
+        </property>
+        <property name="alias" type="string">
+            <column name="ALIAS" length="50" />
+        </property>
+        <property name="netMask" type="string">
+            <column name="NET_MASK" length="15" />
+        </property>
+        <property name="sysDescr" type="string">
+            <column name="SYS_DESCR" length="200" />
+        </property>
+        <property name="sysOid" type="string">
+            <column name="SYS_OID" length="50" />
+        </property>
+        <property name="community" type="string">
+            <column name="COMMUNITY" length="20" />
+        </property>
+        <property name="category" type="java.lang.Short">
+            <column name="CATEGORY" precision="3" scale="0" />
+        </property>
+        <property name="managed" type="java.lang.Boolean">
+            <column name="MANAGED" precision="1" scale="0" />
+        </property>
+        <property name="status" type="java.lang.Short">
+            <column name="STATUS" precision="3" scale="0" />
+        </property>
+        <property name="discoverstatus" type="java.lang.Short">
+            <column name="DISCOVERSTATUS" precision="3" scale="0" />
+        </property>
+        <property name="sysLocation" type="string">
+            <column name="SYS_LOCATION" length="100" />
+        </property>
+        <property name="sysContact" type="string">
+            <column name="SYS_CONTACT" length="100" />
+        </property>
+        <property name="snmpversion" type="java.lang.Short">
+            <column name="SNMPVERSION" precision="3" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>
