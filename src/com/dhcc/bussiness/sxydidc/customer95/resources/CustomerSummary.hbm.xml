@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-23 13:56:06 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <joined-subclass name="com.dhcc.bussiness.sxydidc.customer95.models.CustomerSummary" extends="com.dhcc.bussiness.sxydidc.customer95.models.Customer" table="CUSTOMERSUMMARY"
+    lazy="false">
+        <key>
+            <column name="CUSTOMER_ID" />
+        </key>
+        <property name="ipCount" type="long">
+            <column name="IP_COUNT" />
+        </property>
+        <property name="alarmCount" type="long">
+            <column name="ALARM_COUNT" />
+        </property>
+        <many-to-one name="portips" class="com.dhcc.bussiness.sxydidc.quality.models.Portips" fetch="join">
+            <column name="PORTIPS" />
+        </many-to-one>
+    </joined-subclass>
+</hibernate-mapping>

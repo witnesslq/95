@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-18 9:47:54 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+ <class name="com.dhcc.bussiness.sxydidc.quality.models.Portips"
+  schema="IPS" table="PORTIPS">
+  <id name="id" type="big_decimal">
+   <column name="ID" precision="20" scale="0"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="ipaddress" type="string">
+   <column length="30" name="IPADDRESS"/>
+  </property>
+  <property generated="never" lazy="false" name="restype" type="string">
+   <column length="20" name="RESTYPE"/>
+  </property>
+  <property generated="never" lazy="false" name="category" type="string">
+   <column length="50" name="CATEGORY"/>
+  </property>
+  <property generated="never" lazy="false" name="entity" type="string">
+   <column length="100" name="ENTITY"/>
+  </property>
+  <property generated="never" lazy="false" name="subentity" type="string">
+   <column length="60" name="SUBENTITY"/>
+  </property>
+  <property generated="never" lazy="false" name="utilhdx" type="string">
+   <column length="100" name="UTILHDX"/>
+  </property>
+  <property generated="never" lazy="false" name="utilhdxperc" type="string">
+   <column length="30" name="UTILHDXPERC"/>
+  </property>
+  <property generated="never" lazy="false" name="discardsperc" type="string">
+   <column length="30" name="DISCARDSPERC"/>
+  </property>
+  <property generated="never" lazy="false" name="errorsperc" type="string">
+   <column length="30" name="ERRORSPERC"/>
+  </property>
+  <property generated="never" lazy="false" name="collecttime" type="date">
+   <column length="7" name="COLLECTTIME"/>
+  </property>
+  <property generated="never" lazy="false" name="utilhdxunit" type="string">
+   <column length="30" name="UTILHDXUNIT"/>
+  </property>
+  <property generated="never" lazy="false" name="percunit" type="string">
+   <column length="30" name="PERCUNIT"/>
+  </property>
+  <property generated="never" lazy="false" name="recover" type="string">
+   <column length="100" name="RECOVER"/>
+  </property>
+ </class>
+</hibernate-mapping>

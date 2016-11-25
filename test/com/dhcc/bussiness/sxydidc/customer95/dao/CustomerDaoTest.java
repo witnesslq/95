@@ -24,4 +24,14 @@ public class CustomerDaoTest {
 		fail("Not yet implemented");
 	}
 
+	@Test
+	public void testQueryCustomerStatistic(){
+		System.out.println(dao.queryCustomerStatistic());
+	}
+	
+	@Test
+	public void testQueryCustomerStatisticForGatherInterface(){
+		System.out.println(dao.queryCustomerStatisticForGatherInterface());
+	}
+	
 }

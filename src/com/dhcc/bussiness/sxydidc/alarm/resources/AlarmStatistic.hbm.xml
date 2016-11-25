@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-11-23 16:23:41 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <joined-subclass name="com.dhcc.bussiness.sxydidc.alarm.models.AlarmStatistic" extends="com.dhcc.bussiness.sxydidc.alarm.models.AlarmInfo" table="ALARMSTATISTIC" lazy="false">
+        <key>
+            <column name="ALARMID" />
+        </key>
+        <property name="alarmCount" type="long">
+            <column name="ALARM_COUNT" />
+        </property>
+    </joined-subclass>
+</hibernate-mapping>
