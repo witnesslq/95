@@ -106,6 +106,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			<!-- /.content -->
 		</div>
 	</div>
+	<%@ include file="/system/commons/alert_modal.jsp"  %>
 	<!-- REQUIRED JS SCRIPTS -->
 	<!-- jQuery 2.2.3 -->
 	<script

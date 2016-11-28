@@ -8,13 +8,10 @@ String userid = (String) request.getSession()
 .getAttribute("userid");//用户id
 String username = (String) request.getSession().getAttribute(
 "username");//用户名
-
 String customerId = request.getParameter("customerId"),
-	customerName = request.getParameter("customerName");
-
+customerName = request.getParameter("customerName"),
+portCount = request.getParameter("portCount");
 %>
-
-
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -145,75 +142,83 @@ scratch. This page gets rid of all links and provides the needed markup only.
 										</div>
 										<!-- 质量监测的图表 -->
 										<!-- <div class="box box-default">
-											<div class="box-header with-border">
-												<h3 class="box-title">告警统计</h3>
-												<div class="box-tools pull-right">
-													<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-												</div>
-											</div>
-											<div class="box-body">
-												<div class="container-fluid">
-													<div class="row">
-														<div class="container-fluid">
-															<div class="row">
-																<div class="col-md-4">
-																	<div class="input-group" id="dateForAlarm">
-																		<div class="input-group-btn">
-																			<button class="btn btn-default " data-toggle="dropdown">按天<span class="caret"></span></button>
-																			<ul class="dropdown-menu date">
-																				<li data-view-mode="0">
-																					<a href="####">按天</a>
-																				</li>
-																				<li data-view-mode="1">
-																					<a href="####">按月</a>
-																				</li>
-																				<li data-view-mode="2">
-																					<a href="####">按年</a>
-																				</li>
-																			</ul>
-																		</div>
-																		<input type="text" data-mask="" class="form-control" data-view-mode="0">
-																		<div class="input-group-btn">
-																			<button class="btn btn-default query-btn" type="button">查询</button>
-																		</div>
-																	</div>
-																</div>
-															</div>
-															<div class="row">
-																<div class="col-md-12">
-																	<div id="alarmContainer">
-																		
-																	</div>
-																</div>
-															</div>
+												<div class="box-header with-border">
+														<h3 class="box-title">告警统计</h3>
+														<div class="box-tools pull-right">
+																<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 														</div>
-													</div>
 												</div>
-											</div>
-											
+												<div class="box-body">
+														<div class="container-fluid">
+																<div class="row">
+																		<div class="container-fluid">
+																				<div class="row">
+																						<div class="col-md-4">
+																								<div class="input-group" id="dateForAlarm">
+																										<div class="input-group-btn">
+																												<button class="btn btn-default " data-toggle="dropdown">按天<span class="caret"></span></button>
+																												<ul class="dropdown-menu date">
+																														<li data-view-mode="0">
+																																<a href="####">按天</a>
+																														</li>
+																														<li data-view-mode="1">
+																																<a href="####">按月</a>
+																														</li>
+																														<li data-view-mode="2">
+																																<a href="####">按年</a>
+																														</li>
+																												</ul>
+																										</div>
+																										<input type="text" data-mask="" class="form-control" data-view-mode="0">
+																										<div class="input-group-btn">
+																												<button class="btn btn-default query-btn" type="button">查询</button>
+																										</div>
+																								</div>
+																						</div>
+																				</div>
+																				<div class="row">
+																						<div class="col-md-12">
+																								<div id="alarmContainer">
+																										
+																								</div>
+																						</div>
+																				</div>
+																		</div>
+																</div>
+														</div>
+												</div>
+												
 										</div> -->
 										<!-- IP表 -->
 										<div id="portList" class="box box-default">
 											<div class="box-header with-border">
-												<h3 class="box-title">端口</h3>
+												<h3 class="box-title">端口
+													<span class="label label-primary">共<%=portCount  %>个</span>
+												</h3>
 												<!-- <div class="box-tools">
-													<div class="has-feedback">
-														<input type="text" class="form-control input-sm" placeholder="输入IP">
-														<span class="glyphicon glyphicon-search form-control-feedback"></span>
-													</div>
+														<div class="has-feedback">
+																<input type="text" class="form-control input-sm" placeholder="输入IP">
+																<span class="glyphicon glyphicon-search form-control-feedback"></span>
+														</div>
 												</div> -->
+												<div class="box-tools pull-right"><button class="btn btn-box-tool" data-widget="collapse">
+													<i class="fa fa-minus"></i>
+												</button></div>
 											</div>
 											<div class="box-body">
-												<p>
-													
-													
-												</p>
+												
+											</div>
+											<div class="box-footer">
+												*点击端口，输入日期，点击查询按钮查询
 											</div>
 										</div>
+										
 									</section>
 									<!-- /.content -->
 								</div>
 							</div>
+
+							<%@ include file="/system/commons/alert_modal.jsp"  %>
 							<!-- REQUIRED JS SCRIPTS -->
 							<!-- jQuery 2.2.3 -->
 							<script
@@ -239,23 +244,41 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									customerName = "<%=customerName  %>";
 							</script>
 							<!-- loading模板 -->
-    <script type="text/x-ejs-template" id="overlayTmpl">
-      <div class="overlay">
-              <i class="fa fa-refresh fa-spin"></i>
-            </div>
-    </script>
-
-    <script type="text/x-ejs-template" id="portBtnTmpl">
-    	<\% 
-			for(var i = 0,size = ports.length;i<size;i++){
-			var port = ports[i];
-    	 %>
-    		<button class="btn btn-default" type="button" data-node-id="<\%=port.nodeId  %>" data-if-index="<\%=port.ifIndex  %>"><\%=port.ifDesc  %></button>
-    	<\%
-    	}  
-    	%>
-    </script>
-    <script src="<%=basePath  %>/node_modules/ejs/ejs.js"></script>
+							<script type="text/x-ejs-template" id="overlayTmpl">
+							<div class="overlay">
+								<i class="fa fa-refresh fa-spin"></i>
+							</div>
+							</script>
+							<script type="text/x-ejs-template" id="portBtnTmpl">
+								<dl>
+								<\%
+										for(var i = 0,size = ips.length;i<size;i++){
+										var ipToPorts = ips[i],
+											ip = ipToPorts.ip,
+											ports = ipToPorts.ports;
+								 %>
+									<dt>在设备<\%=ip  %>上<span class="label label-primary"><\%=ports.length  %>个端口</span></dt>
+									<dd>
+								 <\%
+											for(var j=0,jSize = ports.length;j<jSize;j++){
+											var port = ports[j];
+								%>
+									
+										
+										
+									
+									<button class="btn btn-default" type="button" data-node-id="<\%=port.nodeId  %>" data-if-index="<\%=port.ifIndex  %>"><\%=port.ifDesc  %></button>
+								<\%
+								}
+								 %>
+								 </dd>
+								 <\% 
+								}
+								%>
+								
+								</dl>
+							</script>
+							<script src="<%=basePath  %>/node_modules/ejs/ejs.js"></script>
 							<script src="<%=basePath%>/js/quality_visual.js"></script>
 						</body>
 					</html>

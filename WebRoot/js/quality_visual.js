@@ -88,7 +88,11 @@ $(function() {
 		}
 		maskedInput.attr("data-view-mode", viewMode); //输入框上携带按天、月、年的查询模式
 	});
- Highcharts.setOptions({ global: { useUTC: false } });
+	Highcharts.setOptions({
+		global: {
+			useUTC: false
+		}
+	});
 	var ratioRender = {
 		render: function(data) {
 			var discard = {
@@ -107,7 +111,7 @@ $(function() {
 				var portips = data[i];
 
 				var date = new Date(portips.collecttime),
-				utcDate = Date.UTC(date.getUTCFullYear(),date.getUTCMonth(),date.getUTCDate(),date.getUTCHours(),date.getUTCMinutes(),date.getUTCSeconds());
+					utcDate = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
 				discard.data.push([date.getTime(), parseFloat(portips.discardsperc)]);
 				error.data.push([date.getTime(), parseFloat(portips.errorsperc)]);
 			}
@@ -145,26 +149,26 @@ $(function() {
 		if (selectedPortBtnList.length > 0) {
 
 			var interfaceList = [];
-			selectedPortBtnList.each(function(index,element) {
+			selectedPortBtnList.each(function(index, element) {
 				var nodeId = $(element).attr("data-node-id"),
 					ifIndex = $(element).attr("data-if-index");
 
-					interfaceList.push({
-						nodeId:nodeId,
-						ifIndex:ifIndex
-					});
+				interfaceList.push({
+					nodeId: nodeId,
+					ifIndex: ifIndex
+				});
 			});
 
 
 			// 多个端口的丢、错数据
 			visualize({
 				url: "query_portips_list_for_gather_interface.action",
-				contentType:"application/json",
+				contentType: "application/json",
 				data: JSON.stringify({
 					type: type,
 					date: date,
 					dateFormat: dateFormat,
-					"gatherInterfaceList":interfaceList
+					"gatherInterfaceList": interfaceList
 				}),
 				plotOther: (function() {
 
@@ -248,6 +252,9 @@ $(function() {
 		chart: {
 			zoomType: 'x'
 		},
+		credits: {
+			enabled: false
+		},
 		title: {
 			text: new SimpleDateFormat('yyyy-mm-dd').format(new Date()) + customerName + '的错误率、丢包率'
 		},
@@ -306,7 +313,7 @@ $(function() {
 
 		$.ajax({
 			url: o.url,
-			contentType: o.contentType||"application/x-www-form-urlencoded",
+			contentType: o.contentType || "application/x-www-form-urlencoded",
 			method: "POST",
 			data: o.data,
 			beforeSend: function(jqXHR, settings) {
@@ -316,13 +323,30 @@ $(function() {
 				o.render && o.render(data);
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
+				var message;
+				if (textStatus == "error") {
+					message = "服务器内部错误，无法获取数据";
+				} else if (textStatus == "timeout") {
+					message = "浏览器等待数据超时";
+				} else if (textStatus == "parsererror") {
+					message = "数据解析异常";
+				}
 
+				$("#alertModal").data("message", message).modal("show");
 			},
 			complete: function(jqXHR, textStatus) {
 				o.loaded && o.loaded();
 			}
 		});
 	}
+
+	/*
+		展示不同的告警信息
+	 */
+	$("#alertModal").on("show.bs.modal", function(event) {
+		var modal = $(this);
+		modal.find(".modal-body").text(modal.data("message"));
+	});
 
 	/*
 		初始按天查询当天此客户的丢包率、错包率数据
@@ -354,13 +378,30 @@ $(function() {
 			$("#portList").append(result);
 		},
 		success: function(data, textStatus, jqXHR) {
+			var ips = [];
+
+			//构造IP：端口列表 键值对;
+			for (var i = 0, size = data.length; i < size; i++) {
+
+				var port = data[i],
+					last = ips[ips.length>0?ips.length-1:0];
+				
+
+				if(last&&last.ip == port.nodeId){
+					last.ports&&last.ports.push(port);
+				}else{ //第一个IP或者前一个IP和当前portIP不同
+					ips.push({
+						ip:port.nodeId,
+						ports:[port]
+					});
+					
+				}
+			}
 			var tmpl = $("#portBtnTmpl").html(),
 				result = ejs.render(tmpl, {
-					ports: data
+					ips: ips
 				});
-			$("#portList p").append(result);
-
-			$("#portList div.box-body p").on("click", "button", function(event) {
+			$("#portList div.box-body").append(result).on("click", "button", function(event) {
 
 				var clickedPort = $(this);
 

@@ -98,7 +98,7 @@ public class TopoInterfaceDao {
 		Session session = sessionFactory.getCurrentSession();
 		Transaction transaction = session.beginTransaction();
 		try{
-			Query query = session.createQuery("from  TopoInterface where customerId=:customerId");			
+			Query query = session.createQuery("from  TopoInterface where customerId=:customerId order by nodeId");			
 			query.setString("customerId", customer.getCustomerId());
 			List<TopoInterface> interfaceList = query.list();
 			
