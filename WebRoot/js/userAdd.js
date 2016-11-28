@@ -107,8 +107,8 @@ $(function () {
 	 var datepickerCheck=checkdate(datepicker);
 	 var companyPhoneCheck=true;
 	 var companyMailCHeck=true;
-	 if(companyPhone!=""){
-		 companyPhoneCheck=getmobilepublic(companyPhone);  
+	 if(companyMobPhone!=""){
+		 companyPhoneCheck=getmobilepublic(companyMobPhone);  
 		 }
 	 if(companyMail!=""){
 		 companyMailCHeck=getemailpublic(companyMail);	
@@ -124,8 +124,8 @@ $(function () {
 				 roleid: role,
 				 stationid: job,
 				 postid: post,
-				 mobilepublic: companyPhone,
-				 phonepublic: companyMobPhone,
+				 mobilepublic: companyMobPhone,
+				 phonepublic: companyPhone,
 				 mobileprivate: PersonPhone,
 				 phoneprivate: homePhone,
 				 emailpublic: companyMail,
