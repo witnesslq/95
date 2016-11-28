@@ -15,7 +15,9 @@ $(function() {
 	$(window, ".wrapper").resize(function() {
 		$.AdminLTE.layout.fixContent();
 	});
-
+	$("#returnToLogin").click(function(){
+		window.location.href="login.jsp"
+	});
 	/*
 		显示右边菜单
 		
