@@ -88,11 +88,21 @@ $(function() {
 		}
 		maskedInput.attr("data-view-mode", viewMode); //输入框上携带按天、月、年的查询模式
 	});
+
+	/*
+		初始化提示框
+		在没有输入日期就点击查询按钮的情况下显示
+	 */
+	$("input[data-mask]").tooltip({
+		placement: "bottom",
+		title: "请输入日期，再点击查询按钮"
+	});
 	Highcharts.setOptions({
 		global: {
 			useUTC: false
 		}
 	});
+
 	var ratioRender = {
 		render: function(data) {
 			var discard = {
@@ -121,6 +131,7 @@ $(function() {
 			ratioPlot.redraw();
 		},
 		loading: function() {
+
 			var series = ratioPlot.series;
 			while (series.length > 0) {
 				series[0].remove();
@@ -135,13 +146,17 @@ $(function() {
 	点击 查询 ，查询客户或者采集口，相应日期的丢包、错包数据
 	 */
 	$("#dateForRatio").on("click", "button.query-btn", function(event) {
-		var date = $(event.delegateTarget).children("input[data-mask]").val();
-		var viewMode = $(event.delegateTarget).find("input[data-mask]").attr("data-view-mode"),
+		var $queryBtn = $(this);
+		var date = $(event.delegateTarget).children("input[data-mask]").val(),
+			viewMode = $(event.delegateTarget).find("input[data-mask]").attr("data-view-mode"),
 			type = viewMode == 0 ? "day" : (viewMode == 1 ? "month" : "year"),
 			dateFormat = viewMode == 0 ? "yyyy-mm-dd" : (viewMode == 1 ? "yyyy-mm" : "yyyy"); //暂时固定，以后需从mask获取
 
 		//忘记输入日期，不能查询
-		if ("" == date.trim()) return;
+		if ("" == date.trim()) {
+			$(event.delegateTarget).find("input[data-mask]").tooltip("show");
+			return;
+		}
 
 		var selectedPortBtnList = $("#portList div.box-body p button.btn-primary");
 
@@ -178,8 +193,13 @@ $(function() {
 
 				})(),
 				render: ratioRender.render,
-				loading: ratioRender.loading,
-				loaded: ratioRender.loaded
+				loading: [function(argument) {
+
+					$queryBtn.prop("disabled", true).text("查询中...");
+				}, ratioRender.loading],
+				loaded: [ratioRender.loaded, function(argument) {
+					$queryBtn.prop("disabled", false).text("查询");
+				}]
 			});
 		} else {
 
@@ -199,8 +219,13 @@ $(function() {
 
 				})(),
 				render: ratioRender.render,
-				loading: ratioRender.loading,
-				loaded: ratioRender.loaded
+				loading: [function(argument) {
+
+					$queryBtn.prop("disabled", true).text("查询中...");
+				}, ratioRender.loading],
+				loaded: [ratioRender.loaded, function(argument) {
+					$queryBtn.prop("disabled", false).text("查询");
+				}]
 			});
 		}
 
@@ -311,16 +336,28 @@ $(function() {
 		 */
 	function visualize(o) {
 
+		function executeThese(funcArrayOrFunc) {
+			if ($.isArray(funcArrayOrFunc)) {
+				for (var i = 0, size = funcArrayOrFunc.length; i < size; i++) {
+					if ($.isFunction(funcArrayOrFunc[i])) {
+						funcArrayOrFunc[i]();
+					}
+				}
+			} else if ($.isFunction(funcArrayOrFunc)) {
+				funcArrayOrFunc();
+			}
+		}
 		$.ajax({
 			url: o.url,
 			contentType: o.contentType || "application/x-www-form-urlencoded",
 			method: "POST",
 			data: o.data,
 			beforeSend: function(jqXHR, settings) {
-				o.loading && o.loading();
+				var funcArrayOrFunc = o.loading;
+				executeThese(funcArrayOrFunc);
 			},
 			success: function(data, textStatus, jqXHR) {
-				o.render && o.render(data);
+				$.isFunction(o.render) && o.render(data);
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				var message;
@@ -335,7 +372,9 @@ $(function() {
 				$("#alertModal").data("message", message).modal("show");
 			},
 			complete: function(jqXHR, textStatus) {
-				o.loaded && o.loaded();
+				var funcArrayOrFunc = o.loaded;
+
+				executeThese(funcArrayOrFunc);
 			}
 		});
 	}
@@ -361,8 +400,13 @@ $(function() {
 		},
 
 		render: ratioRender.render,
-		loading: ratioRender.loading,
-		loaded: ratioRender.loaded
+		loading: [function(argument) {
+
+			$("#dateForRatio .query-btn").prop("disabled", true).text("查询中...");
+		}, ratioRender.loading],
+		loaded: [ratioRender.loaded, function(argument) {
+			$("#dateForRatio .query-btn").prop("disabled", false).text("查询");
+		}]
 	});
 
 	$.ajax({
@@ -384,17 +428,17 @@ $(function() {
 			for (var i = 0, size = data.length; i < size; i++) {
 
 				var port = data[i],
-					last = ips[ips.length>0?ips.length-1:0];
-				
+					last = ips[ips.length > 0 ? ips.length - 1 : 0];
 
-				if(last&&last.ip == port.nodeId){
-					last.ports&&last.ports.push(port);
-				}else{ //第一个IP或者前一个IP和当前portIP不同
+
+				if (last && last.ip == port.nodeId) {
+					last.ports && last.ports.push(port);
+				} else { //第一个IP或者前一个IP和当前portIP不同
 					ips.push({
-						ip:port.nodeId,
-						ports:[port]
+						ip: port.nodeId,
+						ports: [port]
 					});
-					
+
 				}
 			}
 			var tmpl = $("#portBtnTmpl").html(),

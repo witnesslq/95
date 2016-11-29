@@ -55,7 +55,7 @@ $(function() {
 			}]
 		});
 
-	}).fail(function(jqXHR,textStatue,errorThrown) {
+	}).fail(function(jqXHR,textStatus,errorThrown) {
 		var message;
 				if (textStatus == "error") {
 					message = "服务器内部错误，无法获取数据";
