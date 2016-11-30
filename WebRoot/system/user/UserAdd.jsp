@@ -27,6 +27,8 @@ String username=(String)request.getSession().getAttribute("username");//用户�
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
   <link rel="stylesheet" href="<%=basePath  %>/css/newAddStyle.css">
+   <link rel="stylesheet" href="<%=basePath  %>/css/bootstrap-select.css">
+  
    <!-- bootstrap datepicker -->
    <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/datepicker3.css">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -78,10 +80,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
    <div class="form-group form-group-sm ">
       <label for="sex" class="col-xs-2 control-label nopadding font-size">用户性别<font class="muststyle">(必填)</font></label>
 	    <div  class="col-xs-4 input-sm nopadding ">
-			<select class="form-control" id="sex">
-		        <option value=""></option>
-				<option value="M">男</option>
-				<option value="F">女</option>
+			<select class="selectpicker show-tick form-control"  id="sex" data-live-search="false" title="请选择">	
 			</select>
 		</div>
 	
@@ -101,12 +100,12 @@ String username=(String)request.getSession().getAttribute("username");//用户�
     <label for="department" class="col-xs-2 control-label nopadding font-size">所属部门<font class="muststyle">(必填)</font>
     </label>
     <div  class="col-xs-4 input-sm nopadding ">
-        <select class="form-control" id="department">
+        <select class="selectpicker show-tick form-control" id="department" data-live-search="false" title="请选择">
         </select>
 	</div>
     <label for="job" class="col-xs-2 control-label nopadding1 font-size">岗位<font class="muststyle">(必填)</font></label>
     <div  class="col-xs-4 input-sm nopadding ">
-   	    <select class="form-control" id="job">
+   	    <select class="selectpicker show-tick form-control" multiple id="job"  data-live-search="false">
         </select>
         </div>
   </div>
@@ -115,12 +114,12 @@ String username=(String)request.getSession().getAttribute("username");//用户�
     <label for="role" class="col-xs-2 control-label nopadding font-size">用户角色<font class="muststyle">(必填)</font>
     </label>
     <div  class="col-xs-4 input-sm nopadding ">
-        <select class="form-control" id="role">
+        <select class="selectpicker show-tick form-control" multiple id="role" data-live-search="false">
         </select>
 	</div>
     <label for="post" class="col-xs-2 control-label nopadding1 font-size">职务<font class="muststyle">(必填)</font></label>
    	    <div  class="col-xs-4 input-sm nopadding ">
-   	    <select class="form-control" id="post">
+   	    <select class="selectpicker show-tick form-control" id="post" data-live-search="false" title="请选择">
         </select>
         </div>
   </div>
@@ -131,12 +130,12 @@ String username=(String)request.getSession().getAttribute("username");//用户�
     <label for="area" class="col-xs-2 control-label nopadding font-size">所属区域<font class="muststyle">(必填)</font>
     </label>
      <div  class="col-xs-4 input-sm nopadding ">
-        <select class="form-control" id="area">
+        <select class="selectpicker show-tick form-control" id="area"  data-live-search="false" title="请选择">
         </select>
         </div>
     <label for="dataCenter" class="col-xs-2 control-label nopadding1 font-size">数据中心<font class="muststyle">(必填)</font></label>
    	   <div  class="col-xs-4 input-sm nopadding ">
-   	    <select class="form-control" id="dataCenter">
+   	    <select class="selectpicker show-tick form-control" id="dataCenter"  data-live-search="false" title="请选择">
         </select>
         </div>
   </div>
@@ -214,6 +213,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
  <!-- bootstrap datepicker -->
 <script src="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
 <script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script> 
+<script src="<%=basePath  %>/js/bootstrap-select.js"></script>
 <script src="<%=basePath  %>/js/userAdd.js"></script>
 <!-- page script -->
 
