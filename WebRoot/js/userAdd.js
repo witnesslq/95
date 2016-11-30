@@ -6,16 +6,28 @@ $(function () {
       todayBtn: 'linked',
       language: 'cn'
     });
-  
+  var  setSelectCss="sex,department,job,role,post,area,dataCenter";
+  for(var i=0;i<setSelectCss.split(",").length;i++){
+	  $('#'+setSelectCss.split(",")[i]).selectpicker({
+	      'selectedText': 'cat',
+	      'noneSelectedText':'请选择'
+	     
+	  });  
+  }
+ 
+  $("#sex").html('<option value="M">男</option><option value="F">女</option>');
+  $('#sex').selectpicker('refresh');
   $.ajax({
 		url:"cropDeptQuery", 
 		dataType: 'json',
 		type:"post",
-		success:function (data) {
-	        $("#department").append('<option>'+''+'</option>');
+		success:function (data) {  
+	     var selectOption="";
 	       for(var i=0;i<data.length;i++){
-		       $("#department").append('<option value="'+data[i].id+'">'+data[i].text+'</option>');
+	    	   selectOption=selectOption+'<option value="'+data[i].id+'">'+data[i].text+'</option>';	       
 	       }
+	       $("#department").html(selectOption);
+	       $('#department').selectpicker('refresh');
 		}, 
 		error:function (error) {
 			 window.parent.$("#tipContent").html("获取信息失败！");
@@ -27,10 +39,13 @@ $(function () {
 		dataType: 'json',
 		type:"post",
 		success:function (data) {
-	     $("#dataCenter").append('<option>'+''+'</option>');
-	  for(var i=0;i<data.length;i++){
-	       $("#dataCenter").append('<option value="'+data[i].id+'">'+data[i].text+'</option>');
-    };
+		  var selectOption="";
+		  for(var i=0;i<data.length;i++){
+			    selectOption=selectOption+'<option value="'+data[i].id+'">'+data[i].text+'</option>';
+		    
+	    };
+	          $("#dataCenter").html(selectOption);
+	          $('#dataCenter').selectpicker('refresh');
 		}, 
 		error:function (error) {
 			 window.parent.$("#tipContent").html("获取信息失败！");
@@ -65,11 +80,14 @@ $(function () {
     			dataType: 'json',
     			data:"corpid="+topcorpid,
     			type:"post",
-    			success:function (data) {
-    		        $("#"+id).append('<option>'+''+'</option>');
+    			success:function (data) { 
+    		      var selectOption="";
     		       for(var i=0;i<data.length;i++){
-    			       $("#"+id).append('<option value="'+data[i].id+'">'+data[i].text+'</option>');
-    		       }
+    		    	   selectOption=selectOption+'<option value="'+data[i].id+'">'+data[i].text+'</option>';
+    		       }  
+    		       $("#"+id).html(selectOption);      
+    		       $('#'+id).selectpicker('refresh');
+    		      
     			}, 
     			error:function (error) {
     				 window.parent.$("#tipContent").html("获取信息失败！");
@@ -98,7 +116,7 @@ $(function () {
 	 var description=$("#description").val();
 	 var area=$("#area").val();
 	 var dataCenter=$("#dataCenter").val();
- if(loginUser!=""&&userName!=""&&userPassword!=""&&confirmPwd!=""&&sex!=""&&datepicker!=""&&department!=""&&role!=""&&job!=""&&post!=""&&area!=""&&dataCenter!=""){
+ if(loginUser!=""&&userName!=""&&userPassword!=""&&confirmPwd!=""&&sex!=""&&datepicker!=""&&department!=""&&role!=null&&job!=null&&post!=""&&area!=""&&dataCenter!=""){
 	 var loginnameCheck=getloginname(loginUser);
 	 var userPasswordCheck=getpassword(userPassword);
 	 var userPasswordCheck=getpasswordqr(userPassword,confirmPwd);
@@ -107,6 +125,24 @@ $(function () {
 	 var datepickerCheck=checkdate(datepicker);
 	 var companyPhoneCheck=true;
 	 var companyMailCHeck=true;
+	 var roles=""
+		 for(var i=0;i<role.length;i++){
+			 if(roles!=""){
+				 roles=roles+";"+role[i];  
+			 }else{
+				 roles=role[i];
+			 }
+			
+		 }
+	 var jobs=""
+		 for(var i=0;i<job.length;i++){
+			 if(jobs!=""){
+				 jobs=jobs+";"+job[i];  
+			 }else{
+				 jobs=job[i];
+			 }
+			
+		 }
 	 if(companyMobPhone!=""){
 		 companyPhoneCheck=getmobilepublic(companyMobPhone);  
 		 }
@@ -121,8 +157,8 @@ $(function () {
 				 sex: sex,
 				 birth: datepicker,
 				 deptid: department,
-				 roleid: role,
-				 stationid: job,
+				 roleid: roles,
+				 stationid: jobs,
 				 postid: post,
 				 mobilepublic: companyMobPhone,
 				 phonepublic: companyPhone,

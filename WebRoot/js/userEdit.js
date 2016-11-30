@@ -6,15 +6,29 @@ $('#datepicker').datepicker({
 	      todayBtn: 'linked',
 	      language: 'cn'
 	    });
+
+		var  setSelectCss="sex,department,job,role,post,area,dataCenter";
+		for(var i=0;i<setSelectCss.split(",").length;i++){
+			  $('#'+setSelectCss.split(",")[i]).selectpicker({
+			      'selectedText': 'cat',
+			      'noneSelectedText':'请选择'
+			     
+			  });  
+		}
+		
+		$("#sex").html('<option value="M">男</option><option value="F">女</option>');
+		$('#sex').selectpicker('refresh');
  $.ajax({
 		url:"cropDeptQuery", 
 		dataType: 'json',
 		type:"post",
 		success:function (data) {
-	        $("#department").append('<option>'+''+'</option>');
-	       for(var i=0;i<data.length;i++){
-		       $("#department").append('<option value="'+data[i].id+'">'+data[i].text+'</option>');
-	       }
+				 var selectOption="";
+			     for(var i=0;i<data.length;i++){
+			  	   selectOption=selectOption+'<option value="'+data[i].id+'">'+data[i].text+'</option>';	       
+			     }
+			     $("#department").html(selectOption);
+			     $('#department').selectpicker('refresh');
 		}, 
 		error:function (error) {
 			 window.parent.$("#tipContent").html("获取信息失败！");
@@ -26,10 +40,13 @@ $('#datepicker').datepicker({
 		dataType: 'json',
 		type:"post",
 		success:function (data) {
-	  $("#dataCenter").append('<option>'+''+'</option>');
-	  for(var i=0;i<data.length;i++){
-	       $("#dataCenter").append('<option value="'+data[i].id+'">'+data[i].text+'</option>');
-    };
+		  var selectOption="";
+		  for(var i=0;i<data.length;i++){
+			    selectOption=selectOption+'<option value="'+data[i].id+'">'+data[i].text+'</option>';
+		    
+	    };
+	          $("#dataCenter").html(selectOption);
+	          $('#dataCenter').selectpicker('refresh');
 		}, 
 		error:function (error) {
 			 window.parent.$("#tipContent").html("获取信息失败！");
@@ -64,10 +81,12 @@ $('#datepicker').datepicker({
     			data:"corpid="+topcorpid,
     			type:"post",
     			success:function (data) {
-    		        $("#"+id).append('<option>'+''+'</option>');
-    		       for(var i=0;i<data.length;i++){
-    			       $("#"+id).append('<option value="'+data[i].id+'">'+data[i].text+'</option>');
-    		       }
+		    		  var selectOption="";
+				       for(var i=0;i<data.length;i++){
+				    	   selectOption=selectOption+'<option value="'+data[i].id+'">'+data[i].text+'</option>';
+				       }  
+				       $("#"+id).html(selectOption);      
+				       $('#'+id).selectpicker('refresh');
     			}, 
     			error:function (error) {
     				 window.parent.$("#tipContent").html("获取信息失败！");
@@ -83,16 +102,17 @@ function loadInfo(id){
 		dataType:"json", 
 	    async:false,
 		type:"post",
-		success:function (mm) {	
+		success:function (mm) {
+		    getAllInfo(mm.deptid);
 		    $("#user_id").val(mm.id);
 	        $("#loginUser").val(mm.loginname);
 	        $("#userName").val(mm.username);
-	        $("#sex option[value='"+mm.sex+"']").attr("selected","selected");
+	        $("#sex").selectpicker('val', mm.sex); 
 	        $("#datepicker").val(getFormatDate(mm.birth));  
-	        $("#department").val(mm.deptid);
-	        $("#role").append('<option value="'+mm.roleid+'">'+mm.rolename+'</option>');
-	        $("#job").append('<option value="'+mm.stationid+'">'+mm.stationname+'</option>');
-	        $("#post").append('<option value="'+mm.postid+'">'+mm.postname+'</option>');
+	        $("#department").selectpicker('val', mm.deptid); 	       
+	        $("#role").selectpicker('val',setSelectInfo(mm.roleid));
+	        $("#job").selectpicker('val',setSelectInfo(mm.stationid));
+	        $("#post").selectpicker('val', mm.postid); 
 	        $("#companyPhone").val(mm.phonepublic);
 	        $("#companyMobPhone").val(mm.mobilepublic);
 	        $("#homePhone").val(mm.phoneprivate);
@@ -100,8 +120,9 @@ function loadInfo(id){
 	        $("#companyMail").val(mm.emailpublic);
 	        $("#PersonMail").val(mm.emailprivate);
 	        $("#description").val(mm.remark);
-	        $("#area").append('<option value="'+mm.area+'">'+mm.areaname+'</option>');
-	        $("#dataCenter").val(mm.dcid);
+	        $("#area").selectpicker('val', mm.area); 
+	        $("#dataCenter").selectpicker('val', mm.dcid); 
+	        
 	        window.parent.$("#editUser").modal('show');
 		}, 
 		error:function (error) {
@@ -109,6 +130,54 @@ function loadInfo(id){
 			 window.parent.$("#myModal").modal('show');
 	}});
 	}	
+function setSelectInfo(info){
+	 var roles= new Array();　
+ 	for(var i=0;i<info.split(";").length;i++){
+ 		roles.push(info.split(";")[i]);
+ 	}
+ 	return roles;
+} 
+function getAllInfo(topcorpid){    	 
+	 var result="";
+	  $.ajax({
+			url:"QueryTopCorpId", 
+			data:"corpid="+topcorpid,
+			type:"post",
+			async:false,
+			success:function (data) {
+		    result=data;
+		getinfo("QueryRoleByDept","role",result);
+	    getinfo("QueryStationByDept","job",result);
+	    getinfo("QueryPostByDept","post",result);
+	    getinfo("QueryAreaByDept","area",result);
+			}, 
+			error:function (error) {
+
+			}
+		});    
+}
+function getinfo(url,id,topcorpid){
+	 $("#"+id).html("");
+	  $.ajax({
+			url:url, 
+			dataType: 'json',
+			async:false,
+			data:"corpid="+topcorpid,
+			type:"post",
+			success:function (data) {
+	    		  var selectOption="";
+			       for(var i=0;i<data.length;i++){
+			    	   selectOption=selectOption+'<option value="'+data[i].id+'">'+data[i].text+'</option>';
+			       }  
+			       $("#"+id).html(selectOption);      
+			       $('#'+id).selectpicker('refresh');
+			}, 
+			error:function (error) {
+				 window.parent.$("#tipContent").html("获取信息失败！");
+				 window.parent.$("#myModal").modal('show');
+			}
+		});
+}
 function submit(){
 	 var user_id=$("#user_id").val();
 	 var loginUser=$("#loginUser").val();
@@ -130,7 +199,7 @@ function submit(){
 	 var description=$("#description").val();
 	 var area=$("#area").val();
 	 var dataCenter=$("#dataCenter").val();
-	 if(loginUser!=""&&userName!=""&&userPassword!=""&&confirmPwd!=""&&sex!=""&&datepicker!=""&&department!=""&&role!=""&&job!=""&&post!=""&&area!=""&&dataCenter!=""){
+	 if(loginUser!=""&&userName!=""&&userPassword!=""&&confirmPwd!=""&&sex!=""&&datepicker!=""&&department!=""&&role!=null&&job!=null&&post!=""&&area!=""&&dataCenter!=""){
 	 var userPasswordCheck=getpassword(userPassword);
 	 var userPasswordCheck=getpasswordqr(userPassword,confirmPwd);
 	 var PersonMailCheck=getemailpublic(PersonMail);
@@ -145,6 +214,25 @@ function submit(){
 		 companyMailCHeck=getemailpublic(companyMail);	
 	 }
 	 if(userPasswordCheck==true&&userPasswordCheck==true&&PersonMailCheck==true&&PersonPhoneCheck==true&&datepickerCheck==true&&datepickerCheck==true&&companyPhoneCheck==true&&companyMailCHeck==true){
+		 var roles=""
+			 for(var i=0;i<role.length;i++){
+				 if(roles!=""){
+					 roles=roles+";"+role[i];  
+				 }else{
+					 roles=role[i];
+				 }
+				
+			 }
+		 var jobs=""
+			 for(var i=0;i<job.length;i++){
+				 if(jobs!=""){
+					 jobs=jobs+";"+job[i];  
+				 }else{
+					 jobs=job[i];
+				 }
+				
+			 }
+		 
 		 var data={
 				     id:user_id,
 					 loginname: loginUser,
@@ -153,8 +241,8 @@ function submit(){
 					 sex: sex,
 					 birth: datepicker,
 					 deptid: department,
-					 roleid: role,
-					 stationid: job,
+					 roleid: roles,
+					 stationid: jobs,
 					 postid: post,
 					 mobilepublic: companyMobPhone,
 					 phonepublic: companyPhone,
