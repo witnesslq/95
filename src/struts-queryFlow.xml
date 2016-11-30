@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="flow" extends="json-default">
+		<!-- 编码模块start -->
+		<!-- 编码模块列表查询 -->
+		<action name="queryFlow" class="com.dhcc.flow.queryflow.FlowManager" method="queryFlow">
+			<result type="json"></result>
+		</action>
+		<!--<action name="getUserInfo" class="com.dhcc.flow.queryflow.FlowManager" method="getUserInfo">
+			<result type="json"></result>
+		</action>
+		 <action name="getUserInfo_ip" class="com.dhcc.flow.queryflow.FlowManager" method="getUserInfo_ip">
+			<result type="json"></result>
+		</action>-->
+		<action name="queryUserFlow" class="com.dhcc.flow.queryflow.FlowManager" method="queryUserFlow">
+			<result type="json"></result>
+		</action> 
+		
+		<action name="getcustomerInfo" class="com.dhcc.flow.queryflow.FlowManager" method="getcustomerInfo">
+			<result type="json"></result>
+		</action>
+		<action name="getcustomer_port" class="com.dhcc.flow.queryflow.FlowManager" method="getcustomer_port">
+			<result type="json"></result>
+		</action>
+	</package>
+</struts>
