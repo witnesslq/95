@@ -42,7 +42,7 @@ public class CustomerSummaryService {
 		
 		TopoInterfaceDao interfaceDao = new TopoInterfaceDao();
 		PortipsDao portipsDao = new PortipsDao();
-		System.out.println(list);
+	
 		for(CustomerSummary summary:list){
 			
 //			每个客户的端口所在的设备IP表和所对端口序号索引

@@ -148,9 +148,9 @@ $(function() {
 	$("#dateForRatio").on("click", "button.query-btn", function(event) {
 		var $queryBtn = $(this);
 		var date = $(event.delegateTarget).children("input[data-mask]").val(),
+			dateMillisecond = new Date(date).getTime(),
 			viewMode = $(event.delegateTarget).find("input[data-mask]").attr("data-view-mode"),
-			type = viewMode == 0 ? "day" : (viewMode == 1 ? "month" : "year"),
-			dateFormat = viewMode == 0 ? "yyyy-mm-dd" : (viewMode == 1 ? "yyyy-mm" : "yyyy"); //暂时固定，以后需从mask获取
+			type = viewMode == 0 ? "day" : (viewMode == 1 ? "month" : "year");
 
 		//忘记输入日期，不能查询
 		if ("" == date.trim()) {
@@ -158,7 +158,7 @@ $(function() {
 			return;
 		}
 
-		var selectedPortBtnList = $("#portList div.box-body p button.btn-primary");
+		var selectedPortBtnList = $("#portList div.box-body dl button.btn-primary");
 
 		// 有端口按钮被选中
 		if (selectedPortBtnList.length > 0) {
@@ -181,8 +181,7 @@ $(function() {
 				contentType: "application/json",
 				data: JSON.stringify({
 					type: type,
-					date: date,
-					dateFormat: dateFormat,
+					date: dateMillisecond,
 					"gatherInterfaceList": interfaceList
 				}),
 				plotOther: (function() {
@@ -207,8 +206,7 @@ $(function() {
 				url: "query_customer_portips_list.action",
 				data: {
 					type: type,
-					date: date,
-					dateFormat: dateFormat,
+					date: dateMillisecond,
 					"customer.customerId": customerId
 				},
 				plotOther: (function() {
@@ -262,15 +260,10 @@ $(function() {
 		格式化日期
 	 */
 	function SimpleDateFormat(pattern) {
-		this.pattern = pattern;
+		
 	}
 	SimpleDateFormat.prototype.format = function(date) {
-		if (this.pattern == 'yyyy-mm-dd')
-			return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
-		else if (this.pattern == 'yyyy-mm')
-			return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1);
-		else
-			return date.getUTCFullYear();
+		return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
 	}
 
 	var ratioPlot = Highcharts.chart("ratioContainer", {
@@ -281,7 +274,7 @@ $(function() {
 			enabled: false
 		},
 		title: {
-			text: new SimpleDateFormat('yyyy-mm-dd').format(new Date()) + customerName + '的错误率、丢包率'
+			text:  new SimpleDateFormat().format(new Date())+ customerName + '的错误率、丢包率'
 		},
 		subtitle: {
 			text: document.ontouchstart === undefined ?
@@ -394,8 +387,7 @@ $(function() {
 		url: "query_customer_portips_list.action",
 		data: {
 			type: "day",
-			date: new SimpleDateFormat("yyyy-mm-dd").format(new Date()),
-			dateFormat: "yyyy-mm-dd",
+			date: new Date().getTime(),
 			"customer.customerId": customerId
 		},
 

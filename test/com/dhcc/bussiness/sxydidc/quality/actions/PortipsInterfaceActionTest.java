@@ -4,6 +4,7 @@
 package com.dhcc.bussiness.sxydidc.quality.actions;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -34,9 +35,8 @@ public class PortipsInterfaceActionTest {
 		in2.setIfIndex("35");
 		list.add(in1);list.add(in2);
 		action.setGatherInterfaceList(list);
-		action.setType("month");
-		action.setDateFormat("yyyy-mm");
-		action.setDate("2016-11");
+		action.setType("day");
+		action.setDate(new Date().getTime());
 	}
 
 	/**
