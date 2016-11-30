@@ -14,28 +14,11 @@ import com.opensymphony.xwork2.ActionSupport;
 public class PortipsInterfaceAction  extends ActionSupport{
 
 	private String type;
-	private String dateFormat;
-	private String date;
+	private long date;
 	private Customer customer;
 	
 	private List<TopoInterface> gatherInterfaceList;
 	
-
-	/**
-	 * @return the dateFormat
-	 */
-	public String getDateFormat() {
-		return dateFormat;
-	}
-
-	/**
-	 * @param dateFormat the dateFormat to set
-	 */
-	public void setDateFormat(String dateFormat) {
-		this.dateFormat = dateFormat;
-	}
-
-
 
 	/**
 	 * @return the gatherInterfaceList
@@ -71,14 +54,14 @@ public class PortipsInterfaceAction  extends ActionSupport{
 	/**
 	 * @return the date
 	 */
-	public String getDate() {
+	public long getDate() {
 		return date;
 	}
 
 	/**
 	 * @param date the date to set
 	 */
-	public void setDate(String date) {
+	public void setDate(long date) {
 		this.date = date;
 	}
 
@@ -108,14 +91,8 @@ public class PortipsInterfaceAction  extends ActionSupport{
 //		每个客户的IP所在的设备IP表和所对端口序号索引
 		List<TopoInterface> interfaceList = interfaceDao.queryGatherInterfaceListFor(customer);
 		
-		try{
-			PortipsDao portipsDao = new PortipsDao(type,dateFormat,date);
-			this.list = portipsDao.queryPortipsForInterface(interfaceList);
-		}catch(IllegalArgumentException e){
-			e.printStackTrace();
-		}catch(ParseException e){
-			e.printStackTrace();
-		}
+		PortipsDao portipsDao = new PortipsDao(type,date);
+		this.list = portipsDao.queryPortipsForInterface(interfaceList);
 		
 		return SUCCESS;
 	}
@@ -140,18 +117,8 @@ public class PortipsInterfaceAction  extends ActionSupport{
 	 */
 	public String executeForGatherInterface() throws Exception {
 		// TODO Auto-generated method stub
-		TopoInterfaceDao interfaceDao = new TopoInterfaceDao();
-
-		try{
-			PortipsDao portipsDao = new PortipsDao(type,dateFormat,date);
-			this.list = portipsDao.queryPortipsForInterface(this.gatherInterfaceList);
-		}catch(ParseException e){
-//			日期格式和日期不匹配
-			e.printStackTrace();
-		}catch(IllegalArgumentException e){
-//			非法日期格式
-			e.printStackTrace();
-		}
+		PortipsDao portipsDao = new PortipsDao(type,date);
+		this.list = portipsDao.queryPortipsForInterface(this.gatherInterfaceList);
 		
 		return SUCCESS;
 	}

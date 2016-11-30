@@ -11,15 +11,15 @@ import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
 import com.opensymphony.xwork2.ActionSupport;
 
-public class PortipsAction  extends ActionSupport{
+public class PortipsAction extends ActionSupport {
 
 	private String type;
-	private String dateFormat;
-	private String date;
+
+	private long date;
 	private Customer customer;
-	
+
 	private ProductIp productIp;
-	
+
 	/**
 	 * @return the productIp
 	 */
@@ -28,13 +28,15 @@ public class PortipsAction  extends ActionSupport{
 	}
 
 	/**
-	 * @param productIp the productIp to set
+	 * @param productIp
+	 *            the productIp to set
 	 */
 	public void setProductIp(ProductIp productIp) {
 		this.productIp = productIp;
 	}
 
 	private List<Portips> list;
+
 	/**
 	 * @return the type
 	 */
@@ -43,7 +45,8 @@ public class PortipsAction  extends ActionSupport{
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -52,14 +55,15 @@ public class PortipsAction  extends ActionSupport{
 	/**
 	 * @return the date
 	 */
-	public String getDate() {
+	public long getDate() {
 		return date;
 	}
 
 	/**
-	 * @param date the date to set
+	 * @param date
+	 *            the date to set
 	 */
-	public void setDate(String date) {
+	public void setDate(long date) {
 		this.date = date;
 	}
 
@@ -71,33 +75,29 @@ public class PortipsAction  extends ActionSupport{
 	}
 
 	/**
-	 * @param customer the customer to set
+	 * @param customer
+	 *            the customer to set
 	 */
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
 
-
-	
-	/* 指定客户的按天，月，年的丢包率、错包率
+	/*
+	 * 指定客户的按天，月，年的丢包率、错包率
+	 * 
 	 * @see com.opensymphony.xwork2.ActionSupport#execute()
 	 */
 	@Override
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
 		TopoInterfaceDao interfaceDao = new TopoInterfaceDao();
-//		每个客户的IP所在的设备IP表和所对端口序号索引
-		List<TopoInterface> interfaceList = interfaceDao.queryTopoInterfaceListFor(customer);
-		
-		try{
-			PortipsDao portipsDao = new PortipsDao(type,dateFormat,date);
-			this.list = portipsDao.queryPortipsForInterface(interfaceList);
-		}catch(IllegalArgumentException e){
-			e.printStackTrace();
-		}catch(ParseException e){
-			e.printStackTrace();
-		}
-		
+		// 每个客户的IP所在的设备IP表和所对端口序号索引
+		List<TopoInterface> interfaceList = interfaceDao
+				.queryTopoInterfaceListFor(customer);
+
+		PortipsDao portipsDao = new PortipsDao(type, date);
+		this.list = portipsDao.queryPortipsForInterface(interfaceList);
+
 		return SUCCESS;
 	}
 
@@ -109,33 +109,28 @@ public class PortipsAction  extends ActionSupport{
 	}
 
 	/**
-	 * @param list the list to set
+	 * @param list
+	 *            the list to set
 	 */
 	public void setList(List<Portips> list) {
 		this.list = list;
 	}
 
-	
-	/* 指定IP的按天，月，年的丢包率、错包率
+	/*
+	 * 指定IP的按天，月，年的丢包率、错包率
+	 * 
 	 * @see com.opensymphony.xwork2.ActionSupport#execute()
 	 */
 	public String executeForIp() throws Exception {
 		// TODO Auto-generated method stub
 		TopoInterfaceDao interfaceDao = new TopoInterfaceDao();
-//		每个客户的IP所在的设备IP表和所对端口序号索引
-		List<TopoInterface> interfaceList = interfaceDao.queryTopoInterfaceListFor(productIp);
-		
-		try{
-			PortipsDao portipsDao = new PortipsDao(type,dateFormat,date);
-			this.list = portipsDao.queryPortipsForInterface(interfaceList);
-		}catch(ParseException e){
-//			日期格式和日期不匹配
-			e.printStackTrace();
-		}catch(IllegalArgumentException e){
-//			非法日期格式
-			e.printStackTrace();
-		}
-		
+		// 每个客户的IP所在的设备IP表和所对端口序号索引
+		List<TopoInterface> interfaceList = interfaceDao
+				.queryTopoInterfaceListFor(productIp);
+
+		PortipsDao portipsDao = new PortipsDao(type, date);
+		this.list = portipsDao.queryPortipsForInterface(interfaceList);
+
 		return SUCCESS;
 	}
 
