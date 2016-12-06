@@ -117,46 +117,57 @@ public class ExcelReport extends AbstractionReport1 {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			Label tmpLabel = null;
-			tmpLabel = new Label(0, 0, "流量统计报表", labelFormat);
+			/*tmpLabel = new Label(0, 0, "流量统计报表", labelFormat);
 			sheet.addCell(tmpLabel);
 			tmpLabel = new Label(0, 1, "流量统计时间段:" + starttime, labelFormat1);
 			sheet.addCell(tmpLabel);
 
 			sheet.mergeCells(0, 0, 6, 0);
-			sheet.mergeCells(0, 1, 6, 1);
+			sheet.mergeCells(0, 1, 6, 1);*/
 			
-			tmpLabel = new Label(0, 2, "客户名称", _labelFormat);
+			tmpLabel = new Label(0, 0, "客户名称", _labelFormat);
 			sheet.addCell(tmpLabel);
-			tmpLabel = new Label(1, 2, "交换机ip", _labelFormat);
+			tmpLabel = new Label(1, 0, username, p_labelFormat);
 			sheet.addCell(tmpLabel);
-			tmpLabel = new Label(2, 2, "端口名称", _labelFormat);
+			sheet.mergeCells(1, 0, 2, 0);
+			tmpLabel = new Label(0, 1, "端口名称", _labelFormat);
 			sheet.addCell(tmpLabel);
-			tmpLabel = new Label(3, 2, "流量(M)", _labelFormat);
+			tmpLabel = new Label(1, 1, port, p_labelFormat);
 			sheet.addCell(tmpLabel);
-			tmpLabel = new Label(4, 2, "带宽利用率(%)", _labelFormat);
+			sheet.mergeCells(1, 1, 2, 0);
+			tmpLabel = new Label(0, 2, "采集时间", _labelFormat);
 			sheet.addCell(tmpLabel);
-			tmpLabel = new Label(5, 2, "出口/入口", _labelFormat);
+			tmpLabel = new Label(1, 2, "入口流量(M)", _labelFormat);
 			sheet.addCell(tmpLabel);
-			tmpLabel = new Label(6, 2, "采集时间", _labelFormat);
+			tmpLabel = new Label(2, 2, "出口流量(M)", _labelFormat);
 			sheet.addCell(tmpLabel);
+			
+			
 			
 			int row = 3;
+			int k = 0;
+			int m =0;
 			for (int i=0; i<flowlist.size()-2;i++){
 				FlowModel flowModel = (FlowModel)flowlist.get(i);
-				tmpLabel = new Label(0, row + i, username, p_labelFormat);
-				sheet.addCell(tmpLabel);
-				tmpLabel = new Label(1, row + i, ip, p_labelFormat);
-				sheet.addCell(tmpLabel);
-				tmpLabel = new Label(2, row + i, port, p_labelFormat);
-				sheet.addCell(tmpLabel);
-				tmpLabel = new Label(3, row + i, flowModel.getUtilhdx(), p_labelFormat);
-				sheet.addCell(tmpLabel);
-				tmpLabel = new Label(4, row + i, ""+flowModel.getUtilhdxperc(), p_labelFormat);
-				sheet.addCell(tmpLabel);
-				tmpLabel = new Label(5, row + i, flowModel.getEntity(), p_labelFormat);
-				sheet.addCell(tmpLabel);
-				tmpLabel = new Label(6, row + i, flowModel.getCollecttime(), p_labelFormat);
-				sheet.addCell(tmpLabel);
+				if(flowModel.getEntity().equals("入口")) {
+					
+					tmpLabel = new Label(0, row + k, flowModel.getCollecttime(), p_labelFormat);
+					sheet.addCell(tmpLabel);
+					tmpLabel = new Label(1, row + k, ""+flowModel.getUtilhdx(), p_labelFormat);
+					sheet.addCell(tmpLabel);
+					k++;
+				}
+				
+			}
+			
+			for (int i=0; i<flowlist.size()-2;i++){
+				FlowModel flowModel = (FlowModel)flowlist.get(i);
+				if(flowModel.getEntity().equals("出口")) {
+					tmpLabel = new Label(2, row + m, ""+flowModel.getUtilhdx(), p_labelFormat);
+					sheet.addCell(tmpLabel);
+					m++;
+				}
+				
 			}
 			
 			wb.write();
