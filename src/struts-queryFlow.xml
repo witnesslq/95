@@ -25,5 +25,37 @@
 		<action name="getcustomer_port" class="com.dhcc.flow.queryflow.FlowManager" method="getcustomer_port">
 			<result type="json"></result>
 		</action>
+		
+		<!-- 通过名字模糊查询客户 -->
+		<action name="query_customer_list_by_customer_name" class="com.dhcc.bussiness.sxydidc.customer95.actions.CustomerAction" method="executeQueryCustomerList">
+			<result type="json">
+				<param name="root">list</param>
+				<param name="includeProperties">
+					\[\d+\]\.customerId,
+					\[\d+\]\.customerName
+				</param>
+			</result>
+		</action>
+		
+		<!-- 文件导出 -->
+		<action name="export_file" class="com.dhcc.flow.report.actions.FileExportAction">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">stream</param>
+				<param name="contentDisposition">attachment;filename="${filename}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+		
+		<!-- 通过客户ID和年份查询账单 -->
+		<action name="query_flow_account_list_by_customer_id" class="com.dhcc.flow.report.actions.FlowAccountAction">
+			<result name="success" type="json">
+				<param name="root">list</param>
+				<param name="includeProperties">
+					\[\d+\]\.id\.customerId,
+					\[\d+\]\.id\.datetime
+				</param>
+			</result>
+		</action>
 	</package>
 </struts>

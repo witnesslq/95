@@ -22,10 +22,12 @@
     "bootstrap-treeview": "^1.2.0",
     "ejs": "^2.5.2",
     "font-awesome": "^4.6.3",
+    "fullcalendar": "^3.0.1",
     "highcharts": "^5.0.0",
     "ionicons": "^3.0.0",
     "jquery": "^1.12.4",
     "json-js": "^1.1.2",
+    "moment": "^2.17.0",
     "validator": "^6.1.0"
   },
   "devDependencies": {

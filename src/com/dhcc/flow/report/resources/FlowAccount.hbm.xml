@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-12-7 10:58:49 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.dhcc.flow.report.models.FlowAccount" table="FLOW_ACCOUNT" schema="IPS" optimistic-lock="version">
+        <composite-id name="id" class="com.dhcc.flow.report.models.FlowAccountId">
+            <key-property name="customerId" type="string">
+                <column name="CUSTOMER_ID" length="40" />
+            </key-property>
+            <key-property name="datetime" type="string">
+                <column name="DATETIME" length="20" />
+            </key-property>
+            <key-property name="totalcount" type="string">
+                <column name="TOTALCOUNT" length="30" />
+            </key-property>
+            <key-property name="flowcount" type="string">
+                <column name="FLOWCOUNT" length="30" />
+            </key-property>
+            <key-property name="utilhdx" type="string">
+                <column name="UTILHDX" length="100" />
+            </key-property>
+            <key-property name="cabinet" type="string">
+                <column name="CABINET" length="30" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

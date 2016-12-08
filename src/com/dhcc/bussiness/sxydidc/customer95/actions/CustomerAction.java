@@ -29,6 +29,22 @@ public class CustomerAction extends ActionSupport implements Excel,RequestAware 
 	String fileContentType;
 	String fileFileName;
 	
+	private List<Customer> list;
+	
+	/**
+	 * @return the list
+	 */
+	public List<Customer> getList() {
+		return list;
+	}
+
+	/**
+	 * @param list the list to set
+	 */
+	public void setList(List<Customer> list) {
+		this.list = list;
+	}
+
 	/**
 	 * @return the fileContentType
 	 */
@@ -148,4 +164,28 @@ public class CustomerAction extends ActionSupport implements Excel,RequestAware 
 		return request;
 	}
 
+	private Customer customer;
+	
+	/**
+	 * @return the customer
+	 */
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	/**
+	 * @param customer the customer to set
+	 */
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	/*
+	 * 按照用户查询用户
+	 */
+	public String executeQueryCustomerList(){
+		CustomerDao dao  = new CustomerDao();
+		this.list = dao.queryWithPatternBy(customer);
+		return SUCCESS;
+	}
 }

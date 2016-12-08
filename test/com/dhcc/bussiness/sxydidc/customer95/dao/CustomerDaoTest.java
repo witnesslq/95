@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
+
 public class CustomerDaoTest {
 
 	static CustomerDao dao;
@@ -34,4 +36,10 @@ public class CustomerDaoTest {
 		System.out.println(dao.queryCustomerStatisticForGatherInterface());
 	}
 	
+	@Test
+	public void testQueryWithPatternBy(){
+		Customer customer = new Customer();
+		customer.setCustomerName("公司");
+		System.out.println(dao.queryWithPatternBy(customer));
+	}
 }

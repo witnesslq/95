@@ -38,6 +38,9 @@
   		<!-- 
   		 <mapping resource="com/dhcc/bussiness/sxydidc/customer95/resources/CustomerSummary.hbm.xml" />
     	<mapping resource="com/dhcc/bussiness/sxydidc/alarm/resources/AlarmStatistic.hbm.xml" />
-    -->
+    	-->
+    	
+    	<!-- 流量账单 -->
+    	<mapping resource="com/dhcc/flow/report/resources/FlowAccount.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

@@ -12,4 +12,5 @@
 	<include file="struts-95-alarm.xml"></include>
 	<include file="struts-95-customer.xml"></include>
 	<include file="struts-95-quality.xml"></include>
+	<include file="struts-queryFlow.xml"></include>
 </struts>

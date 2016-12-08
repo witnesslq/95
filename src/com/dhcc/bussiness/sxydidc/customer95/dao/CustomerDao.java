@@ -15,7 +15,6 @@ import org.hibernate.Transaction;
 import com.dhcc.bussiness.sxydidc.alarm.HibernateUtil;
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.customer95.models.CustomerSummary;
-import com.dhcc.bussiness.sxydidc.customer95.models.ProductIp;
 
 public class CustomerDao {
 
@@ -100,25 +99,34 @@ public class CustomerDao {
 	/*
 	 * 由客户ID查询到此客户完整的信息
 	 */
-	public List<ProductIp> queryBy(Customer customer) {
+	public List<Customer> queryWithPatternBy(Customer customer) {
 
 		Session session = sessionFactory.getCurrentSession();
 		Transaction transaction = session.beginTransaction();
+		List<Customer > list = new ArrayList<Customer>();
+		
 		try{
-			Query query  = session.createQuery("select new ProcuctIp(new ProductIpId(c.customerId,pi.ip)) from Customer c join Contract ct on c.customerId = ct.customerId "
-					+ "join Product p on ct.contractId=p.contractId "
-					+ "join ProductIp pi on p.productId= pi.id.productId where c.customerId=:customerId");
+			Query query  = session.createSQLQuery("select customer_id,customer_name from customer   where customer_name like '%"
+					+ customer.getCustomerName()
+					+ "%'");
 			
-			query.setString("customerId", customer.getCustomerId());
+			List<Object[]> rows = query.list();
 			
-			List<ProductIp> list = query.list();
+			for(Object[] row:rows){
+				 customer = new Customer();
+				
+				customer.setCustomerId((String)row[0]);
+				customer.setCustomerName((String)row[1]);
+				list.add(customer);
+			}
 			transaction.commit();
 			return list;
 		}catch(RuntimeException e){
 			transaction.rollback();
+			e.printStackTrace();
 			log.error(e);
 		}
-		return Collections.emptyList();
+		return list;
 	}
 	
 	/*

@@ -218,7 +218,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								</div>
 							</div>
 
-							<%@ include file="/system/commons/alert_modal.jsp"  %>
+							<%@ include file="/system/commons/common_widgets.jsp"  %>
 							<!-- REQUIRED JS SCRIPTS -->
 							<!-- jQuery 2.2.3 -->
 							<script
@@ -243,12 +243,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									customerId = "<%=customerId  %>",
 									customerName = "<%=customerName  %>";
 							</script>
-							<!-- loading模板 -->
-							<script type="text/x-ejs-template" id="overlayTmpl">
-							<div class="overlay">
-								<i class="fa fa-refresh fa-spin"></i>
-							</div>
-							</script>
+							
 							<script type="text/x-ejs-template" id="portBtnTmpl">
 								<dl>
 								<\%

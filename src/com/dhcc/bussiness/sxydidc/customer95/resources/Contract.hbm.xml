@@ -48,7 +48,7 @@
                 <comment>&#193;&#247;&#193;&#191;&#188;&#198;&#183;&#209;&#185;&#230;&#212;&#242;</comment>
             </column>
         </property>
-        <set name="products" table="PRODUCT" inverse="true" lazy="true"  cascade="save-update" fetch="select">
+        <set name="products" table="PRODUCT" inverse="true" lazy="false"  cascade="save-update" fetch="select">
             <key>
                 <column name="CONTRACT_ID" length="100">
                     <comment>&#186;&#207;&#205;&#172;&#177;&#224;&#186;&#197;</comment>

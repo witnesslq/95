@@ -10,6 +10,15 @@ import java.util.Set;
  */
 public class Customer implements java.io.Serializable {
 
+	/**
+	 * @param customerId
+	 * @param customerName
+	 */
+	public Customer(String customerId, String customerName) {
+		super();
+		this.customerId = customerId;
+		this.customerName = customerName;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
