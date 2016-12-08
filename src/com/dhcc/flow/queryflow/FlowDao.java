@@ -562,7 +562,6 @@ public class FlowDao {
 					
 			}
 			insertFlowAccount(listsql);
-			//dbm.executeBatch();
 		}  catch (Exception e) {
 			e.printStackTrace();
 			logger.error("--QueryList--失败"+e.getMessage());
