@@ -38,16 +38,18 @@ public class PdfGenerator extends Generator {
         PdfWriter.getInstance(document, os);
         document.open();
         //方法二：使用iTextAsian.jar中的字体    
-        BaseFont baseFont = BaseFont.createFont("STSong-Light","UniGB-UCS2-H",BaseFont.NOT_EMBEDDED);    
-            
-        Font font = new Font(baseFont);  
+        BaseFont baseFont = BaseFont.createFont("STSong-Light","UniGB-UCS2-H",BaseFont.NOT_EMBEDDED);
+  
+        Font font = new Font(baseFont),
+        		captionFont = new Font(baseFont,22f,Font.BOLD)
+        		;  
  
         PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
         PdfPCell cell;
         
-        cell = new PdfPCell(new Phrase(caption,font));
-        cell.setFixedHeight(30);
+        cell = new PdfPCell(new Phrase(caption,captionFont));
+       cell.setFixedHeight(2.41f*captionFont.getSize());
         cell.setColspan(7);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -60,7 +62,7 @@ public class PdfGenerator extends Generator {
         table.addCell(cell);
         cell = new PdfPCell(new Phrase("开始时间",font));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setVerticalAlignment(Element.ALIGN_TOP);
         table.addCell(cell);
         
         cell = new PdfPCell(new Phrase("结束时间",font));
@@ -76,7 +78,7 @@ public class PdfGenerator extends Generator {
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.addCell(cell);
-        cell = new PdfPCell(new Phrase("95%峰值流量(Gbps)",font));
+        cell = new PdfPCell(new Phrase("95%峰值流量(Mbps)",font));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.addCell(cell);
@@ -119,8 +121,9 @@ public class PdfGenerator extends Generator {
         table.addCell(cell);
         
         //审核意见
-        cell = new PdfPCell(new Phrase("审核意见：", font));
-        cell.setFixedHeight(30);
+        Font requireSignatureFont = new Font(baseFont,12f,Font.BOLD);
+        cell = new PdfPCell(new Phrase("审核意见：", requireSignatureFont));
+        cell.setFixedHeight(2f*requireSignatureFont.getSize());
         cell.setColspan(7);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setVerticalAlignment(Element.ALIGN_TOP);
@@ -128,12 +131,8 @@ public class PdfGenerator extends Generator {
         table.addCell(cell);
         
 //        签字
-        cell = new PdfPCell(new Phrase("", font));
-        cell.setColspan(3);
-        cell.setBorder(Rectangle.NO_BORDER);
-        table.addCell(cell);
-        cell = new PdfPCell(new Phrase("签字（盖章）：", font));
-        cell.setColspan(2);
+        cell = new PdfPCell(new Phrase("签字（盖章）：", requireSignatureFont));
+        cell.setColspan(5);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         cell.setBorder(Rectangle.NO_BORDER);
         table.addCell(cell);
@@ -141,13 +140,10 @@ public class PdfGenerator extends Generator {
         cell.setColspan(2);
         cell.setBorder(Rectangle.NO_BORDER);
         table.addCell(cell);
+       
 //      日期
-      cell = new PdfPCell(new Phrase("", font));
-      cell.setColspan(3);
-      cell.setBorder(Rectangle.NO_BORDER);
-      table.addCell(cell);
-      cell = new PdfPCell(new Phrase("日期：", font));
-      cell.setColspan(2);
+      cell = new PdfPCell(new Phrase("日期：", requireSignatureFont));
+      cell.setColspan(5);
       cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
       cell.setBorder(Rectangle.NO_BORDER);
       table.addCell(cell);

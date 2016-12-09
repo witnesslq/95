@@ -83,7 +83,7 @@ public class FlowAccountId implements java.io.Serializable {
 	}
 
 	public void setCabinet(String cabinet) {
-		this.cabinet = cabinet== null?"未知":cabinet;
+		this.cabinet = cabinet== null||"null".equals(cabinet)?"未知":cabinet;
 	}
 
 	public boolean equals(Object other) {

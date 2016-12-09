@@ -7,3 +7,4 @@ WebRoot/node_modules
 logs/*
 src/SystemConfigResources.properties
 
+/results/
