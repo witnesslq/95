@@ -476,10 +476,10 @@ public class FlowDao {
 				String userflowsql_ip="select t.node_id  from customer c ,topo_interface t where c.customer_id=t.customer_id and c.customer_id='"+info.getCustomer_id()+"' group by t.node_id order by t.node_id ";
 				
 				//获取客户流量信息
-				StringBuffer sql= new StringBuffer("select collecttime,SUM(utilhdx) as utilhdx, entity from (");
+				StringBuffer sql= new StringBuffer("select collecttime,round(SUM(utilhdx)*64/300,2) as utilhdx, entity from (");
 				//客户流量信息的最大值
 				StringBuffer maxvaluesql= new StringBuffer("SELECT max(utilhdx) as utilhdx FROM ( select collecttime,utilhdx,entity from (");
-				//一个月的客户流量条数
+				//一个月的客户流量总条数
 				StringBuffer totalcount= new StringBuffer("select count(*) as utilhdx from (");
 				List list =null;
 				

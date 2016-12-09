@@ -25,6 +25,11 @@
 		<action name="getcustomer_port" class="com.dhcc.flow.queryflow.FlowManager" method="getcustomer_port">
 			<result type="json"></result>
 		</action>
+
+		<action name="report_flow" class="com.dhcc.flow.queryflow.FlowManager" method="report_flow">
+			<result name="success">/system/queryFlow/download.jsp</result>
+		</action>
+
 		
 		<!-- 通过名字模糊查询客户 -->
 		<action name="query_customer_list_by_customer_name" class="com.dhcc.bussiness.sxydidc.customer95.actions.CustomerAction" method="executeQueryCustomerList">

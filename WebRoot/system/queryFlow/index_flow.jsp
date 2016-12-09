@@ -27,6 +27,9 @@ String username=(String)request.getSession().getAttribute("username");//用户�
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/dist/css/skins/_all-skins.min.css">
    <link href="<%=basePath%>system/queryFlow/loading/jquery.loadmask.css" rel="stylesheet" type="text/css" />
+   
+   <link rel="stylesheet" href="<%=basePath  %>/node_modules/admin-lte/plugins/datepicker/datepicker3.css"/>
+   
       <script src="<%=basePath%>system/queryFlow/loading/jquery-latest.pack.js"></script>
 	  <script src='<%=basePath%>system/queryFlow/loading/jquery.loadmask.js'></script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -50,7 +53,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
             <li><a href="#"><i class="fa fa-dashboard"></i> 流量查询</a></li>
             <li class="active">流量查询</li>
           </ol>
-          <form role="form">
+          <form role="form" id="mainForm" method="post" action="report_flow.action">
               <div class="box-body">
 	              <table border='0' style="width:1000px;text-align:center;" >
 		              	<tr>
@@ -59,7 +62,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 					                <div class="input-group-btn">
 					                 	 <button type="button" class="btn btn-danger">客户</button>
 					                </div>
-				                	<input type="text" class="form-control" id="user_id" style="width:200px">
+				                	<input type="text" class="form-control" id="user_id" name="userid" style="width:200px">
 				              	</div>
 		             		</td>
 		              		<td style="vertical-align: top;"> 
@@ -67,7 +70,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 					                <div class="input-group-btn">
 					                 	 <button type="button" class="btn btn-danger">端口</button>
 					                </div>
-				                	<input type="text" class="form-control" id="ip_address" style="width:200px">
+				                	<input type="text" class="form-control" id="ip_address" name="ipaddress" style="width:200px">
 				              	</div>
 							</td>
 							<td style="vertical-align: top;">
@@ -86,14 +89,16 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 											</li>
 										</ul>
 									</div>
-									<input id="datetime" type="text" data-view-mode="0" data-mask="" class="form-control" style="width: 200px;">
+									<input id="datetime" name="datetime" type="text" data-view-mode="0" data-mask="" class="form-control" style="width: 200px;"/>
 								</div>
 							</td>
 							<td style="vertical-align: top;"><button id="query_submit" type="button" class="btn btn-primary" >查询</button></td>
+							<!-- <td style="vertical-align: top;"><button id="excle_flow" type="button" class="btn btn-primary">打印</button></td> -->
 		              	</tr>
 	                </table>
               </div>
               <!-- /.box-body -->
+              <input type="hidden" id="ip" name="ip"/>
             </form>
     </section>
 
@@ -134,11 +139,13 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 		       </div><!-- /.modal-content -->
 		   </div><!-- /.modal -->
 		</div>
-		<div class="box box-default">
+		<div id="content" class="box box-default">
 		 <div class="box-header with-border">
            	图像显示
+           	<div style="float: right;margin-right: 200px;font-size:12px;">打印excel：<a href="#" id="excle_flow"><img src="<%=basePath %>/system/queryFlow/images/excel.jpg" 
+								border="0" class="td_icons" /></a></div>
           </div>
-          <div id="content" class="box-body">
+          <div  class="box-body">
           			<div class="overlay">
               				<i id="datashow" ></i>
            			   </div> 
@@ -148,7 +155,6 @@ String username=(String)request.getSession().getAttribute("username");//用户�
     </section>
 	</div>
 </div>
-<input type="hidden" id="ip" />
 <!-- ./wrapper -->
 
 <!-- jQuery 2.2.3 -->
@@ -179,6 +185,9 @@ String username=(String)request.getSession().getAttribute("username");//用户�
       <script  type="text/javascript"  src="<%=basePath  %>js/dateformat.js"></script>   
 	  <script  type="text/javascript"  src="<%=basePath  %>js/moment.js"></script>   
 	  <script  type="text/javascript"  src="<%=basePath  %>js/daterangepicker.js"></script>   
+	  <!-- datetime -->
+	  <script src="<%=basePath%>node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+	  <script src="<%=basePath%>node_modules/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
 <!-- page script -->   
 <script src="flow.js"></script>
 

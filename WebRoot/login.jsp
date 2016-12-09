@@ -13,7 +13,7 @@ String username=(String)request.getSession().getAttribute("username");//用户�
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bootstrap Login Form Template</title>
+        <title>IDC／ISP流量统计与质量监测系统</title>
 
 
 		  <link rel="stylesheet" href="<%=basePath %>/node_modules/admin-lte/bootstrap/css/bootstrap.min.css"/>
@@ -44,7 +44,6 @@ String username=(String)request.getSession().getAttribute("username");//用户�
 			   
 			         <div class="form-top-left">
                         			<h3>IDC／ISP流量统计与质量监测系统</h3>
-                            		<p>Enter your username and password to log on:</p>
                      </div>
                      <div class="form-top-right">
                         			<i class="fa fa-key"></i>
