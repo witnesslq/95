@@ -158,7 +158,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 																			<td class="fc-day-number calendar-month">03</td>
 																			<td class="fc-day-number calendar-month">04</td>
 																			<td class="fc-day-number calendar-month">05</td>
-																			<td class="fc-day-number calendar-month">06</td>
+																			<td class="fc-day-number calendar-month">06
+																			
+																			</td>
 																			</tr>
 																		</thead>
 																		<tbody>
@@ -255,6 +257,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
 										<!-- /.content -->
 									</div>
 								</div>
+
+			<div class="modal fade" id="flowAccountModal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button class="close" type="button" data-dismiss="modal"><span>&times;</span></button>
+							<h4 class="modal-title">2016-11月账单</h4>
+						</div>
+						<div class="modal-body">
+							
+							<form>
+								<div class="form-group">
+								<label for="" class="control-label">流量峰值点数</label>
+								<input type="text" class="form-control" id="totalCount">
+								</div>
+								<div class="form-group">
+								<label for="" class="control-label">95%峰值流量点</label>
+								<input type="text" class="form-control" id="flowCount">
+								</div>
+								<div class="form-group">
+								<label for="" class="control-label">95%峰值流量</label>
+								<input type="text" class="form-control" id="utilhdx">
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-default" type="button" data-dismiss="modal">关闭</button>
+							<button class="btn btn-primary save" type="button">保存</button>
+						</div>
+					</div>
+				</div>
+			</div>
 							<%@ include file="/system/commons/common_widgets.jsp"  %>
 							
 	<script type="text/x-ejs-template" id="customerTmpl">
@@ -296,6 +330,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			</div>
 		</a>
 	</script>
+	<script id="alertTmpl" type="text/x-ejs-template">
+		<div class="alert alert-danger alert-dismissable">
+							<button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+							<\%= msg %>
+							</div>
+	</script>
 								<!-- REQUIRED JS SCRIPTS -->
 								<!-- jQuery 2.2.3 -->
 								<script
@@ -311,7 +351,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								<!-- AdminLTE App -->
 								<script src="<%=basePath%>/node_modules/admin-lte/dist/js/app.min.js"></script>
 							<script src="<%=basePath  %>/node_modules/ejs/ejs.js"></script>
-								
+							<script src="<%=basePath  %>node_modules/validator/validator.js"></script>
 								<script src="<%=basePath%>js/flow_report.js"></script>
 							</body>
 						</html>

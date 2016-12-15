@@ -3,6 +3,8 @@ package com.dhcc.flow.report.actions;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.HibernateException;
+
 import com.dhcc.flow.report.dao.FlowAccountDao;
 import com.dhcc.flow.report.models.FlowAccount;
 import com.dhcc.flow.report.services.CommonDateFormat;
@@ -72,4 +74,36 @@ public class FlowAccountAction extends ActionSupport{
 		return super.SUCCESS;
 	}
 
+	/* 修改账单
+	 * @see com.opensymphony.xwork2.ActionSupport#execute()
+	 */
+	public String executeUpdate() throws Exception {
+		// TODO Auto-generated method stub
+		if(flowAccount ==null||flowAccount.getId()==null || flowAccount.getId().getCustomerId()==null){
+			return super.ERROR;
+		}
+		
+		FlowAccountDao dao = new FlowAccountDao();
+		
+		this.number = dao.update(flowAccount);
+		
+		return super.SUCCESS;
+	}
+	
+	private int number;
+
+	/**
+	 * @return the number
+	 */
+	public int getNumber() {
+		return number;
+	}
+
+	/**
+	 * @param number the number to set
+	 */
+	public void setNumber(int number) {
+		this.number = number;
+	}
+	
 }

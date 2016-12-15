@@ -100,4 +100,29 @@ public class FlowAccountDao {
 		}
 		return null;
 	}
+	
+	/*
+	 * 保存账单
+	 */
+	public int update(FlowAccount flowAccount){
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		
+		try{
+			Query query = session.createQuery("update FlowAccount f set f.id.totalcount =:totalcount,f.id.flowcount = :flowcount,f.id.utilhdx=:utilhdx where f.id.customerId=:customerId and f.id.datetime=:datetime");
+			query.setString("totalcount",flowAccount.getId().getTotalcount())
+			.setString("flowcount", flowAccount.getId().getFlowcount())
+			.setString("utilhdx",flowAccount.getId().getUtilhdx())
+			.setString("customerId",flowAccount.getId().getCustomerId())
+			.setString("datetime", flowAccount.getId().getDatetime());
+			
+			int number = query.executeUpdate();
+			transaction.commit();
+			return number;
+		}catch(HibernateException e){
+			transaction.rollback();
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }

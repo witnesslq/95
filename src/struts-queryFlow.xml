@@ -4,6 +4,14 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 	<package name="flow" extends="json-default">
+	<interceptors>
+    <interceptor-stack name="jsonStack">
+    	<interceptor-ref name="defaultStack"></interceptor-ref>
+        <interceptor-ref name="json">
+            <param name="enableSMD">true</param>
+        </interceptor-ref>
+    </interceptor-stack>
+</interceptors>
 		<!-- 编码模块start -->
 		<!-- 编码模块列表查询 -->
 		<action name="queryFlow" class="com.dhcc.flow.queryflow.FlowManager" method="queryFlow">
@@ -56,10 +64,22 @@
 		<action name="query_flow_account_list_by_customer_id" class="com.dhcc.flow.report.actions.FlowAccountAction">
 			<result name="success" type="json">
 				<param name="root">list</param>
-				<param name="includeProperties">
-					\[\d+\]\.id\.customerId,
-					\[\d+\]\.id\.datetime
-				</param>
+				
+			</result>
+			<result name="error" type="json">
+				<param name="errorCode">400</param>
+			</result>
+		</action>
+		
+		<!-- 通过客户ID和年份更新账单 -->
+		<action name="update_flow_account" class="com.dhcc.flow.report.actions.FlowAccountAction" method="executeUpdate">
+			<interceptor-ref name="jsonStack"></interceptor-ref>
+			<result name="success" type="json">
+				<param name="root">number</param>
+				
+			</result>
+			<result name="error" type="json">
+				<param name="errorCode">400</param>
 			</result>
 		</action>
 	</package>
