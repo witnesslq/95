@@ -45,13 +45,13 @@ public class TopoInterfaceDao {
 		Session session = sessionFactory.getCurrentSession();
 		Transaction transaction = session.beginTransaction();
 		try{
-			Query query = session.createSQLQuery("select node_id,port from  topo_interface "
+			Query query = session.createSQLQuery("select {t.*} from  topo_interface t "
 					+ "join ("
 					+ "select customer.customer_id,product_ip.ip from customer join contract on customer.customer_id=contract.customer_id join product on product.contract_id = contract.contract_id join product_ip on product.product_id = product_ip.product_id where customer.customer_id='"
 					+customer.getCustomerId()
 					+"'"
-					+ ") ip  on ip.ip = topo_interface.ip_address ")
-					.addEntity(TopoInterface.class);
+					+ ") ip  on ip.ip = t.node_id")
+					.addEntity("t",TopoInterface.class);
 			
 			List<TopoInterface> interfaceList = query.list();
 			

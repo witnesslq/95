@@ -22,6 +22,14 @@ public class TopoHostNode implements java.io.Serializable {
 				+ ", snmpversion=" + snmpversion + "]";
 	}
 
+	/**
+	 * @param ipAddress
+	 */
+	public TopoHostNode(String ipAddress) {
+		super();
+		this.ipAddress = ipAddress;
+	}
+
 	private int id;
 	private String ipAddress;
 	private String ipLong;

@@ -138,11 +138,11 @@ public class AlarmInfoDao  {
 			query.setFirstResult(data.getCurrentPageStart());
 			query.setMaxResults(data.getCurrentPageEnd());
 			data.setList(query.list());
+			transaction.commit();
 		} catch (RuntimeException re) {
+			transaction.rollback();
 			log.error("get failed", re);
 			throw re;
-		}finally{
-			transaction.commit();
 		}
 	}
 	

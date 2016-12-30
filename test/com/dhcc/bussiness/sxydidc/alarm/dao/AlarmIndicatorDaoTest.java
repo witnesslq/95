@@ -15,7 +15,13 @@ public class AlarmIndicatorDaoTest {
 
 	@Test
 	public void testQueryListForAllNumberType() {
-		System.out.println(dao.queryListForAllNumberType());
+		//System.out.println(dao.queryListForAllNumberType());
+		dao.queryListForAllNumberType();
 	}
 
+	@Test
+	public void testQueryListForAllNumberTypeUseDynamicLazy(){
+		dao = new AlarmIndicatorDao();
+		dao.queryListForAllNumberTypeUseDynamicLazy();
+	}
 }

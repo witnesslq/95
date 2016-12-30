@@ -28,7 +28,7 @@ public class TopoInterfaceDaoTest {
 	@Test
 	public void testQueryTopoInterfaceListFor(){
 		Customer customer = new Customer();
-		customer.setCustomerId("6ae6a658-80b9-4413-b168-8afdefbd3ac4");
+		customer.setCustomerId("f90ad976-6a07-4d55-a951-4568abe23a02");
 		System.out.println(dao.queryTopoInterfaceListFor(customer));;
 	}
 	

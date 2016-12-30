@@ -4,31 +4,38 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 	<package name="customer95" extends="json-default">
-<interceptors>
-    <interceptor-stack name="jsonStack">
-    	<interceptor-ref name="defaultStack"></interceptor-ref>
-        <interceptor-ref name="json">
-            <param name="enableSMD">true</param>
-        </interceptor-ref>
-    </interceptor-stack>
-</interceptors>
+		<interceptors>
+			<interceptor-stack name="jsonStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="json">
+					<param name="enableSMD">true</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
 
-	<action name="import_customer" class="com.dhcc.bussiness.sxydidc.customer95.actions.CustomerAction">
-		<result name="success"  type="dispatcher">
+		<!-- 发生hibernate运行异常时的响应 -->
+		<global-exception-mappings>
+			<exception-mapping exception="org.hibernate.HibernateException" result="HibernateException"></exception-mapping>
+		</global-exception-mappings>
+		
+		<action name="import_customer"
+			class="com.dhcc.bussiness.sxydidc.customer95.actions.CustomerAction">
+			<result name="success" type="dispatcher">
 				/system/alarm/import_result.jsp
 			</result>
-		<result name="error"  type="dispatcher">
+			<result name="error" type="dispatcher">
 				/system/alarm/import_result.jsp
 			</result>
-	</action>
-	
-	<action name="export_customer" class="com.dhcc.bussiness.sxydidc.customer95.actions.CustomerAction">
-		<result name="success"  type="dispatcher">
+		</action>
+
+		<action name="export_customer"
+			class="com.dhcc.bussiness.sxydidc.customer95.actions.CustomerAction">
+			<result name="success" type="dispatcher">
 				/system/alarm/import_result.jsp
 			</result>
-		<result name="error"  type="dispatcher">
+			<result name="error" type="dispatcher">
 				/system/alarm/import_result.jsp
 			</result>
-	</action>
+		</action>
 	</package>
 </struts>

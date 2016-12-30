@@ -21,9 +21,6 @@ public class CustomerDao {
 	private static final Log log = LogFactory.getLog(CustomerDao.class);
 
 	private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-	public void save(Customer customer){
-		
-	}
 	
 	/*
 	 * 删除所有客户及相关联的合同，产品

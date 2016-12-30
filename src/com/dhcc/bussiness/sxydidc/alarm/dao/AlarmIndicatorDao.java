@@ -41,6 +41,27 @@ public class AlarmIndicatorDao {
 		}
 	}
 	
+	/* 所有指标，其规则的值类型是数字
+	 * 
+	 */
+	public List<AlarmIndicator> queryListForAllNumberTypeUseDynamicLazy(){
+		Session session = sessionFactory.getCurrentSession();
+		Transaction transaction = session.beginTransaction();
+		try{
+			Query query = session.createQuery("select i,r from AlarmIndicator i inner join fetch i.alarmRules r "
+					+ "where r.alarmRuleValueType.name='number' and r.alarmRuleValueType.valueCount >=1");
+	
+			List<AlarmIndicator> list = query.list();
+			transaction.commit();
+			return list;
+		}catch(RuntimeException e){
+			transaction.rollback();
+			log.error(e);
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
 	/*
 	 * 更新告警指标及其相关的告警规则
 	 */

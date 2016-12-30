@@ -7,44 +7,26 @@ import com.opensymphony.xwork2.ActionSupport;
 
 /*
  * 带分页信息的分页数据
- * 其中有 当前页号
+ * 其中有 
+ * 当前页号
  * 每页条数
  * 总条数
+ * 这三个是可以自定义去设置的，其他的属性都是通过这几个属性计算得出
+ * 计算属性在调用其getXxx方法的时候计算
  * 当前页开始索引（从0开始）
  * 当前页结束索引（不包括结束）
  */
 public class PaginationData<T> extends ActionSupport {
 
 	private List<T> list = new ArrayList();
-	private int currentPageNumber;
+	private int currentPageNumber=0;
 	private int totalCount;
-	private  int countPerPage;//默认10条
-	private int currentPageStart = 0;
-	private int currentPageEnd = 9;
+	private  int countPerPage=10;//默认10条
+	private int currentPageStart;
+	private int currentPageEnd;
 	private int totalPageCount;
 	
 	
-	/**
-	 * @param currentPageStart the currentPageStart to set
-	 */
-	public void setCurrentPageStart(int currentPageStart) {
-		this.currentPageStart = currentPageStart;
-	}
-
-	/**
-	 * @param currentPageEnd the currentPageEnd to set
-	 */
-	public void setCurrentPageEnd(int currentPageEnd) {
-		this.currentPageEnd = currentPageEnd;
-	}
-
-	/**
-	 * @param totalPageCount the totalPageCount to set
-	 */
-	public void setTotalPageCount(int totalPageCount) {
-		this.totalPageCount = totalPageCount;
-	}
-
 	/**
 	 * @param currentPageNumber
 	 * @param countPerPage
@@ -67,7 +49,9 @@ public class PaginationData<T> extends ActionSupport {
 	 * @return the totalPageCount
 	 */
 	public int getTotalPageCount() {
-		return totalPageCount;
+		this.totalPageCount = totalCount%countPerPage>0?(totalCount/countPerPage+1):(totalCount/countPerPage);
+
+		return this.totalPageCount;
 	}
 
 	/**
@@ -82,7 +66,7 @@ public class PaginationData<T> extends ActionSupport {
 	 */
 	public int getCurrentPageStart() {
 		this.currentPageStart = getCurrentPageNumber() *this.getCountPerPage();
-		return currentPageStart;
+		return this.currentPageStart;
 	}
 
 	/**
@@ -91,7 +75,7 @@ public class PaginationData<T> extends ActionSupport {
 	public int getCurrentPageEnd() {
 	
 		this.currentPageEnd = (getCurrentPageNumber()+1)*this.getCountPerPage();
-		return currentPageEnd;
+		return this.currentPageEnd;
 	}
 
 	/* (non-Javadoc)
@@ -101,9 +85,10 @@ public class PaginationData<T> extends ActionSupport {
 	public String toString() {
 		return "PaginationData [list=" + list + ", currentPageNumber="
 				+ currentPageNumber + ", totalCount=" + totalCount
-				+ ", countPerPage=" + countPerPage + ", currentPageStart="
-				+ currentPageStart + ", currentPageEnd=" + currentPageEnd
-				+ ", totalPageCount=" + totalPageCount + "]";
+				+ ", countPerPage=" + countPerPage + ", getTotalPageCount()="
+				+ getTotalPageCount() + ", getCurrentPageStart()="
+				+ getCurrentPageStart() + ", getCurrentPageEnd()="
+				+ getCurrentPageEnd() + "]";
 	}
 
 	/**
@@ -141,7 +126,6 @@ public class PaginationData<T> extends ActionSupport {
 	 * @param totalCount the totalCount to set
 	 */
 	public void setTotalCount(int totalCount) {
-		this.totalPageCount = totalCount%countPerPage>0?(totalCount/countPerPage+1):(totalCount/countPerPage);
 		this.totalCount = totalCount;
 	}
 

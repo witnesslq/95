@@ -4,7 +4,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.TimerTask;
 
-import sun.nio.ch.ThreadPool;
 
 public class PortIpsTimer extends TimerTask{
 	

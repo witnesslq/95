@@ -1,14 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 2016-11-24 11:37:02 by Hibernate Tools 4.3.1 -->
+<!-- Generated 2016-12-23 13:03:10 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="com.dhcc.bussiness.sxydidc.quality.models.TopoInterface" table="TOPO_INTERFACE"  optimistic-lock="version">
+    <class name="com.dhcc.bussiness.sxydidc.customer95.config.models.DeviceInterface" table="DEVICE_INTERFACE" schema="" optimistic-lock="version">
         <id name="id" type="long">
             <column name="ID" precision="10" scale="0" />
-            <generator class="sequence" >
-            	<param name="sequence">seq_topo_interface</param>
-            </generator>
+            <generator class="assigned" />
         </id>
         <property name="nodeId" type="string">
             <column name="NODE_ID" length="30" />
@@ -18,9 +16,6 @@
         </property>
         <property name="ifDesc" type="string">
             <column name="IF_DESC" length="30" />
-        </property>
-        <property name="customerId" type="string">
-            <column name="CUSTOMER_ID" length="50" />
         </property>
     </class>
 </hibernate-mapping>

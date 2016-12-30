@@ -42,5 +42,9 @@
     	
     	<!-- 流量账单 -->
     	<mapping resource="com/dhcc/flow/report/resources/FlowAccount.hbm.xml" />
+    	
+    	<!--客户配置 -->
+    	<mapping resource="com/dhcc/bussiness/sxydidc/customer95/config/resources/DeviceInterface.hbm.xml" />
+   		
     </session-factory>
 </hibernate-configuration>
