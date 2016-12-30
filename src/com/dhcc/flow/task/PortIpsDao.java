@@ -197,7 +197,7 @@ public class PortIpsDao
 	   OracleDBManager dbm=new OracleDBManager();
 	   List list =null;
 	   try {
-		   String sql = "select * from topo_host_node where managed = '1'";
+		   String sql = "select distinct thn.ip_address from TOPO_HOST_NODE thn,topo_interface ti where thn.ip_address=ti.node_id";
 		   list = dbm.getObjectList(HostNode.class, sql);
 		   
 		} catch (Exception e) {
