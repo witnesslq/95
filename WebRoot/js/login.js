@@ -4,26 +4,29 @@ jQuery(function($){
 		   	 userlogin();
 		    }
 		});
-
+		
 		$("#password").keyup(function(event){
 			if(event.keyCode == 13){
-	            if(doLogin()){
+	           /* if(doLogin()){
 			   	 	userlogin();
-			    }
+			    }*/
+				return false;
 	        }
 		});
 		$("#username").keyup(function(event){
 			if(event.keyCode == 13){
-	            if(doLogin()){
+	            /*if(doLogin()){
 			   	 	userlogin();
-			    }
+			    }*/
+				return false;
 	        }
 		});
 		$("#verifycode").keyup(function(event){
 			if(event.keyCode == 13){
-	            if(doLogin()){
+	            /*if(doLogin()){
 			   	 	userlogin();
-			    }
+			    }*/
+				return false;
 	        }
 		});
 		$("#rCodeImg").click(function(){
