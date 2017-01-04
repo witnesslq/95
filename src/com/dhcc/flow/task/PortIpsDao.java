@@ -56,20 +56,23 @@ public class PortIpsDao
 		Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.MONTH, -6);
+        cal.add(Calendar.DATE, -1); 
         //前6个月的日期
         String halfyear = new SimpleDateFormat( "yyyy-MM-dd ").format(cal.getTime());
-        String sql = "select a.ipaddress,a.restype,a.category,a.entity,a.subentity,round(avg(a.utilhdx),2) as utilhdx,round(avg(a.utilhdxperc),2) as utilhdxperc,round(avg(a.discardsperc),2) as discardsperc ,round(avg(a.errorsperc),2) as errorsperc, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeed from (select  ipaddress,restype,category,entity,subentity,utilhdx,utilhdxperc,discardsperc,errorsperc,TO_CHAR(collecttime,'YYYY/MM/DD hh24') as collecttime ,utilhdxunit,percunit,ifspeed from portips"+ip+" t where t.collecttime<to_date('"+halfyear+"','YYYY/MM/DD'))  a  group by a.collecttime,a.ipaddress,a.restype,a.category,a.entity,a.subentity, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeed";
+        String sql = "select a.ipaddress,a.restype,a.category,a.entity,a.subentity,round(avg(a.utilhdx),2) as utilhdx,round(avg(a.utilhdxperc),2) as utilhdxperc,round(avg(a.discardsperc),2) as discardsperc ,round(avg(a.errorsperc),2) as errorsperc, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeed from (select  ipaddress,restype,category,entity,subentity,utilhdx,utilhdxperc,discardsperc,errorsperc,TO_CHAR(collecttime,'YYYY/MM/DD hh24') as collecttime ,utilhdxunit,percunit,ifspeed from portips"+ip+" t where  TO_CHAR(t.collecttime,'YYYY/MM/DD')=TO_CHAR(TO_DATE('"+halfyear+"','YYYY/MM/DD'),'YYYY/MM/DD')) a  group by a.collecttime,a.ipaddress,a.restype,a.category,a.entity,a.subentity, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeed";
 		//select a.ipaddress,a.restype,a.category,a.entity,a.subentity,avg(a.utilhdx) as utilhdx,avg(a.utilhdxperc) as utilhdxperc,avg(a.discardsperc) as discardsperc ,avg(a.errorsperc) as errorsperc, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeed from (select  ipaddress,restype,category,entity,subentity,utilhdx,utilhdxperc,discardsperc,errorsperc,TO_CHAR(collecttime,'YYYY/MM/DD hh24') as collecttime ,utilhdxunit,percunit,ifspeed from portips183_203_0_111 t)  a group by a.collecttime,a.ipaddress,a.restype,a.category,a.entity,a.subentity,a.utilhdx,a.utilhdxperc,a.discardsperc,a.errorsperc, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeeda
 		List<PortIpsModel> list = null;
 		try {
 			list = dbm.getObjectList(PortIpsModel.class, sql);
 			if(list==null||list.size()==0) return; 
 			PortIpsDao dao = new PortIpsDao();
-			List insertsql = dao.inserthelfyear(list, ip,"hour");
 			
 			//执行删除操作
-			String deletesql = "delete from portips"+ip+" t where t.collecttime<to_date('"+halfyear+"','YYYY/MM/DD')";
-			insertsql.add(deletesql);
+			String deletesql = "delete from portips"+ip+" t where TO_CHAR(t.collecttime,'YYYY/MM/DD')=TO_CHAR(TO_DATE('"+halfyear+"','YYYY/MM/DD'),'YYYY/MM/DD')";
+			List insertsql = dao.inserthelfyear(list, ip,"hour",deletesql);
+			
+			
+			//insertsql.add(deletesql);
 			boolean t = dbm.excuteBatchSql(insertsql);
 			System.out.println(t);
 		} catch (Exception e) {
@@ -89,19 +92,21 @@ public class PortIpsDao
 		Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.MONTH, -18);
+        cal.add(Calendar.DATE, -1); 
         //前12个月的日期
         String year = new SimpleDateFormat( "yyyy-MM-dd").format(cal.getTime());
-        String sql = "select a.ipaddress,a.restype,a.category,a.entity,a.subentity,round(avg(a.utilhdx),2) as utilhdx,round(avg(a.utilhdxperc),2) as utilhdxperc,round(avg(a.discardsperc),2) as discardsperc ,round(avg(a.errorsperc),2) as errorsperc, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeed from (select  ipaddress,restype,category,entity,subentity,utilhdx,utilhdxperc,discardsperc,errorsperc,TO_CHAR(collecttime,'YYYY/MM/DD') as collecttime ,utilhdxunit,percunit,ifspeed from portipshour"+ip+" t where t.collecttime<to_date('"+year+"','YYYY/MM/DD'))  a  group by a.collecttime,a.ipaddress,a.restype,a.category,a.entity,a.subentity, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeed";
+        String sql = "select a.ipaddress,a.restype,a.category,a.entity,a.subentity,round(avg(a.utilhdx),2) as utilhdx,round(avg(a.utilhdxperc),2) as utilhdxperc,round(avg(a.discardsperc),2) as discardsperc ,round(avg(a.errorsperc),2) as errorsperc, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeed from (select  ipaddress,restype,category,entity,subentity,utilhdx,utilhdxperc,discardsperc,errorsperc,TO_CHAR(collecttime,'YYYY/MM/DD') as collecttime ,utilhdxunit,percunit,ifspeed from portips"+ip+" t where TO_CHAR(t.collecttime,'YYYY/MM/DD')=TO_CHAR(TO_DATE('"+year+"','YYYY/MM/DD'),'YYYY/MM/DD'))  a  group by a.collecttime,a.ipaddress,a.restype,a.category,a.entity,a.subentity, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeed";
 		//select a.ipaddress,a.restype,a.category,a.entity,a.subentity,avg(a.utilhdx) as utilhdx,avg(a.utilhdxperc) as utilhdxperc,avg(a.discardsperc) as discardsperc ,avg(a.errorsperc) as errorsperc, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeed from (select  ipaddress,restype,category,entity,subentity,utilhdx,utilhdxperc,discardsperc,errorsperc,TO_CHAR(collecttime,'YYYY/MM/DD hh24') as collecttime ,utilhdxunit,percunit,ifspeed from portips183_203_0_111 t)  a group by a.collecttime,a.ipaddress,a.restype,a.category,a.entity,a.subentity,a.utilhdx,a.utilhdxperc,a.discardsperc,a.errorsperc, a.collecttime ,a.utilhdxunit,a.percunit,a.ifspeeda
 		List<PortIpsModel> list = null;
 		try {
 			list = dbm.getObjectList(PortIpsModel.class, sql);
 			if(list==null||list.size()==0) return; 
 			PortIpsDao dao = new PortIpsDao();
-			List insertsql = dao.inserthelfyear(list, ip,"day");
 			//执行删除操作
-			String deletesql = "delete from portipshour"+ip+" t where t.collecttime<to_date('"+year+"','YYYY/MM/DD')";
-			insertsql.add(deletesql);
+			String deletesql = "delete from portips"+ip+" t where TO_CHAR(t.collecttime,'YYYY/MM/DD')=TO_CHAR(TO_DATE('"+year+"','YYYY/MM/DD'),'YYYY/MM/DD')";
+			List insertsql = dao.inserthelfyear(list, ip,"day",deletesql);
+			
+			//insertsql.add(deletesql);
 			boolean t = dbm.excuteBatchSql(insertsql);
 			System.out.println(t);
 		} catch (Exception e) {
@@ -118,10 +123,11 @@ public class PortIpsDao
 	 * @param ip
 	 * @return
 	 */
-   public List inserthelfyear(List list,String ip,String flag)
+   public List inserthelfyear(List list,String ip,String flag,String deletesql)
    {	
 		String allipstr = ip.replaceAll("\\.", "_");
 	    List insertsql = new ArrayList();
+	    insertsql.add(deletesql);
 			//端口状态信息入库
 			Calendar tempCal = null;
 			Date cc = null;
@@ -132,9 +138,9 @@ public class PortIpsDao
 			String tablename="";
 			if (portipslist != null && portipslist.size() > 0) {
 				if(flag.equals("day")) {
-					tablename = "PORTIPSDAY" + allipstr;
+					tablename = "PORTIPS" + allipstr;
 				}else {
-					tablename = "PORTIPSHOUR" + allipstr;
+					tablename = "PORTIPS" + allipstr;
 				}
 				 
 				PortIpsModel utilhdx = null;
@@ -142,7 +148,11 @@ public class PortIpsDao
 					
 						utilhdx = (PortIpsModel) portipslist.get(si);
 						if (utilhdx.getRestype().equals("dynamic")) {
+							if(utilhdx.getIfspeed()==null) utilhdx.setIfspeed("");
 							time = utilhdx.getCollecttime();
+							if(flag.equals("day")) {
+								time = time + " 23:59:59";
+							}
 							StringBuffer sBuffer = new StringBuffer();
 							sBuffer.append("insert into ");
 							sBuffer.append(tablename);
@@ -170,7 +180,7 @@ public class PortIpsDao
 							sBuffer.append("','");
 							sBuffer.append(utilhdx.getPercunit());
 							sBuffer.append("','");
-							sBuffer.append(utilhdx.getUtilhdxflag());
+							sBuffer.append("0");
 							sBuffer.append("','");
 							sBuffer.append(utilhdx.getRecover());
 							sBuffer.append("','");
