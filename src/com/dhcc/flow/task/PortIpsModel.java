@@ -9,10 +9,10 @@ public class PortIpsModel {
 	private String restype;   
 	private String category;
 	private String utilhdxunit;
-	private String utilhdx;  //流量
-	private String utilhdxperc;  //带宽利用率
-	private String discardsperc;// 丢包率
-	private String errorsperc;   //错误率
+	private double utilhdx;  //流量
+	private double utilhdxperc;  //带宽利用率
+	private double discardsperc;// 丢包率
+	private double errorsperc;   //错误率
 	private String percunit;     //利用率单位
 	private String utilhdxflag;  //是否为异常
 	private String recover;      //纠错后数据
@@ -59,28 +59,29 @@ public class PortIpsModel {
 	public void setUtilhdxunit(String utilhdxunit) {
 		this.utilhdxunit = utilhdxunit;
 	}
-	public String getUtilhdx() {
+	
+	public double getUtilhdx() {
 		return utilhdx;
 	}
-	public void setUtilhdx(String utilhdx) {
+	public void setUtilhdx(double utilhdx) {
 		this.utilhdx = utilhdx;
 	}
-	public String getUtilhdxperc() {
+	public double getUtilhdxperc() {
 		return utilhdxperc;
 	}
-	public void setUtilhdxperc(String utilhdxperc) {
+	public void setUtilhdxperc(double utilhdxperc) {
 		this.utilhdxperc = utilhdxperc;
 	}
-	public String getDiscardsperc() {
+	public double getDiscardsperc() {
 		return discardsperc;
 	}
-	public void setDiscardsperc(String discardsperc) {
+	public void setDiscardsperc(double discardsperc) {
 		this.discardsperc = discardsperc;
 	}
-	public String getErrorsperc() {
+	public double getErrorsperc() {
 		return errorsperc;
 	}
-	public void setErrorsperc(String errorsperc) {
+	public void setErrorsperc(double errorsperc) {
 		this.errorsperc = errorsperc;
 	}
 	public String getPercunit() {
