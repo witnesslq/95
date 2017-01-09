@@ -1,5 +1,8 @@
 $(function() {
 
+    // 修改客户
+    if (!!customerId) $("#saveCustomer").text('更新');
+
     // 添加客户
     $.ajax({
             url: basePath + 'customer_config/query_all_device_summary.action',
@@ -131,7 +134,8 @@ $(function() {
 
     // 保存客户名
     $("#saveCustomer").click(function(event) {
-        var $customerName = $(this).parents(".input-group").children('input'),
+        var $customerBtn = $(this),
+            $customerName = $customerBtn.parents(".input-group").children('input'),
             customerName = $customerName.val();
 
         if (customerName === "") {
@@ -148,18 +152,37 @@ $(function() {
                 url: basePath + 'customer_config/save_customer.action',
                 type: 'POST',
                 dataType: 'json',
-                data: data
+                data: data,
+                beforeSend: function(jqXHR, settings) {
+                    $customerBtn.prop({
+                        "disabled": true
+                    });
+                }
             })
             .done(function(data) {
-                var customerId = data.customerId,
+                customerId = data.customerId,
                     customerName = data.customerName;
 
+                $customerBtn.text('更新');
             })
-            .fail(function() {
-                console.log("error");
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                var message;
+                if (textStatus == "error") {
+                    if (jqXHR.status == 0) {
+                        message = "网络连接错误";
+                    } else if (jqXHR.status == 500) {
+                        message = "服务器内部错误，无法获取数据";
+                    }
+                } else if (textStatus == "timeout") {
+                    message = "浏览器等待数据超时";
+                } else if (textStatus == "parsererror") {
+                    message = "数据解析异常";
+                }
+
+                $("#alertModal").data("message", message).modal("show");
             })
-            .always(function() {
-                console.log("complete");
+            .always(function(jqXHR, textStatus) {
+                $customerBtn.prop('disabled', false);
             });
 
     }).parents(".input-group").children('input').tooltip({
@@ -387,22 +410,22 @@ $(function() {
     $(".panel-list ul.pagination").on("click", "li", function(event) {
 
         var currentPageNumber = $(this).attr("data-page");
-        
+
         if (isNaN(parseInt(currentPageNumber))) {
 
             if (currentPageNumber === 'prev') {
                 currentPageNumber = parseInt($(event.delegateTarget).children('li.active').attr("data-page"));
-                currentPageNumber = currentPageNumber-1<1?1:(currentPageNumber-1);
+                currentPageNumber = currentPageNumber - 1 < 1 ? 1 : (currentPageNumber - 1);
             } else {
                 currentPageNumber = parseInt($(event.delegateTarget).children('li.active').attr("data-page"));
                 var totalPageCount = parseInt($(this).prev().attr("data-page"));
-                currentPageNumber = currentPageNumber+1>totalPageCount?totalPageCount:(currentPageNumber+1);
+                currentPageNumber = currentPageNumber + 1 > totalPageCount ? totalPageCount : (currentPageNumber + 1);
             }
-        } 
-        
+        }
+
         currentPageNumber = parseInt(currentPageNumber);
         currentPageNumber -= 1;
-        
+
         getPagingDeviceDetail({
             countPerPage: 10,
             currentPageNumber: currentPageNumber
@@ -417,5 +440,13 @@ $(function() {
     $("#info").on("render.bs.info", function(event, data) {
         data.currentPageEnd = data.currentPageEnd < data.totalCount ? data.currentPageEnd : data.totalCount;
         $(this).text('显示第' + (data.currentPageStart + 1) + '至第' + data.currentPageEnd + '项结果，共' + data.totalCount + '项');
+    });
+
+    /*
+        展示不同的告警信息
+     */
+    $("#alertModal").on("show.bs.modal", function(event) {
+        var modal = $(this);
+        modal.find(".modal-body").text(modal.data("message"));
     });
 });
