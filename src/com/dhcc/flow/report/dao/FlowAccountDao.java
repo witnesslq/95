@@ -109,12 +109,13 @@ public class FlowAccountDao {
 		Transaction transaction = session.beginTransaction();
 		
 		try{
-			Query query = session.createQuery("update FlowAccount f set f.id.totalcount =:totalcount,f.id.flowcount = :flowcount,f.id.utilhdx=:utilhdx where f.id.customerId=:customerId and f.id.datetime=:datetime");
+			Query query = session.createQuery("update FlowAccount f set f.id.totalcount =:totalcount,f.id.flowcount = :flowcount,f.id.utilhdx=:utilhdx,f.id.cabinet=:cabinet where f.id.customerId=:customerId and f.id.datetime=:datetime");
 			query.setString("totalcount",flowAccount.getId().getTotalcount())
 			.setString("flowcount", flowAccount.getId().getFlowcount())
 			.setString("utilhdx",flowAccount.getId().getUtilhdx())
 			.setString("customerId",flowAccount.getId().getCustomerId())
-			.setString("datetime", flowAccount.getId().getDatetime());
+			.setString("datetime", flowAccount.getId().getDatetime())
+			.setString("cabinet", flowAccount.getId().getCabinet());
 			
 			int number = query.executeUpdate();
 			transaction.commit();

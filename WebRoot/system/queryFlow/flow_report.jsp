@@ -269,16 +269,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							
 							<form>
 								<div class="form-group">
-								<label for="" class="control-label">流量峰值点数</label>
+								<label for="totalCount" class="control-label">流量峰值点数</label>
 								<input type="text" class="form-control" id="totalCount">
 								</div>
 								<div class="form-group">
-								<label for="" class="control-label">95%峰值流量点</label>
+								<label for="flowCount" class="control-label">95%峰值流量点</label>
 								<input type="text" class="form-control" id="flowCount">
 								</div>
 								<div class="form-group">
-								<label for="" class="control-label">95%峰值流量</label>
+								<label for="utilhdx" class="control-label">95%峰值流量</label>
 								<input type="text" class="form-control" id="utilhdx">
+								</div>
+								<div class="form-group">
+								<label for="cabinet" class="control-label">占用机柜数量</label>
+								<input type="text" class="form-control" id="cabinet">
 								</div>
 							</form>
 						</div>

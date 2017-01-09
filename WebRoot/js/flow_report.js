@@ -218,6 +218,7 @@ $(function() {
 		$modal.find(".modal-body input#totalCount").val(flowAccount.id.totalcount);
 		$modal.find(".modal-body input#flowCount").val(flowAccount.id.flowcount);
 		$modal.find(".modal-body input#utilhdx").val(flowAccount.id.utilhdx);
+		$modal.find(".modal-body input#cabinet").val(flowAccount.id.cabinet);
 
 	}).on("hide.bs.modal", function(event) {
 		$(this).find(".modal-body .alert").alert("close"); //去掉警告
@@ -235,7 +236,12 @@ $(function() {
 
 			$utilhdx = $("input#utilhdx"),
 			utilhdxLabel = $utilhdx.prev("label").text(),
-			utilhdx = $utilhdx.val();
+			utilhdx = $utilhdx.val(),
+
+			$cabinet = $("input#cabinet"),
+			cabinetLabel = $cabinet.prev("label").text(),
+			cabinet = $cabinet.val();
+
 
 		//检测输入合法性
 		var msg = "",
@@ -250,6 +256,9 @@ $(function() {
 			msg += utilhdxLabel + suffix;
 		}
 
+		if(validator.isEmpty(cabinet)){
+			msg += cabinetLabel + suffix;
+		}
 		$("#flowAccountModal .modal-body .alert").alert("close"); //去掉之前的警告
 
 		// 有不合法的输入
@@ -270,7 +279,8 @@ $(function() {
 					datetime:flowAccount.id.datetime,
 					totalcount: totalCount,
 					flowcount: flowCount,
-					utilhdx: utilhdx
+					utilhdx: utilhdx,
+					cabinet:cabinet
 				}
 			}]);
 		}
