@@ -1,33 +1,36 @@
 package com.dhcc.bussiness.sxydidc.customer95.config.actions;
 
 import static org.junit.Assert.*;
-import junit.framework.Assert;
 
-import org.eclipse.jdt.internal.compiler.ast.AssertStatement;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 
-public class CustomerActionTest {
+public class UnboundCustomerInterfaceActionTest {
 
-	static CustomerAction action;
+	static UnboundCustomerInterfaceAction action;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		action = new CustomerAction();
+		action = new UnboundCustomerInterfaceAction();
 	}
 
 	@Test
-	public void testSaveOrUpdateForSave() {
-		Customer customer = new Customer();
-		customer.setCustomerName("东华软件");
+	public void testValidate() {
+		action.validate();
+		System.out.println(action);
+	}
+
+	@Test
+	public void testExecute() {
+		Customer customer = new Customer("5ecf8c9f-2212-42d6-990b-37b8aaf16edb");
 		action.setCustomer(customer);
 		try {
-			Assert.assertEquals("success", action.saveOrUpdate());
+			action.execute();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 }

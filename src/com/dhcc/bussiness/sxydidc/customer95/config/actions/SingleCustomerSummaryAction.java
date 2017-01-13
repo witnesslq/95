@@ -39,7 +39,6 @@ public class SingleCustomerSummaryAction extends ActionSupport {
 	@Override
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
-		if(customer == null) return ERROR;
 		CustomerDao dao = new CustomerDao();
 		this.customerSummary = dao.queryBy(customer);
 		return super.SUCCESS;

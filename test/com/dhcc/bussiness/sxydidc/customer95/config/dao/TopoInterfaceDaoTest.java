@@ -20,7 +20,7 @@ public class TopoInterfaceDaoTest {
 	@Test
 	public void testQueryBy() {
 		Customer customer = new Customer();
-		customer.setCustomerId("6f56f2d9-f13e-4ddb-bd19-392b2887c599");
+		customer.setCustomerId("5ecf8c9f-2212-42d6-990b-37b8aaf16edb");
 		System.out.println(dao.queryBy(customer));
 	}
 
@@ -61,5 +61,20 @@ public class TopoInterfaceDaoTest {
 		Customer customer = new Customer();
 		customer.setCustomerId("'' or 1=1");
 		dao.deleteAllBy(customer);
+	}
+	
+	@Test
+	public void testUnboundAllByCustomer(){
+		Customer customer = new Customer("5ecf8c9f-2212-42d6-990b-37b8aaf16edb");
+		
+		dao.unboundAllBy(customer);
+	}
+	
+	@Test
+	public void testUnboundAllBy(){
+		Customer customer = new Customer("5ecf8c9f-2212-42d6-990b-37b8aaf16edb");
+		TopoHostNode host = new TopoHostNode();
+		host.setIpAddress("183.203.0.104");
+		dao.unboundAllBy(customer,host);
 	}
 }

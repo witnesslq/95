@@ -9,34 +9,23 @@ import org.junit.Test;
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoHostNode;
 
-public class DeviceInterfaceActionTest {
+public class UnboundCustomerDeviceInterfaceActionTest {
 
-	static DeviceInterfaceAction action;
+	static UnboundCustomerDeviceInterfaceAction action;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		action = new DeviceInterfaceAction();
+		action = new UnboundCustomerDeviceInterfaceAction();
 	}
 
 	@Test
-	public void testDeleteAllInterfaceForThisCustomer() {
-		Customer customer =new Customer();
-		action.setCustomer(customer);
-		try {
-			action.deleteAllInterfaceForThisCustomer();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Test
-	public void testDeleteDeviceInterfaceForThisCustomer() {
-		Customer customer =new Customer();
+	public void testExecute() {
+		Customer customer =new Customer("5ecf8c9f-2212-42d6-990b-37b8aaf16edb");
 		action.setCustomer(customer);
 		TopoHostNode host = new TopoHostNode();
+		host.setIpAddress("183.203.0.104");
 		action.setHost(host);
 		try {
-			action.deleteDeviceInterfaceForThisCustomer();
+			action.execute();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

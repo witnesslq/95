@@ -42,4 +42,5 @@ public class CustomerDaoTest {
 		customer.setCustomerName("公司");
 		System.out.println(dao.queryWithPatternBy(customer));
 	}
+
 }

@@ -59,6 +59,10 @@ public class CustomerDao {
 		Transaction transaction = session.beginTransaction();
 		
 		try{
+			boolean isExist = !session.createQuery("select new Customer(c.customerId,c.customerName) from Customer c where c.customerName=:customerName")
+					.setString("customerName", customer.getCustomerName()).list().isEmpty();
+			
+			if(isExist) throw new IllegalArgumentException("客户"+customer.getCustomerName()+"已存在");
 			session.saveOrUpdate(customer);
 			transaction.commit();
 		}catch(HibernateException e){
@@ -76,7 +80,7 @@ public class CustomerDao {
 		Transaction transaction = session.beginTransaction();
 		
 		try{
-			Query query = session.createQuery("select count(*) as portCount from  TopoInterface t  where t.customerId=:customerId")
+			Query query = session.createQuery("select count(*) as portCount from  TopoInterface t  where t.customerId=:customerId and t.endTime is null")
 					.setString("customerId", customer.getCustomerId());
 			
 			List<Long> rows = query.list();
@@ -90,6 +94,66 @@ public class CustomerDao {
 		}catch(HibernateException e){
 			
 			transaction.rollback();
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	/*
+	 * 删除客户
+	 */
+	public void delete(Customer customer){
+
+
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		
+		try{
+			 session.delete(customer);
+			Query query = session.createQuery("delete from TopoInterface t where t.id.customerId=:customerId")
+			 .setString("customerId", customer.getCustomerId());
+			 
+			query.executeUpdate();
+			 
+			transaction.commit();
+		}catch(RuntimeException e){
+			try{
+				transaction.rollback();
+			}catch(HibernateException ex){
+				ex.printStackTrace();
+			}
+
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * 查询客户
+	 */
+	public Customer queryOne(Customer customer){
+
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		
+		try{
+			Query query = session.createQuery("select new Customer(c.customerId,c.customerName) from Customer c where c.customerName=:customerName")
+					.setString("customerName", customer.getCustomerName());
+			
+			List<Customer> list = query.list();
+			
+			transaction.commit();
+			
+			if(list.size()>0)
+				return list.get(0);
+			else
+				throw new IllegalArgumentException("没有名称为 "+customer.getCustomerName()+" 客户");
+		}catch(HibernateException e){
+			try{
+				transaction.rollback();
+			}catch(HibernateException ex){
+				ex.printStackTrace();
+			}
+
 			e.printStackTrace();
 			throw e;
 		}

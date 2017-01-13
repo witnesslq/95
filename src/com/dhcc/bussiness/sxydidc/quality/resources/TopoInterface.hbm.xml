@@ -22,5 +22,11 @@
         <property name="customerId" type="string">
             <column name="CUSTOMER_ID" length="50" />
         </property>
+        <property name="startTime" type="string">
+            <column name="STARTTIME" />
+        </property>
+        <property name="endTime" type="string">
+            <column name="ENDTIME" />
+        </property>
     </class>
 </hibernate-mapping>

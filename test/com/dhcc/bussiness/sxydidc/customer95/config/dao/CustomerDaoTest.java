@@ -42,4 +42,20 @@ public class CustomerDaoTest {
 		customer.setCustomerName("东华");
 		dao.saveOrUpdate(customer);
 	}
+	
+	@Test
+	public void testDelete(){
+		Customer customer = new Customer();
+		customer.setCustomerId("4ab27414-c8de-48aa-8141-06ced4665815");
+		
+		dao.delete(customer);
+	}
+	
+	@Test
+	public void testQueryOne(){
+		Customer customer = new Customer();
+		customer.setCustomerName("计划表");
+		System.out.println(dao.queryOne(customer));;
+	}
+	
 }

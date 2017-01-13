@@ -67,7 +67,7 @@ public class DeviceInterfaceDao {
 		Transaction transaction = session.beginTransaction();
 		
 		try{
-			Query query = session.createSQLQuery("select d.id,d.node_Id,d.if_Index,d.if_Desc,customer_Id from (select * from Device_Interface d where d.node_Id = :ipAddress) d left join  Topo_Interface t on d.node_Id = t.node_Id and d.if_index = t.if_index")
+			Query query = session.createSQLQuery("select d.id,d.node_Id,d.if_Index,d.if_Desc,customer_Id,startTime,endTime from (select * from Device_Interface d where d.node_Id = :ipAddress) d left join  Topo_Interface t on d.node_Id = t.node_Id and d.if_index = t.if_index")
 					.addEntity(TopoInterface.class);
 			query.setString("ipAddress", host.getIpAddress());
 			

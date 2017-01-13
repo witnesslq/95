@@ -14,8 +14,12 @@ public class TopoInterface implements java.io.Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result + ((ifIndex == null) ? 0 : ifIndex.hashCode());
 		result = prime * result + ((nodeId == null) ? 0 : nodeId.hashCode());
+		result = prime * result
+				+ ((startTime == null) ? 0 : startTime.hashCode());
 		return result;
 	}
 
@@ -31,6 +35,11 @@ public class TopoInterface implements java.io.Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		TopoInterface other = (TopoInterface) obj;
+		if (customerId == null) {
+			if (other.customerId != null)
+				return false;
+		} else if (!customerId.equals(other.customerId))
+			return false;
 		if (ifIndex == null) {
 			if (other.ifIndex != null)
 				return false;
@@ -41,6 +50,11 @@ public class TopoInterface implements java.io.Serializable {
 				return false;
 		} else if (!nodeId.equals(other.nodeId))
 			return false;
+		if (startTime == null) {
+			if (other.startTime != null)
+				return false;
+		} else if (!startTime.equals(other.startTime))
+			return false;
 		return true;
 	}
 
@@ -49,6 +63,37 @@ public class TopoInterface implements java.io.Serializable {
 	private String ifIndex;
 	private String ifDesc;
 	private String customerId;
+	private String startTime;
+	private String endTime;
+	
+
+	/**
+	 * @return the startTime
+	 */
+	public String getStartTime() {
+		return startTime;
+	}
+
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	/**
+	 * @return the endTime
+	 */
+	public String getEndTime() {
+		return endTime;
+	}
+
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
 
 	public TopoInterface() {
 	}
@@ -113,7 +158,7 @@ public class TopoInterface implements java.io.Serializable {
 	public String toString() {
 		return "TopoInterface [id=" + id + ", nodeId=" + nodeId + ", ifIndex="
 				+ ifIndex + ", ifDesc=" + ifDesc + ", customerId=" + customerId
-				+ "]";
+				+ ", startTime=" + startTime + ", endTime=" + endTime + "]";
 	}
 
 }

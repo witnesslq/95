@@ -20,7 +20,7 @@ public class DeviceInterfaceDaoTest {
 	@Test
 	public void testQueryBy(){
 		TopoHostNode host = new TopoHostNode();
-		host.setIpAddress("183.203.0.49");
+		host.setIpAddress("183.203.0.111");
 		System.out.println(dao.queryBy(host));
 	}
 	

@@ -14,9 +14,18 @@
 		</interceptors>
 
 		<global-results>
+			<result type="json" name="input">
+				
+				<param name="statusCode">400</param>
+				<param name="root">fieldErrors</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 			
-			<result name="error" type="json">
-				<param name="errorCode">400</param>
+			<result type="json" name="error">
+				
+				<param name="statusCode">422</param>
+				<param name="root">actionErrors</param>
+				<param name="ignoreHierarchy">false</param>
 			</result>
 			<result name="HibernameException" type="json">
 				<param name="errorCode">503</param>
@@ -40,11 +49,19 @@
 			</result>
 		</action>
 		
-		<!-- 新增用户和修改用户名 -->
-		<action name="*_customer" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.CustomerAction" method="saveOrUpdate">
+		<!-- 新增用户 -->
+		<action name="save_customer" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.SaveCustomerAction" method="save">
 			<result name="success" type="json">
 				<param name="root">customer</param>
 			</result>
+		</action>
+		
+		<!-- 修改用户名 -->
+		<action name="update_customer" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.UpdateCustomerAction">
+			<result name="success" type="json">
+				<param name="root">customer</param>
+			</result>
+			
 		</action>
 		
 		<!-- 新增用户和修改用户名 -->
@@ -58,13 +75,13 @@
 			</result>
 		</action>
 		
-		<!-- 删除单个设备上端口和客户的占用关系 -->
-		<action name="unbound_device_interface_for_this_customer" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.DeviceInterfaceAction" method="deleteDeviceInterfaceForThisCustomer">
+		<!-- 解绑单个设备上端口和客户的占用关系 -->
+		<action name="unbound_device_interface_for_this_customer" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.UnboundCustomerDeviceInterfaceAction">
 			<result name="success" type="json"></result>
 		</action>
 		
-		<!-- 删除客户占用的所有端口 -->
-		<action name="unbound_all_interface_for_this_customer" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.DeviceInterfaceAction" method="deleteAllInterfaceForThisCustomer">
+		<!-- 解绑客户占用的所有端口 -->
+		<action name="unbound_all_interface_for_this_customer" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.UnboundCustomerInterfaceAction">
 			<result name="success" type="json">
 				
 			</result>
@@ -117,6 +134,16 @@
 					\.contracts.*
 				</param>
 			</result>
+		</action>
+		
+		<!-- 删除客户占用的所有端口 -->
+		<action name="delete_customer" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.DeleteCustomerAction" method="delete">
+
+			<result name="success" type="json">
+				<param name="root">customer</param>
+				
+			</result>
+			
 		</action>
 	</package>
 </struts>

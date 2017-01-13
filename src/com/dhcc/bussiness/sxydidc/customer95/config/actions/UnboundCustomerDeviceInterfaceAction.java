@@ -5,7 +5,7 @@ import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoHostNode;
 import com.opensymphony.xwork2.ActionSupport;
 
-public class DeviceInterfaceAction extends ActionSupport {
+public class UnboundCustomerDeviceInterfaceAction extends ActionSupport {
 
 	private Customer customer;
 	private TopoHostNode host;
@@ -39,25 +39,32 @@ public class DeviceInterfaceAction extends ActionSupport {
 		this.customer = customer;
 	}
 
-	/* 删除客户占用的所有端口
-	 * @see com.opensymphony.xwork2.ActionSupport#execute()
-	 */
-	public String deleteAllInterfaceForThisCustomer() throws Exception {
-		// TODO Auto-generated method stub
-		if(customer == null) return ERROR;
-		TopoInterfaceDao dao = new TopoInterfaceDao();
-		dao.deleteAllBy(customer);
-		return SUCCESS;
-	}
 	
+	/* (non-Javadoc)
+	 * @see com.opensymphony.xwork2.ActionSupport#validate()
+	 */
+	@Override
+	public void validate() {
+		// TODO Auto-generated method stub
+		if(this.customer==null||this.customer.getCustomerId() == null){
+			this.addFieldError("customer", "没有客户ID");
+		}
+		if(this.host==null || this.host.getIpAddress() ==null){
+			this.addFieldError("customer", "没有设备IP");
+		}else{
+			
+		}
+		
+	}
+
 	/* 删除单个设备上端口和客户的占用关系
 	 * @see com.opensymphony.xwork2.ActionSupport#execute()
 	 */
-	public String deleteDeviceInterfaceForThisCustomer() throws Exception {
+	@Override
+	public String execute() throws Exception {
 		// TODO Auto-generated method stub
-		if(customer == null||host == null) return ERROR;
 		TopoInterfaceDao dao = new TopoInterfaceDao();
-		dao.deleteAllBy(customer, host);
+		dao.unboundAllBy(customer, host);
 		return SUCCESS;
 	}
 

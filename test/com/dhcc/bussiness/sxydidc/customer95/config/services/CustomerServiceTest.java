@@ -19,4 +19,11 @@ public class CustomerServiceTest {
 		System.out.println(customer);
 	}
 
+	@Test
+	public void testHas(){
+		Customer customer = new Customer();
+		customer.setCustomerName("计划表");
+		
+		System.out.println(service.has(customer));
+	}
 }

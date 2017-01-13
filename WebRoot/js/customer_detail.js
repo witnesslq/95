@@ -1,8 +1,5 @@
 $(function() {
 
-    // 修改客户
-    if (!!customerId) $("#saveCustomer").text('更新');
-
     // 添加客户
     $.ajax({
             url: basePath + 'customer_config/query_all_device_summary.action',
@@ -46,16 +43,76 @@ $(function() {
     }
 
     /*
+        通用的ajax发送之前
+        将操作组件所在的box加上loading遮罩
+     */
+    function commonBeforeSend($box) {
+        return function(jqXHR, settings) {
+            var tmpl = $("#overlayTmpl").html(),
+                result = ejs.render(tmpl);
+            $box.append(
+                result);
+        };
+    }
+
+    /*
+        通用的ajax响应成功之后
+        将操作组件所在的box去掉loading遮罩
+     */
+    function commonAlways(jqXHR, textStatus) {
+        this.children(".overlay").remove();
+    }
+
+    function commonFail(jqXHR, textStatus, errorThrown) {
+                var message;
+                if (textStatus == "error") {
+                    if (jqXHR.status == 0) {
+                        message = "网络连接错误";
+                    } else if (jqXHR.status == 500) {
+                        message = "服务器内部错误";
+                    } else if (jqXHR.status === 404) {
+                        message = "URL地址出错";
+                    }
+                } else if (textStatus == "timeout") {
+                    message = "浏览器等待数据超时";
+                } else if (textStatus == "parsererror") {
+                    message = "数据解析异常";
+                }
+
+                $("#alertModal").data("message", message).modal("show");
+    }
+    /*
         解绑客户占用的端口
      */
     $(".unbound-customer").click(function(event) {
 
-        if (!!!customerId) return;
+        var $unboundCustomer = $(this);
+
+        $confirmModal.data('message', '确定要解绑这个客户的所有端口?')
+            .find('button.ok').on('click', function(event) {
+
+                /*
+                    删除附加的解绑客户的操作
+                 */
+                $(this).off('click');
+                $confirmModal.on('hidden.bs.modal',function(event) {
+
+                    $(this).off('hidden.bs.modal');
+                   $unboundCustomer.triggerHandler('unbound.customer');
+                }).modal('hide');
+            });
+
+        $confirmModal.modal('show');        
+    }).on('unbound.customer', function(event) {
+
+        var $customerBox = $(this).parents('.box');
+
         $.ajax({
                 url: basePath + 'customer_config/unbound_all_interface_for_this_customer.action',
                 type: 'POST',
                 dataType: 'json',
                 data: { "customer.customerId": customerId },
+                beforeSend: commonBeforeSend($customerBox)
             })
             .done(function() {
                 location.reload();
@@ -63,10 +120,7 @@ $(function() {
             .fail(function() {
                 console.log("error");
             })
-            .always(function() {
-                console.log("complete");
-            });
-
+            .always($.proxy(commonAlways, $customerBox));
     });
 
     $("#deviceSummaryTable").on("dataTables.render", function(event) {
@@ -123,9 +177,7 @@ $(function() {
                 .done(function() {
                     location.reload();
                 })
-                .fail(function() {
-                    console.log("error");
-                })
+                .fail(commonFail)
                 .always(function() {
                     console.log("complete");
                 });
@@ -163,29 +215,22 @@ $(function() {
                 customerId = data.customerId,
                     customerName = data.customerName;
 
-                $customerBtn.text('更新');
+                $customerBtn.triggerHandler('update.button.dropdown');
             })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-                var message;
-                if (textStatus == "error") {
-                    if (jqXHR.status == 0) {
-                        message = "网络连接错误";
-                    } else if (jqXHR.status == 500) {
-                        message = "服务器内部错误，无法获取数据";
-                    }
-                } else if (textStatus == "timeout") {
-                    message = "浏览器等待数据超时";
-                } else if (textStatus == "parsererror") {
-                    message = "数据解析异常";
-                }
-
-                $("#alertModal").data("message", message).modal("show");
-            })
+            .fail(commonFail)
             .always(function(jqXHR, textStatus) {
                 $customerBtn.prop('disabled', false);
             });
 
-    }).parents(".input-group").children('input').tooltip({
+    }).on("update.button.dropdown", function(event) {
+        // 修改客户
+        if (!!customerId) {
+            $("#saveCustomer").text('更新').parent()
+                .children('.dropdown-menu').children().removeClass('disabled');
+        }
+
+        event.stopPropagation();
+    }).trigger('update.button.dropdown').parents(".input-group").children('input').tooltip({
         placement: "bottom",
         trigger: "manual",
         title: function() {
@@ -193,6 +238,55 @@ $(function() {
         }
     }).focus(function(event) {
         $(this).tooltip("hide");
+    });
+
+    var $confirmModal = $('#confirmModal').on('show.bs.modal', function(event) {
+        var $confirmModal = $(this),
+            message = $confirmModal.data('message');
+
+        $confirmModal.find('.modal-body').text(message);
+    });
+    /*
+        删除用户以及用户绑定的端口信息
+     */
+    $('.delete-customer').on('click', function(event) {
+
+        var $deleteCustomer = $(this);
+
+        $confirmModal.data('message', '确定要删除这个客户?')
+            .find('button.ok').on('click', function(event) {
+
+                /*
+                    删除附加的删除客户的操作
+                 */
+                $(this).off('click');
+                $confirmModal.on('hidden.bs.modal',function(event) {
+
+                    $(this).off('hidden.bs.modal');
+                   $deleteCustomer.triggerHandler('delete.customer');
+                }).modal('hide');
+            });
+
+        $confirmModal.modal('show');
+
+    }).on('delete.customer', function(event) {
+
+        var $customerBox = $(this).parents('.box');
+        $.ajax({
+                url: basePath + 'customer_config/delete_customer.action',
+                type: 'POST',
+                data: {
+                    "customer.customerId": customerId
+                },
+                beforeSend: commonBeforeSend($customerBox)
+            })
+            .done(function(data) {
+
+                //回到客户概况页面，不可回退
+                location.replace(basePath+"system/customer_config/customer_summary.jsp");
+            })
+            .fail(commonFail)
+            .always($.proxy(commonAlways, $customerBox));
     });
 
     // 查询过滤出来所输入IP的设备Panel

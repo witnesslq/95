@@ -1,7 +1,9 @@
 package com.dhcc.bussiness.sxydidc.customer95.config.dao;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -18,8 +20,9 @@ import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
 
 public class TopoInterfaceDao {
 
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	/*
-	 * 解除客户占用的所有端口
+	 * 删除客户占用的所有端口
 	 */
 	public void deleteAllBy(Customer customer){
 
@@ -117,7 +120,7 @@ public class TopoInterfaceDao {
 		Transaction transaction = session.beginTransaction();
 		
 		try{
-			Query query = session.createQuery("select t.nodeId as ipAddress,count(*) as portCount from TopoInterface t where t.customerId = :customerId group by t.nodeId");
+			Query query = session.createQuery("select t.nodeId as ipAddress,count(*) as portCount from TopoInterface t where t.customerId = :customerId and t.endTime is null group by t.nodeId");
 			query.setString("customerId", customer.getCustomerId());
 			List<Object[]> rows = query.list();
 			List<DeviceSummary> list = new ArrayList();
@@ -135,4 +138,50 @@ public class TopoInterfaceDao {
 		}
 	}
 
+
+	/*
+	 * 解绑客户占用的所有端口
+	 */
+	public void unboundAllBy(Customer customer){
+
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		
+		try{ 
+			Query query = session.createQuery("update from TopoInterface t set t.endTime = :endTime where t.customerId=:customerId and t.endTime is null")
+			.setString("endTime", sdf.format(new Date()))
+			.setString("customerId", customer.getCustomerId());
+			
+			query.executeUpdate();
+			transaction.commit();
+		}catch(HibernateException e){
+			transaction.rollback();
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
+	/*
+	 * 解绑当前客户、当前设备上占用的所有端口
+	 */
+	public void unboundAllBy(Customer customer,TopoHostNode host){
+
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		
+		try{
+			Query query = session.createQuery("update from TopoInterface t set t.endTime = :endTime where t.customerId=:customerId and t.nodeId=:nodeId and t.endTime is null")
+			.setString("endTime", sdf.format(new Date()))
+			.setString("customerId", customer.getCustomerId())
+			.setString("nodeId", host.getIpAddress());
+			
+			query.executeUpdate();
+			transaction.commit();
+		}catch(HibernateException e){
+			transaction.rollback();
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }
