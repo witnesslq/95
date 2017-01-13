@@ -240,6 +240,7 @@ $(function() {
         $(this).tooltip("hide");
     });
 
+    // 显示警告消息，需要用户确认
     var $confirmModal = $('#confirmModal').on('show.bs.modal', function(event) {
         var $confirmModal = $(this),
             message = $confirmModal.data('message');

@@ -199,23 +199,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						</div>
 						
 						<%@ include file="/system/commons/common_widgets.jsp"  %>
+						<%@ include file="/system/commons/common_confirm_dialog.jsp"  %>
 						
-						<div class="modal fade modal-warning" id="confirmModal">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button class="close" type="button" data-dismiss="modal"><span>&times;</span></button>
-										<h4 class="modal-title">警告</h4>
-									</div>
-									<div class="modal-body"></div>
-									<div class="modal-footer">
-										<button class="btn btn-outline pull-left" type="button" data-dismiss="modal">取消
-										</button>
-										<button class="btn btn-outline ok" type="button">确定</button>
-									</div>
-								</div>
-							</div>
-						</div>
 						<script type="x-ejs-template" id="devicePaginationTmpl">
 								<li data-page="prev"><a href="#">上页</a></li>
 								

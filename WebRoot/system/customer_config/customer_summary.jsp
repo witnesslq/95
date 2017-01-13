@@ -114,6 +114,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		</div>
 	</div>
 	<%@ include file="/system/commons/common_widgets.jsp"  %>
+	<%@ include file="/system/commons/common_confirm_dialog.jsp"  %>
 	<script type="x-ejs-template" id="customerOperationTmpl">
           <div class="btn-group">
 	          <a class="btn btn-default btn-sm" href="customer_detail.jsp?customer_id=<\%=customer.customerId  %>&customer_name=<\%=customer.customerName  %>&port_count=<\%=portCount  %>">修改</a>

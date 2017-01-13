@@ -21,9 +21,9 @@ public class CustomerDao {
 		Transaction transaction = session.beginTransaction();
 		
 		try{
-			Query query = session.createSQLQuery("select customer_id,customer_name,'下线' as status,0 as port_count from customer c where c.customer_id not in (select customer_id from topo_interface t where t.customer_id = c.customer_id )"
+			Query query = session.createSQLQuery("select customer_id,customer_name,'下线' as status,0 as port_count from customer c where c.customer_id not in (select customer_id from topo_interface t where t.customer_id = c.customer_id and endtime is null )"
 					+ "union "
-					+ "select c.customer_id,customer_name,'在线' as stauts,count(*) as port_count from customer c join topo_interface t on c.customer_id = t.customer_id group by c.customer_id,customer_name ");
+					+ "select c.customer_id,customer_name,'在线' as stauts,count(*) as port_count from customer c join topo_interface t on c.customer_id = t.customer_id and endtime is null group by c.customer_id,customer_name ");
 			List<Object[] > rows = query.list();
 			
 			List<CustomerSummary> list = new ArrayList<CustomerSummary>();
