@@ -262,12 +262,10 @@
 					async:false, 
 					type:"post",
 					success:function (data) {
-				     //对数据进行加工处理，也可以按你自己的需求进行处理
-               //  if(data!=null && data.length != 0){
-                 	
+				    //对数据进行加工处理，也可以按你自己的需求进行处理
+					//if(data!=null && data.length != 0){
                          for(var w=0;w<data.length;w++){
 	                         	  if(data[w].utilhdxflag==0 || data[w].utilhdxflag==1) {
-	                         		 
 	                         		  //封装出口流量
 	                         		  if (data[w].entity=="出口") {
 	                         			 xdate[i]=new Array();
@@ -424,7 +422,7 @@
 		 /*
 			按天，月，年查询的掩码日期控件
 		 */
-		$("input[data-mask]").inputmask("yyyy-mm-dd", {
+		$("input[data-mask]").inputmask("", {
 			"placeholder": "yyyy-mm-dd",
 			"clearIncomplete": true
 		});
@@ -439,23 +437,76 @@
 				maskedInput.inputmask("yyyy-mm-dd", {
 					"placeholder": "yyyy-mm-dd"
 				});
+				$(".daterangepicker").remove();
 				$('#datetime').datepicker("remove");
+				$("#datetime").removeAttr("readonly");
 				$('#datetime').datepicker({format: "yyyy-mm-dd",language: "zh-CN",startView:0, minViewMode: 0});
 
 			} else if (viewMode == 1) {
 				maskedInput.inputmask("y-m", {
 					"placeholder": "yyyy-mm"
 				});
+				$(".daterangepicker").remove();
 				$('#datetime').datepicker("remove");
+				$("#datetime").removeAttr("readonly");
 				$('#datetime').datepicker({format: "yyyy-mm",language: "zh-CN",startView:1, minViewMode: 1});
 				
 			} else if (viewMode == 2) {
-				maskedInput.
-				inputmask("y", {
-					placeholder: "yyyy"
+				maskedInput.inputmask("y", {
+					"placeholder": "yyyy"
 				});
+				$(".daterangepicker").remove();
 				$('#datetime').datepicker("remove");
+				$("#datetime").removeAttr("readonly");
 				$('#datetime').datepicker({format: "yyyy",language: "zh-CN",startView:2, minViewMode: 2});
+			} else if (viewMode == 3) {
+				$('#datetime').inputmask('remove');
+				$('#datetime').datepicker("remove");
+				$('#datetime').attr("readonly","readonly");
+				$('#datetime').daterangepicker({
+					"locale": {
+				        "format": "YYYY-MM-DD",
+				        "separator": " ~ ",
+				        "applyLabel": "确认",
+				        "cancelLabel": "取消",
+				        "fromLabel": "从",
+				        "toLabel": "到",
+				        "customRangeLabel": "Custom",
+				        "weekLabel": "W",
+				        "daysOfWeek": [
+				            "周日",
+				            "周一",
+				            "周二",
+				            "周三",
+				            "周四",
+				            "周五",
+				            "周六"
+				        ],
+				        "monthNames": [
+				            "一月",
+				            "二月",
+				            "三月",
+				            "四月",
+				            "五月",
+				            "六月",
+				            "七月",
+				            "八月",
+				            "九月",
+				            "十月",
+				            "十一月",
+				            "十二月"
+				        ],
+				        "firstDay": 1
+				    },
+				    "linkedCalendars": false,
+				    "startDate":"2017-01-01",
+				    "endDate": new Date(),
+				    "drops": "down",
+				    "opens": "left",
+				    "format":"YYYY-MM-DD"
+				},function(start, end) {
+					console.log(start.format('YYYY-MM-DD') + ' ~ ' + end.format('YYYY-MM-DD'));
+				});
 			}
 			maskedInput.attr("data-view-mode", viewMode);
 		});
