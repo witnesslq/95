@@ -72,6 +72,15 @@ $(function() {
                         message = "服务器内部错误";
                     } else if (jqXHR.status === 404) {
                         message = "URL地址出错";
+                    }else if(jqXHR.status == 400){
+                        message = "参数出错"
+                    }else if(jqXHR.status == 422){
+
+                        // 业务上的错误信息
+                        var errors = $.parseJSON(jqXHR.responseText);
+                        for(i in errors){
+                            message += errors[i];
+                        }
                     }
                 } else if (textStatus == "timeout") {
                     message = "浏览器等待数据超时";
@@ -450,21 +459,24 @@ $(function() {
         var data = {
             "topoInterface.nodeId": ip,
             "topoInterface.ifIndex": portId,
-            "topoInterface.ifDesc": portName
+            "topoInterface.ifDesc": portName,
+            "topoInterface.customerId": currentCustomerId
         };
 
         if (!$button.hasClass('active')) {
-            url = basePath + 'customer_config/bound_port.action',
-                data["topoInterface.customerId"] = currentCustomerId;
+            url = basePath + 'customer_config/bound_port.action';
+               
 
             increment = 1;
         }
 
+        var $box = $(this).parents('.box');
         $.ajax({
                 url: url,
                 type: 'POST',
                 dataType: 'json',
-                data: data
+                data: data,
+                beforeSend:commonBeforeSend($box)
             })
             .done(function(data) {
                 $button.toggleClass('active');
@@ -478,12 +490,8 @@ $(function() {
 
                 $(".port-count-label").trigger('render.bs.label', increment);
             })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-                console.log("error");
-            })
-            .always(function() {
-                console.log("complete");
-            });
+            .fail(commonFail)
+            .always($.proxy(commonAlways,$box));
 
     }).on("render.bs.collapse", function(event) {
         var devices = $(this).data('deviceDetail'),

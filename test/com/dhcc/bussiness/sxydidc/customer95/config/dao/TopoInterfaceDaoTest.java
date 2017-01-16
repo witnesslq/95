@@ -27,21 +27,21 @@ public class TopoInterfaceDaoTest {
 	@Test
 	public void testSave(){
 		TopoInterface topoInterface = new TopoInterface();
+		topoInterface.setCustomerId("kkk");
 		topoInterface.setNodeId("183.203.0.49");
-		topoInterface.setIfIndex("44");
+		topoInterface.setIfIndex("47");
 		topoInterface.setIfDesc("GE 1/1/1");
 		dao.save(topoInterface);
 		System.out.println(topoInterface);
 	}
 	
 	@Test
-	public void testDelete(){
+	public void testUpdate(){
 		TopoInterface topoInterface = new TopoInterface();
 		topoInterface.setNodeId("183.203.0.49");
-		topoInterface.setIfIndex("44");
+		topoInterface.setIfIndex("47");
 		topoInterface.setIfDesc("GE 1/1/1");
-		dao.save(topoInterface);
-		dao.delete(topoInterface);
+		dao.update(topoInterface);
 		
 	}
 	

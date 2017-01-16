@@ -43,7 +43,7 @@ public class TopoInterfaceDao {
 	}
 	
 	/*
-	 * 解除当前客户、当前设备上占用的所有端口
+	 * 删除当前客户、当前设备上的所有端口
 	 */
 	public void deleteAllBy(Customer customer,TopoHostNode host){
 
@@ -67,13 +67,14 @@ public class TopoInterfaceDao {
 	/*
 	 * 解除客户对这个端口的占用
 	 */
-	public void delete(TopoInterface topoInterface){
+	public void update(TopoInterface topoInterface){
 
 		Session session = HibernateUtil.getSession();
 		Transaction transaction = session.beginTransaction();
 		
 		try{
-			session.createQuery("delete from TopoInterface t where t.nodeId = :nodeId and t.ifIndex=:ifIndex")
+			session.createQuery("update from TopoInterface t set t.endTime=:endTime where t.nodeId = :nodeId and t.ifIndex=:ifIndex and t.endTime is null")
+			.setString("endTime", sdf.format(new Date()))
 			.setString("nodeId", topoInterface.getNodeId())
 			.setString("ifIndex", topoInterface.getIfIndex())
 			.executeUpdate();
@@ -95,12 +96,13 @@ public class TopoInterfaceDao {
 		Transaction transaction = session.beginTransaction();
 		
 		try{
-			boolean wasBound = !session.createQuery("from TopoInterface t where t.nodeId=:nodeId and t.ifIndex =:ifIndex")
+			boolean wasBound = !session.createQuery("from TopoInterface t where t.nodeId=:nodeId and t.ifIndex =:ifIndex and t.endTime is null")
 			.setString("nodeId", topoInterface.getNodeId())
 			.setString("ifIndex", topoInterface.getIfIndex())
 			.list().isEmpty();
 			
-			if(wasBound) throw new IllegalArgumentException();
+			if(wasBound) throw new IllegalArgumentException("端口已经被占用");
+			topoInterface.setStartTime(sdf.format(new Date()));
 			session.save(topoInterface);
 			transaction.commit();
 		}catch(HibernateException e){

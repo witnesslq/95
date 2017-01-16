@@ -16,7 +16,7 @@ public class TopoInterfaceActionTest {
 	}
 
 	@Test
-	public void testDelete() {
+	public void testUnbound() {
 
 		TopoInterface topoInterface = new TopoInterface();
 		topoInterface.setNodeId("183.203.0.49");
@@ -25,7 +25,7 @@ public class TopoInterfaceActionTest {
 		
 		action.setTopoInterface(topoInterface);
 		try {
-			action.delete();
+			action.unbound();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -33,7 +33,7 @@ public class TopoInterfaceActionTest {
 	}
 
 	@Test
-	public void testSave() {
+	public void testBound() {
 		TopoInterface topoInterface = new TopoInterface();
 		topoInterface.setNodeId("183.203.0.49");
 		topoInterface.setIfIndex("44");
@@ -41,11 +41,16 @@ public class TopoInterfaceActionTest {
 		
 		action.setTopoInterface(topoInterface);
 		try {
-			action.save();
+			action.bound();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	@Test
+	public void testValidate(){
+		action.validate();
+		System.out.println(action);
+	}
 }

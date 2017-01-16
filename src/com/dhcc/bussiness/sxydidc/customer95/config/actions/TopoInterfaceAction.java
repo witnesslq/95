@@ -22,25 +22,58 @@ public class TopoInterfaceAction extends ActionSupport {
 		this.topoInterface = topoInterface;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "TopoInterfaceAction [topoInterface=" + topoInterface
+				+ ", getActionErrors()=" + getActionErrors()
+				+ ", getFieldErrors()=" + getFieldErrors() + "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see com.opensymphony.xwork2.ActionSupport#validate()
+	 */
+	@Override
+	public void validate() {
+		// TODO Auto-generated method stub
+		if(topoInterface == null || topoInterface.getCustomerId() ==null){
+			this.addFieldError("topoInterface", "没有客户ID");
+		}
+		
+		if(topoInterface ==null || topoInterface.getIfIndex() == null){
+			this.addFieldError("topoInterface", "没有客户ID");
+		}
+		
+		if(topoInterface == null || topoInterface.getNodeId() == null){
+			this.addFieldError("topoInterface", "没有IP地址");
+		}
+	}
+
 	/* 解绑占用的端口
 	 * @see com.opensymphony.xwork2.ActionSupport#execute()
 	 */
-	public String delete() throws Exception {
+	public String unbound() throws Exception {
 		// TODO Auto-generated method stub
-		if(topoInterface == null) return ERROR;
 		TopoInterfaceDao dao = new TopoInterfaceDao();
-		dao.delete(topoInterface);
+		dao.update(topoInterface);
 		return super.SUCCESS;
 	}
 	
 	/* 占用端口
 	 * @see com.opensymphony.xwork2.ActionSupport#execute()
 	 */
-	public String save() throws Exception {
+	public String bound() throws Exception {
 		// TODO Auto-generated method stub
-		if(topoInterface == null) return ERROR;
 		TopoInterfaceDao dao = new TopoInterfaceDao();
-		dao.save(topoInterface);
+		
+		try{
+			dao.save(topoInterface);
+		}catch(IllegalArgumentException e){
+			this.addActionError(e.getMessage());
+			throw e;
+		}
 		return super.SUCCESS;
 	}
 

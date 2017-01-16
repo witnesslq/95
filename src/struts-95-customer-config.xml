@@ -113,14 +113,14 @@
 		</action>
 		
 		<!-- 绑定端口 -->
-		<action name="bound_port" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.TopoInterfaceAction" method="save">
+		<action name="bound_port" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.TopoInterfaceAction" method="bound">
 			<result name="success" type="json">
 				<param name="root">topoInterface</param>
 			</result>
 		</action>
 		
 		<!-- 解绑占用的端口 -->
-		<action name="unbound_port" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.TopoInterfaceAction" method="delete">
+		<action name="unbound_port" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.TopoInterfaceAction" method="unbound">
 			<result name="success" type="json">
 				<param name="root">topoInterface</param>
 			</result>
