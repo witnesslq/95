@@ -101,7 +101,10 @@ public class TopoInterfaceDao {
 			.setString("ifIndex", topoInterface.getIfIndex())
 			.list().isEmpty();
 			
-			if(wasBound) throw new IllegalArgumentException("端口已经被占用");
+			if(wasBound){
+				transaction.commit();
+				throw new IllegalArgumentException("端口已经被占用");
+			}
 			topoInterface.setStartTime(sdf.format(new Date()));
 			session.save(topoInterface);
 			transaction.commit();

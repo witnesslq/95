@@ -62,7 +62,10 @@ public class CustomerDao {
 			boolean isExist = !session.createQuery("select new Customer(c.customerId,c.customerName) from Customer c where c.customerName=:customerName")
 					.setString("customerName", customer.getCustomerName()).list().isEmpty();
 			
-			if(isExist) throw new IllegalArgumentException("客户"+customer.getCustomerName()+"已存在");
+			if(isExist) {
+				transaction.commit();
+				throw new IllegalArgumentException("客户"+customer.getCustomerName()+"已存在");
+			}
 			session.saveOrUpdate(customer);
 			transaction.commit();
 		}catch(HibernateException e){

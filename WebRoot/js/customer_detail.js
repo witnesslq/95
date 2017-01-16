@@ -64,7 +64,7 @@ $(function() {
     }
 
     function commonFail(jqXHR, textStatus, errorThrown) {
-                var message;
+                var message = "";
                 if (textStatus == "error") {
                     if (jqXHR.status == 0) {
                         message = "网络连接错误";
