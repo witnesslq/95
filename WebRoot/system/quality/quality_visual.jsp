@@ -100,27 +100,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 											</div>
 											<div class="box-body">
 												<div class="container-fluid">
-													<div class="row">
-														
-														
+													<div class="row">							
 														<div class="col-md-4">
 															<!-- 分时段查询控件 -->
 															<div class="input-group" id="dateForRatio">
-																<div class="input-group-btn">
-																	<button class="btn btn-default " data-toggle="dropdown" >按天<span class="caret"></span></button>
-																	<ul class="dropdown-menu date">
-																		<li data-view-mode="0">
-																			<a href="####">按天</a>
-																		</li>
-																		<li data-view-mode="1">
-																			<a href="####">按月</a>
-																		</li>
-																		<li data-view-mode="2">
-																			<a href="####">按年</a>
-																		</li>
-																	</ul>
-																</div>
-																<input type="text" data-view-mode="0" data-mask="" class="form-control">
+																<span class="input-group-addon">
+																	<span>日期</span>
+																</span>
+																<input type="text" data-mask="" class="form-control" id="datetime" readonly>
 																<div class="input-group-btn">
 																	<button class="btn btn-default query-btn" type="button">查询</button>
 																</div>
@@ -230,6 +217,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<script src="<%=basePath%>node_modules/highcharts/highcharts.js"></script>
 							<script src="<%=basePath%>node_modules/highcharts/modules/exporting.js"></script>
 							<script src="<%=basePath%>node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
+							<script src="<%=basePath%>node_modules/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
 							<script src="<%=basePath%>node_modules/admin-lte/plugins/daterangepicker/moment.min.js"></script>
 							<script src="<%=basePath%>/node_modules/admin-lte/plugins/daterangepicker/daterangepicker.js"></script>
 							<!-- InputMask -->

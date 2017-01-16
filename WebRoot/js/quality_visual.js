@@ -7,41 +7,22 @@ $(function() {
 		"placeholder": "yyyy-mm-dd",
 		"clearIncomplete": true
 	});
-	$('.dropdown-menu.date').on("click", "li", function(event) {
-
-		var triggerBtn = $(event.delegateTarget).prev("button");
-		triggerBtn.contents().first().remove();
-		triggerBtn.prepend($(event.target).text());
-
-		var viewMode = $(this).attr("data-view-mode"),
-			maskedInput = $(event.delegateTarget).parent("div.input-group-btn").next("input[data-mask]");
-		if (viewMode == 0) {
-			maskedInput.inputmask("yyyy-mm-dd", {
-				"placeholder": "yyyy-mm-dd"
-			});
-
-		} else if (viewMode == 1) {
-			maskedInput.
-			inputmask("y-m", {
-				"placeholder": "yyyy-mm"
-			});
-		} else if (viewMode == 2) {
-			maskedInput.
-			inputmask("y", {
-				placeholder: "yyyy"
-			});
-		}
-		maskedInput.attr("data-view-mode", viewMode); //输入框上携带按天、月、年的查询模式
+	
+	$("#datetime").click(function(){
+		$('#datetime').datepicker({format: "yyyy-mm-dd",language: "zh-CN",startView:0, minViewMode: 0});
+		$("#datetime").datepicker("show");
 	});
-
+	
+	
 	/*
 		初始化提示框
 		在没有输入日期就点击查询按钮的情况下显示
-	 */
+	 
 	$("input[data-mask]").tooltip({
 		placement: "bottom",
 		title: "请输入日期，再点击查询按钮"
 	});
+	*/
 	Highcharts.setOptions({
 		global: {
 			useUTC: false
@@ -64,19 +45,16 @@ $(function() {
 				};
 			for (var i = 0, size = data.length; i < size; i++) {
 				var portips = data[i];
-
 				var date = new Date(portips.collecttime),
 					utcDate = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
 				discard.data.push([date.getTime(), parseFloat(portips.discardsperc)]);
 				error.data.push([date.getTime(), parseFloat(portips.errorsperc)]);
 			}
-
 			ratioPlot.addSeries(discard);
 			ratioPlot.addSeries(error);
 			ratioPlot.redraw();
 		},
 		loading: function() {
-
 			var series = ratioPlot.series;
 			while (series.length > 0) {
 				series[0].remove();
@@ -93,32 +71,29 @@ $(function() {
 	$("#dateForRatio").on("click", "button.query-btn", function(event) {
 		var $queryBtn = $(this);
 		var date = $(event.delegateTarget).children("input[data-mask]").val(),
-			dateMillisecond = new Date(date).getTime(),
-			viewMode = $(event.delegateTarget).find("input[data-mask]").attr("data-view-mode"),
-			type = viewMode == 0 ? "day" : (viewMode == 1 ? "month" : "year");
+		dateMillisecond = new Date(date).getTime(),
+		viewMode = $(event.delegateTarget).find("input[data-mask]").attr("data-view-mode"),
+		type = viewMode == 0 ? "day" : (viewMode == 1 ? "month" : "year");
 
 		//忘记输入日期，不能查询
 		if ("" == date.trim()) {
 			$(event.delegateTarget).find("input[data-mask]").tooltip("show");
 			return;
 		}
-
 		var selectedPortBtnList = $("#portList div.box-body dl button.btn-primary");
 
 		// 有端口按钮被选中
 		if (selectedPortBtnList.length > 0) {
-
 			var interfaceList = [];
 			selectedPortBtnList.each(function(index, element) {
 				var nodeId = $(element).attr("data-node-id"),
-					ifIndex = $(element).attr("data-if-index");
+				ifIndex = $(element).attr("data-if-index");
 
 				interfaceList.push({
 					nodeId: nodeId,
 					ifIndex: ifIndex
 				});
 			});
-
 
 			// 多个端口的丢、错数据
 			visualize({
@@ -130,7 +105,6 @@ $(function() {
 					"gatherInterfaceList": interfaceList
 				}),
 				plotOther: (function() {
-
 					ratioPlot.setTitle({
 						text: date + customerName + '的错误率、丢包率'
 					});
@@ -146,7 +120,6 @@ $(function() {
 				}]
 			});
 		} else {
-
 			visualize({
 				url: "query_customer_portips_list.action",
 				data: {
@@ -155,11 +128,9 @@ $(function() {
 					"customer.customerId": customerId
 				},
 				plotOther: (function() {
-
 					ratioPlot.setTitle({
 						text: date + customerName + '的错误率、丢包率'
 					});
-
 				})(),
 				render: ratioRender.render,
 				loading: [function(argument) {
@@ -171,7 +142,6 @@ $(function() {
 				}]
 			});
 		}
-
 	});
 
 	/*$("#dateForAlarm").on("click", "button.query-btn", function(event) {
@@ -360,14 +330,10 @@ $(function() {
 		},
 		success: function(data, textStatus, jqXHR) {
 			var ips = [];
-
 			//构造IP：端口列表 键值对;
 			for (var i = 0, size = data.length; i < size; i++) {
-
 				var port = data[i],
-					last = ips[ips.length > 0 ? ips.length - 1 : 0];
-
-
+				last = ips[ips.length > 0 ? ips.length - 1 : 0];
 				if (last && last.ip == port.nodeId) {
 					last.ports && last.ports.push(port);
 				} else { //第一个IP或者前一个IP和当前portIP不同
@@ -375,7 +341,6 @@ $(function() {
 						ip: port.nodeId,
 						ports: [port]
 					});
-
 				}
 			}
 			var tmpl = $("#portBtnTmpl").html(),
@@ -383,9 +348,7 @@ $(function() {
 					ips: ips
 				});
 			$("#portList div.box-body").append(result).on("click", "button", function(event) {
-
 				var clickedPort = $(this);
-
 				//当前点击的按钮变色，其它按钮置灰，目前同时只能查询一个端口
 				clickedPort.toggleClass("btn-default").toggleClass("btn-primary");
 			});
