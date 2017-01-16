@@ -171,9 +171,31 @@ $(function() {
         })
         //解绑此客户在设备上占用的端口
         .on("click", "button", function(event) {
+
+            var $unboundDevice = $(this);
+
+            $confirmModal.data('message', '确定要解绑当前客户在此设备上的所有端口?')
+                .find('button.ok').on('click', function(event) {
+
+                    /*
+                        删除附加的解绑客户的操作
+                     */
+                    $(this).off('click');
+                    $confirmModal.on('hidden.bs.modal', function(event) {
+
+                        $(this).off('hidden.bs.modal');
+                        $unboundDevice.trigger('unbound.device');
+                    }).modal('hide');
+                });
+
+            $confirmModal.modal('show');
+
+        }).on('unbound.device', 'button', function(event) {
+
             var ip = $(this).attr('data-ip'),
                 portCount = parseInt($(this).attr('data-port-count'));
 
+            var $box = $(this).parents('.box');
             $.ajax({
                     url: basePath + 'customer_config/unbound_device_interface_for_this_customer.action',
                     type: 'POST',
@@ -182,15 +204,14 @@ $(function() {
                         "host.ipAddress": ip,
                         "customer.customerId": customerId
                     },
+                    beforeSend:commonBeforeSend($box)
                 })
                 .done(function() {
                     location.reload();
                 })
                 .fail(commonFail)
-                .always(function() {
-                    console.log("complete");
-                });
-
+                .always($.proxy(commonAlways,$box));
+            event.preventDefault();
         });
 
     // 保存客户名
@@ -301,14 +322,14 @@ $(function() {
 
     // 所有设备IP
     $.ajax({
-            url: basePath+'customer_config/query_all_device_ip',
+            url: basePath + 'customer_config/query_all_device_ip',
             type: 'POST',
             dataType: 'json'
         })
         .done(function(data) {
-            var ips =[];
+            var ips = [];
 
-            for(i in data){
+            for (i in data) {
                 ips.push(data[i].ipAddress);
             }
 
@@ -322,6 +343,7 @@ $(function() {
         });
 
     var ips = ["183.203.0.47", "183.203.0.17"];
+
     function renderIpTemplate(data) {
         var template = $('#deviceIpTmpl').html(),
             result = ejs.render(template, {
@@ -354,7 +376,7 @@ $(function() {
                             ipAddress: ip
                         }]
                     }),
-                    beforeSend:commonBeforeSend($box)
+                    beforeSend: commonBeforeSend($box)
                 })
                 .done(function(data) {
 
@@ -388,7 +410,7 @@ $(function() {
                     $(".panel-list ul.pagination").html('<li class="disabled"><a href="#">上页</a></li><li class="disabled"><a href="#">下页</a></li>');
                 })
                 .fail(commonFail)
-                .always($.proxy(commonAlways,$box));
+                .always($.proxy(commonAlways, $box));
 
         } else {
             $ip.tooltip("show");
