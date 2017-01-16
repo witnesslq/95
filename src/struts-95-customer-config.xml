@@ -145,5 +145,14 @@
 			</result>
 			
 		</action>
+		
+		<action name="query_all_device_ip" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.TopoHostNodeAction">
+			<result type="json" name="success">
+				<param name="root">list</param>
+				<param name="includeProperties">
+					\[\d+\]\.ipAddress
+				</param>
+			</result>
+		</action>
 	</package>
 </struts>

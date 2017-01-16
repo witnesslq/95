@@ -39,7 +39,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				href="<%=basePath%>/node_modules/font-awesome/css/font-awesome.min.css">
 				<!-- Ionicons -->
 				<link rel="stylesheet"
-					href="<%=basePath%>/node_modules/ionicons/dist/css/ionicons.min.css">
+					href="<%=basePath%>/node_modules/ionicons/dist/css/ionicons.min.css"/>
+				<!-- select2 -->
+				<link rel="stylesheet" href="<%=basePath%>node_modules/admin-lte/plugins/select2/select2.css" />
 					<!-- Theme style -->
 					<link rel="stylesheet"
 						href="<%=basePath%>/node_modules/admin-lte/dist/css/AdminLTE.min.css">
@@ -157,7 +159,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 													<div class="col-md-4">
 														<div class="input-group">
 															<div class="input-group-addon">IP</div>
-															<input type="text" class="form-control" placeholder="例如：192.168.0.1"></input>
+															<select class="form-control ip">
+																<option value="">所有</option>
+
+															</select>
+															
 															<span class="input-group-btn">
 																<button type="button" class="btn btn-default" id="queryDeviceBtn">查询</button>
 															</span>
@@ -328,7 +334,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						}
 						  %>
 						</script>
-
+						<script type="x-ejs-template" id="deviceIpTmpl">
+							<\%
+							for(i in ips){
+								var ip = ips[i];
+							  %>
+							<option value="<\%=ip  %>"><\%=ip  %></option>
+							<\%
+							 }
+							  %>
+						</script>
 						<script type="x-ejs-template" id="unboundDeviceTmpl">
 							<button data-ip="<\%=host.host.ipAddress  %>" data-port-count="<\%=host.portCount  %>" class="btn btn-default btn-sm" type="button">下线</button>
 						</script>
@@ -342,7 +357,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<!-- DataTables -->
 						<script src="<%=basePath%>node_modules/admin-lte/plugins/datatables/jquery.dataTables.js"></script>
 						<script src="<%=basePath  %>/node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.js"></script>
-
+						
+						<!-- select2 -->
+						<script src="<%=basePath  %>node_modules/admin-lte/plugins/select2/select2.js"></script>
 						<!-- validator -->
 						<script src="<%=basePath  %>node_modules/validator/validator.js"></script>
 						<script src="<%=basePath  %>node_modules/ejs/ejs.js"></script>

@@ -18,4 +18,8 @@ public class TopoHostNodeDaoTest {
 		System.out.println(dao.queryAll());
 	}
 
+	@Test
+	public void testQueryAllWithOnlyIp(){
+		System.out.println(dao.queryAllWithOnlyIp());
+	}
 }
