@@ -64,22 +64,31 @@ $(function() {
     }
 
     function commonFail(jqXHR, textStatus, errorThrown) {
-                var message;
-                if (textStatus == "error") {
-                    if (jqXHR.status == 0) {
-                        message = "网络连接错误";
-                    } else if (jqXHR.status == 500) {
-                        message = "服务器内部错误";
-                    } else if (jqXHR.status === 404) {
-                        message = "URL地址出错";
-                    }
-                } else if (textStatus == "timeout") {
-                    message = "浏览器等待数据超时";
-                } else if (textStatus == "parsererror") {
-                    message = "数据解析异常";
-                }
+        var message = "";
+        if (textStatus == "error") {
+            if (jqXHR.status == 0) {
+                message = "网络连接错误";
+            } else if (jqXHR.status == 500) {
+                message = "服务器内部错误";
+            } else if (jqXHR.status === 404) {
+                message = "URL地址出错";
+            } else if (jqXHR.status == 400) {
+                message = "参数出错"
+            } else if (jqXHR.status == 422) {
 
-                $("#alertModal").data("message", message).modal("show");
+                // 业务上的错误信息
+                var errors = $.parseJSON(jqXHR.responseText);
+                for (i in errors) {
+                    message += errors[i];
+                }
+            }
+        } else if (textStatus == "timeout") {
+            message = "浏览器等待数据超时";
+        } else if (textStatus == "parsererror") {
+            message = "数据解析异常";
+        }
+
+        $("#alertModal").data("message", message).modal("show");
     }
     /*
         解绑客户占用的端口
@@ -95,14 +104,14 @@ $(function() {
                     删除附加的解绑客户的操作
                  */
                 $(this).off('click');
-                $confirmModal.on('hidden.bs.modal',function(event) {
+                $confirmModal.on('hidden.bs.modal', function(event) {
 
                     $(this).off('hidden.bs.modal');
-                   $unboundCustomer.triggerHandler('unbound.customer');
+                    $unboundCustomer.triggerHandler('unbound.customer');
                 }).modal('hide');
             });
 
-        $confirmModal.modal('show');        
+        $confirmModal.modal('show');
     }).on('unbound.customer', function(event) {
 
         var $customerBox = $(this).parents('.box');
@@ -162,9 +171,31 @@ $(function() {
         })
         //解绑此客户在设备上占用的端口
         .on("click", "button", function(event) {
+
+            var $unboundDevice = $(this);
+
+            $confirmModal.data('message', '确定要解绑当前客户在此设备上的所有端口?')
+                .find('button.ok').on('click', function(event) {
+
+                    /*
+                        删除附加的解绑客户的操作
+                     */
+                    $(this).off('click');
+                    $confirmModal.on('hidden.bs.modal', function(event) {
+
+                        $(this).off('hidden.bs.modal');
+                        $unboundDevice.trigger('unbound.device');
+                    }).modal('hide');
+                });
+
+            $confirmModal.modal('show');
+
+        }).on('unbound.device', 'button', function(event) {
+
             var ip = $(this).attr('data-ip'),
                 portCount = parseInt($(this).attr('data-port-count'));
 
+            var $box = $(this).parents('.box');
             $.ajax({
                     url: basePath + 'customer_config/unbound_device_interface_for_this_customer.action',
                     type: 'POST',
@@ -173,15 +204,14 @@ $(function() {
                         "host.ipAddress": ip,
                         "customer.customerId": customerId
                     },
+                    beforeSend:commonBeforeSend($box)
                 })
                 .done(function() {
                     location.reload();
                 })
                 .fail(commonFail)
-                .always(function() {
-                    console.log("complete");
-                });
-
+                .always($.proxy(commonAlways,$box));
+            event.preventDefault();
         });
 
     // 保存客户名
@@ -261,10 +291,10 @@ $(function() {
                     删除附加的删除客户的操作
                  */
                 $(this).off('click');
-                $confirmModal.on('hidden.bs.modal',function(event) {
+                $confirmModal.on('hidden.bs.modal', function(event) {
 
                     $(this).off('hidden.bs.modal');
-                   $deleteCustomer.triggerHandler('delete.customer');
+                    $deleteCustomer.triggerHandler('delete.customer');
                 }).modal('hide');
             });
 
@@ -284,15 +314,48 @@ $(function() {
             .done(function(data) {
 
                 //回到客户概况页面，不可回退
-                location.replace(basePath+"system/customer_config/customer_summary.jsp");
+                location.replace(basePath + "system/customer_config/customer_summary.jsp");
             })
             .fail(commonFail)
             .always($.proxy(commonAlways, $customerBox));
     });
 
+    // 所有设备IP
+    $.ajax({
+            url: basePath + 'customer_config/query_all_device_ip',
+            type: 'POST',
+            dataType: 'json'
+        })
+        .done(function(data) {
+            var ips = [];
+
+            for (i in data) {
+                ips.push(data[i].ipAddress);
+            }
+
+            renderIpTemplate(ips);
+        })
+        .fail(function() {
+            console.log("error");
+        })
+        .always(function() {
+            console.log("complete");
+        });
+
+    var ips = ["183.203.0.47", "183.203.0.17"];
+
+    function renderIpTemplate(data) {
+        var template = $('#deviceIpTmpl').html(),
+            result = ejs.render(template, {
+                ips: data
+            });
+
+        $('select.ip').append(result).select2();
+    }
+
     // 查询过滤出来所输入IP的设备Panel
     $("#queryDeviceBtn").click(function(event) {
-        var $ip = $(this).parents(".input-group").children('input'),
+        var $ip = $(this).parents(".input-group").children('select'),
             ip = $ip.val();
 
         if (ip === "") { //所有设备Panel
@@ -301,6 +364,8 @@ $(function() {
                 currentPageNumber: 0
             });
         } else if (validator.isIP(ip)) {
+
+            var $box = $(this).parents('.box');
             $.ajax({
                     url: basePath + 'customer_config/query_some_device_detail.action',
                     type: 'POST',
@@ -311,6 +376,7 @@ $(function() {
                             ipAddress: ip
                         }]
                     }),
+                    beforeSend: commonBeforeSend($box)
                 })
                 .done(function(data) {
 
@@ -343,12 +409,8 @@ $(function() {
 
                     $(".panel-list ul.pagination").html('<li class="disabled"><a href="#">上页</a></li><li class="disabled"><a href="#">下页</a></li>');
                 })
-                .fail(function() {
-                    console.log("error");
-                })
-                .always(function() {
-                    console.log("complete");
-                });
+                .fail(commonFail)
+                .always($.proxy(commonAlways, $box));
 
         } else {
             $ip.tooltip("show");
@@ -450,21 +512,24 @@ $(function() {
         var data = {
             "topoInterface.nodeId": ip,
             "topoInterface.ifIndex": portId,
-            "topoInterface.ifDesc": portName
+            "topoInterface.ifDesc": portName,
+            "topoInterface.customerId": currentCustomerId
         };
 
         if (!$button.hasClass('active')) {
-            url = basePath + 'customer_config/bound_port.action',
-                data["topoInterface.customerId"] = currentCustomerId;
+            url = basePath + 'customer_config/bound_port.action';
+
 
             increment = 1;
         }
 
+        var $box = $(this).parents('.box');
         $.ajax({
                 url: url,
                 type: 'POST',
                 dataType: 'json',
-                data: data
+                data: data,
+                beforeSend: commonBeforeSend($box)
             })
             .done(function(data) {
                 $button.toggleClass('active');
@@ -478,12 +543,8 @@ $(function() {
 
                 $(".port-count-label").trigger('render.bs.label', increment);
             })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-                console.log("error");
-            })
-            .always(function() {
-                console.log("complete");
-            });
+            .fail(commonFail)
+            .always($.proxy(commonAlways, $box));
 
     }).on("render.bs.collapse", function(event) {
         var devices = $(this).data('deviceDetail'),

@@ -1,5 +1,6 @@
 package com.dhcc.bussiness.sxydidc.quality.dao;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -27,7 +28,27 @@ private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 			transaction.rollback();
 			e.printStackTrace();
 		}
-		return null;
+		return Collections.EMPTY_LIST;
 	
+	}
+	
+	/*
+	 * 所有设备的IP
+	 */
+	public List<TopoHostNode> queryAllWithOnlyIp(){
+
+
+		Session session = sessionFactory.getCurrentSession();
+		Transaction transaction = session.beginTransaction();
+		try{
+			Query query = session.createQuery("select new TopoHostNode(t.ipAddress) from TopoHostNode t");
+			List<TopoHostNode> list = query.list();
+			transaction.commit();
+			return list;
+		}catch(HibernateException e){
+			transaction.rollback();
+			e.printStackTrace();
+		}
+		return Collections.EMPTY_LIST;
 	}
 }
