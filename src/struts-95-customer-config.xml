@@ -87,8 +87,24 @@
 			</result>
 		</action>
 		
-		<!-- 分页设备 -->
-		<action name="query_paging_device_detail" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.DeviceDetailAction" method="queryPagingDeviceDetail">
+		<!-- 未设备 -->
+		<action name="query_unbound_device_detail" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.GetUnboundedDeviceDetailAction" method="queryPagingDeviceDetail">
+			<result name="success" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					\.list.*,
+				 	\.currentPageNumber,
+					\.totalCount,
+					\.countPerPage,
+					\.currentPageStart,
+					\.currentPageEnd,
+					\.totalPageCount
+				</param>
+			</result>
+		</action>
+		
+		<!-- 已经绑定设备 -->
+		<action name="query_bound_device_detail" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.GetBoundedDeviceDetailAction">
 			<result name="success" type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
@@ -104,7 +120,7 @@
 		</action>
 		
 		<!-- 某几个设备的端口占用详情 -->
-		<action name="query_some_device_detail" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.DeviceDetailAction" method="querySomeDeviceDetail">
+		<action name="query_some_device_detail" class="com.dhcc.bussiness.sxydidc.customer95.config.actions.GetSomeDeviceInterfaceAction">
 			<interceptor-ref name="jsonStack"></interceptor-ref>
 			<result name="success" type="json">
 				<param name="root">list</param>

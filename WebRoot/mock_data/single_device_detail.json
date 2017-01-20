@@ -1,0 +1,9 @@
+[{
+    "ip": "183.203.0.17",
+    "ports": [{
+        "name": "GE 0/1/1",
+        "status": "up",
+        "customerId": null,
+        "speed": "1000MB"
+    }]
+}]

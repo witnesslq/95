@@ -7,21 +7,21 @@ import org.junit.Test;
 
 import com.dhcc.bussiness.sxydidc.alarm.actions.PaginationData;
 import com.dhcc.bussiness.sxydidc.customer95.config.models.DeviceDetail;
+import com.dhcc.bussiness.sxydidc.quality.models.TopoHostNode;
 
-public class DeviceInterfaceServiceTest {
+public class BoundedDeviceInterfaceServiceTest {
 
-	static DeviceInterfaceService service;
+	static DeviceInterfaceServiceSupport service;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		service = new DeviceInterfaceService();
+		service = new BoundedDeviceInterfaceService();
 	}
 
-
 	@Test
-	public void testPagingList() {
-		PaginationData<DeviceDetail> data = new PaginationData(1, 5);
-		service.paging(data);
-		System.out.println(data);
+	public void testQueryBy() {
+		TopoHostNode host = new TopoHostNode();
+		host.setIpAddress("183.203.0.111");
+		System.out.println(service.queryBy(host));
 	}
 
 }

@@ -13,14 +13,62 @@ public class DeviceInterface implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "DeviceInterface [id=" + id + ", nodeId=" + nodeId
-				+ ", ifIndex=" + ifIndex + ", ifDesc=" + ifDesc + "]";
+				+ ", ifIndex=" + ifIndex + ", ifDesc=" + ifDesc + ", ifSpeed="
+				+ ifSpeed + ", ifStatus=" + ifStatus + ", ifDescr=" + ifDescr
+				+ "]";
 	}
 
 	private long id;
+	/**
+	 * @return the ifSpeed
+	 */
+	public String getIfSpeed() {
+		return ifSpeed;
+	}
+
+	/**
+	 * @param ifSpeed the ifSpeed to set
+	 */
+	public void setIfSpeed(String ifSpeed) {
+		this.ifSpeed = ifSpeed;
+	}
+
+	/**
+	 * @return the ifStatus
+	 */
+	public String getIfStatus() {
+		return ifStatus;
+	}
+
+	/**
+	 * @param ifStatus the ifStatus to set
+	 */
+	public void setIfStatus(String ifStatus) {
+		this.ifStatus = ifStatus;
+	}
+
+	/**
+	 * @return the ifDescr
+	 */
+	public String getIfDescr() {
+		return ifDescr;
+	}
+
+	/**
+	 * @param ifDescr the ifDescr to set
+	 */
+	public void setIfDescr(String ifDescr) {
+		this.ifDescr = ifDescr;
+	}
+
 	private String nodeId;
 	private String ifIndex;
 	private String ifDesc;
-
+	
+	private String ifSpeed;
+	private String ifStatus;
+	private String ifDescr;
+	
 	public DeviceInterface() {
 	}
 

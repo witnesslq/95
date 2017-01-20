@@ -9,10 +9,10 @@ import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
  * 设备端口占用的详细情况，包括哪些端口被哪个客户占用、哪些端口不被占用
  * 不被占用的端口，它的客户ID是null
  */
-public class DeviceDetail {
+public class DeviceDetail<DeviceInterfaceType> {
 
 	private TopoHostNode device;
-	private Set<TopoInterface> interfaces;
+	private Set<DeviceInterfaceType> interfaces;
 	/**
 	 * @return the device
 	 */
@@ -36,7 +36,7 @@ public class DeviceDetail {
 	 * @param device
 	 * @param interfaces
 	 */
-	public DeviceDetail(TopoHostNode device, Set<TopoInterface> interfaces) {
+	public DeviceDetail(TopoHostNode device, Set<DeviceInterfaceType> interfaces) {
 		super();
 		this.device = device;
 		this.interfaces = interfaces;
@@ -44,13 +44,13 @@ public class DeviceDetail {
 	/**
 	 * @return the interfaces
 	 */
-	public Set<TopoInterface> getInterfaces() {
+	public Set<DeviceInterfaceType> getInterfaces() {
 		return interfaces;
 	}
 	/**
 	 * @param interfaces the interfaces to set
 	 */
-	public void setInterfaces(Set<TopoInterface> interfaces) {
+	public void setInterfaces(Set<DeviceInterfaceType> interfaces) {
 		this.interfaces = interfaces;
 	}
 	/* (non-Javadoc)

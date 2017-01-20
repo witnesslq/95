@@ -6,10 +6,11 @@
 	<package name="quality" extends="json-default">
 <interceptors>
     <interceptor-stack name="jsonStack">
-    	<interceptor-ref name="defaultStack"></interceptor-ref>
-        <interceptor-ref name="json">
+    	<interceptor-ref name="json">
             <param name="enableSMD">true</param>
         </interceptor-ref>
+    	<interceptor-ref name="defaultStack"></interceptor-ref>
+        
     </interceptor-stack>
 </interceptors>
 

@@ -1,0 +1,26 @@
+{
+    "currentPageStart": 0,
+    "currentPageEnd": 10,
+    "totalCount": 80,
+    "totalPageCount": 8,
+    "currentPageNumber": 1,
+    "devices": [{
+        "ip": "183.203.0.17",
+        "ports": [{
+            "id":"123",
+           "name": "GE 0/1/1",
+            "status": "up",
+            "customerId": "01856576-e896-45f3-b7a2-8daab05c823b",
+            "speed": "1000MB"
+        }]
+    },{
+        "ip": "183.203.0.27",
+        "ports": [{
+            "id":"232",
+           "name": "GE 0/1/1",
+            "status": "up",
+            "customerId": null,
+            "speed": "1000MB"
+        }]
+    }]
+}

@@ -45,6 +45,6 @@
     	
     	<!--客户配置 -->
     	<mapping resource="com/dhcc/bussiness/sxydidc/customer95/config/resources/DeviceInterface.hbm.xml" />
-   		
+   		<mapping resource="com/dhcc/bussiness/sxydidc/customer95/config/resources/InterfaceDetail.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

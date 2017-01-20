@@ -1,47 +1,35 @@
 $(function() {
 
-    // 添加客户
-    $.ajax({
-            url: basePath + 'customer_config/query_all_device_summary.action',
-            type: 'POST',
-            dataType: 'json',
-            data: { "customer.customerId": customerId },
-            beforeSend: function(jqXHR, settings) {
-                var tmpl = $("#overlayTmpl").html(),
-                    result = ejs.render(tmpl);
-                $("#customerBox").append(result);
-            }
-        })
-        .done(function(data) {
-            $("#deviceSummaryTable").data("deviceSummary", data).triggerHandler("dataTables.render");
-        })
-        .fail(function() {
-            console.log("error");
-        })
-        .always(function() {
-            $("#customerBox").children(".overlay").remove();
-        });
+    function Customer(opts) {
+        $.extend(this, {
+            customerId: "",
+            customerName: ""
+        }, opts);
 
-    getCustomerSummary();
-    // 客户的端口占用数量
-    function getCustomerSummary() {
-        $.ajax({
-                url: basePath + 'customer_config/query_customer_summary_for_this_customer.action',
-                type: 'POST',
-                dataType: 'json',
-                data: { "customer.customerId": customerId }
-            })
-            .done(function(data) {
-                $(".port-count-label").text(data.portCount);
-            })
-            .fail(function() {
-                console.log("error");
-            })
-            .always(function() {
-                console.log("complete");
-            });
     }
 
+    Customer.prototype.getCustomerSummary = function() {
+        if (!!this.customerId) {
+            $.ajax({
+                    url: basePath + 'customer_config/query_customer_summary_for_this_customer.action',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { "customer.customerId": customerId }
+                })
+                .done(function(data) {
+                    $(".port-count-label").text(data.portCount);
+                })
+                .fail(commonFail)
+                .always(function() {
+                    console.log("complete");
+                });
+        }
+    };
+
+    var customer = new Customer({
+        customerId: customerId
+    });
+    customer.getCustomerSummary();
     /*
         通用的ajax发送之前
         将操作组件所在的box加上loading遮罩
@@ -132,88 +120,6 @@ $(function() {
             .always($.proxy(commonAlways, $customerBox));
     });
 
-    $("#deviceSummaryTable").on("dataTables.render", function(event) {
-
-            var template = $("#unboundDeviceTmpl").html();
-
-            $(this).DataTable({
-                processing: true,
-                serverSide: false,
-                data: $(this).data("deviceSummary"),
-
-                autoWidth: false,
-                "language": {
-                    "url": basePath + "/lang/dataTables.chinese.lang"
-                },
-                columns: [{
-                    data: null,
-                    title: "序号",
-                    render: function(data, type, row, meta) {
-                        return meta.row + 1;
-                    }
-                }, {
-                    data: "host.ipAddress",
-                    title: "IP"
-                }, {
-                    data: "portCount",
-                    title: "当前用户所占端口数"
-                }, {
-                    data: null,
-                    title: "操作",
-                    render: function(data, type, row, meta) {
-
-                        return ejs.render(template, {
-                            host: row
-                        });
-                    }
-                }]
-            });
-        })
-        //解绑此客户在设备上占用的端口
-        .on("click", "button", function(event) {
-
-            var $unboundDevice = $(this);
-
-            $confirmModal.data('message', '确定要解绑当前客户在此设备上的所有端口?')
-                .find('button.ok').on('click', function(event) {
-
-                    /*
-                        删除附加的解绑客户的操作
-                     */
-                    $(this).off('click');
-                    $confirmModal.on('hidden.bs.modal', function(event) {
-
-                        $(this).off('hidden.bs.modal');
-                        $unboundDevice.trigger('unbound.device');
-                    }).modal('hide');
-                });
-
-            $confirmModal.modal('show');
-
-        }).on('unbound.device', 'button', function(event) {
-
-            var ip = $(this).attr('data-ip'),
-                portCount = parseInt($(this).attr('data-port-count'));
-
-            var $box = $(this).parents('.box');
-            $.ajax({
-                    url: basePath + 'customer_config/unbound_device_interface_for_this_customer.action',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        "host.ipAddress": ip,
-                        "customer.customerId": customerId
-                    },
-                    beforeSend:commonBeforeSend($box)
-                })
-                .done(function() {
-                    location.reload();
-                })
-                .fail(commonFail)
-                .always($.proxy(commonAlways,$box));
-            event.preventDefault();
-        });
-
     // 保存客户名
     $("#saveCustomer").click(function(event) {
         var $customerBtn = $(this),
@@ -264,7 +170,7 @@ $(function() {
         placement: "bottom",
         trigger: "manual",
         title: function() {
-            return "用户名不能空"
+            return "用户名不能空";
         }
     }).focus(function(event) {
         $(this).tooltip("hide");
@@ -322,14 +228,14 @@ $(function() {
 
     // 所有设备IP
     $.ajax({
-            url: basePath + 'customer_config/query_all_device_ip',
+            url: basePath + 'customer_config/query_all_device_ip.action',
             type: 'POST',
             dataType: 'json'
         })
         .done(function(data) {
             var ips = [];
 
-            for (i in data) {
+            for (var i in data) {
                 ips.push(data[i].ipAddress);
             }
 
@@ -341,8 +247,6 @@ $(function() {
         .always(function() {
             console.log("complete");
         });
-
-    var ips = ["183.203.0.47", "183.203.0.17"];
 
     function renderIpTemplate(data) {
         var template = $('#deviceIpTmpl').html(),
@@ -359,7 +263,7 @@ $(function() {
             ip = $ip.val();
 
         if (ip === "") { //所有设备Panel
-            getPagingDeviceDetail({
+            deviceAccordion.getPagingDeviceDetail({
                 countPerPage: 10,
                 currentPageNumber: 0
             });
@@ -387,25 +291,29 @@ $(function() {
                             interfaces = device.interfaces,
                             ports = [];
 
-                        for (var j = 0, jSize = interfaces.length; j < jSize; j++) {
-                            var interf = interfaces[j];
-
+                        for (var j in interfaces) {
+                            var inf = interfaces[j];
                             ports.push({
-                                id: interf.ifIndex,
-                                name: interf.ifDesc,
-                                customerId: interf.customerId
+                                "id": inf.ifIndex,
+                                "name": inf.ifDesc,
+                                "status": inf.ifStatus,
+                                "customerId": inf.customerId,
+                                "speed": inf.ifSpeed
                             });
                         }
+
                         devices.push({
                             ip: device.device.ipAddress,
                             ports: ports
                         });
+
                     }
 
-                    $("#deviceAccordion").data("deviceDetail", devices).triggerHandler("render.bs.collapse");
+                    data = devices;
+                    $("#deviceAccordion").data("deviceDetail", data).triggerHandler("render.bs.accordion");
 
 
-                    $("#info").text('');
+                    $(".info").text('');
 
                     $(".panel-list ul.pagination").html('<li class="disabled"><a href="#">上页</a></li><li class="disabled"><a href="#">下页</a></li>');
                 })
@@ -419,183 +327,277 @@ $(function() {
         placement: "bottom",
         trigger: "manual",
         title: function() {
-            return "请输入合法的IP"
+            return "请输入合法的IP";
         }
     }).focus(function(event) {
         $(this).tooltip("hide");
     });
 
-    getPagingDeviceDetail({
-        countPerPage: 10,
-        currentPageNumber: 0
-    });
+    var Accordion = (function(argument) {
 
-    function getPagingDeviceDetail(data) {
-        /*
-        获取设备
-     */
-        $.ajax({
-                url: basePath + 'customer_config/query_paging_device_detail.action',
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-                beforeSend: function(jqXHR, settings) {
-                    var tmpl = $("#overlayTmpl").html(),
-                        result = ejs.render(tmpl);
-                    $("#deviceBox").append(result);
-                }
-            })
-            .done(function(data, textStatus, jqXHR) {
-
-                if (data && data.totalCount > 0) {
-
-                    //格式化数据
-                    var devices = [];
-                    for (var i = 0, list = data.list, size = list.length; i < size; i++) {
-                        var device = list[i],
-                            interfaces = device.interfaces,
-                            ports = [];
-
-                        for (var j = 0, jSize = interfaces.length; j < jSize; j++) {
-                            var interf = interfaces[j];
-
-                            ports.push({
-                                id: interf.ifIndex,
-                                name: interf.ifDesc,
-                                customerId: interf.customerId
-                            });
-                        }
-                        devices.push({
-                            ip: device.device.ipAddress,
-                            ports: ports
-                        });
-                    }
-
-                    $("#info").triggerHandler("render.bs.info", {
-                        currentPageStart: data.currentPageStart,
-                        currentPageEnd: data.currentPageEnd,
-                        totalCount: data.totalCount
-                    });
-
-                    $(".panel-list ul.pagination").triggerHandler('render.bs.pagination', {
-                        totalPageCount: data.totalPageCount,
-                        currentPageNumber: data.currentPageNumber
-                    });
-
-                    $("#deviceAccordion").data("deviceDetail", devices)
-                        .triggerHandler("render.bs.collapse");
-                }
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-                console.log("error");
-            })
-            .always(function(jqXHR, textStatus) {
-                $("#deviceBox").children(".overlay").remove();
+        // 渲染accordion分页组件
+        function renderAccordionPagingComponent(data) {
+            $(this.id).parents(".accordion").find(".panel-list ul.pagination").triggerHandler('render.bs.pagination', {
+                totalPageCount: data.totalPageCount,
+                currentPageNumber: data.currentPageNumber
             });
-    }
-
-
-    /*
-        所有设备的端口点击处理
-     */
-    $("#deviceAccordion").on("click", "button", function(event) {
-
-        if (!!!customerId) return;
-        var url = basePath + 'customer_config/unbound_port.action',
-            currentCustomerId = customerId,
-            $button = $(this),
-            ip = $button.parent().attr("data-ip").trim(),
-            portId = $button.attr("data-port-id"),
-            portName = $button.text().trim(),
-            increment = -1;
-
-        var data = {
-            "topoInterface.nodeId": ip,
-            "topoInterface.ifIndex": portId,
-            "topoInterface.ifDesc": portName,
-            "topoInterface.customerId": currentCustomerId
-        };
-
-        if (!$button.hasClass('active')) {
-            url = basePath + 'customer_config/bound_port.action';
-
-
-            increment = 1;
         }
 
-        var $box = $(this).parents('.box');
-        $.ajax({
-                url: url,
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-                beforeSend: commonBeforeSend($box)
-            })
-            .done(function(data) {
-                $button.toggleClass('active');
-                var counts = $('a[href="#ip_' + ip.replace(/\./g, "_") + '"]').next().children('i');
+        // 渲染accordion分页信息
+        function renderAccordionPagingInfo(data) {
+            $(this.id).parents(".accordion").find(".info").triggerHandler("render.bs.info", {
+                currentPageStart: data.currentPageStart,
+                currentPageEnd: data.currentPageEnd,
+                totalCount: data.totalCount
+            });
+        }
 
-                counts.each(function(index, el) {
+        var Accordion = function(opts) {
+            $.extend(this, {
+                countPerPage: 10,
+                currentPageNumber: 0
+            }, opts);
 
-                    var $el = $(el);
-                    $el.text(parseInt($el.text()) + increment);
+            var that = this;
+            this.$collapse = $(this.id);
+            this.$accordion = this.$collapse.parents(".accordion");
+            /*
+                所有设备的端口点击处理
+            */
+            this.$collapse.on("click", "button.toggle-bound-port", function(event) {
+
+                    if (!!!customerId) return;
+                    var url = basePath + 'customer_config/unbound_port.action',
+                        currentCustomerId = customerId,
+                        $toggleBoundBtn = $(this),
+                        ip = $toggleBoundBtn.parents('div[data-ip]').attr("data-ip").trim(),
+                        portId = $toggleBoundBtn.attr("data-port-id"),
+                        portName = $toggleBoundBtn.attr("data-port-name");
+
+                    var data = {
+                        "topoInterface.nodeId": ip,
+                        "topoInterface.ifIndex": portId,
+                        "topoInterface.ifDesc": portName,
+                        "topoInterface.customerId": currentCustomerId
+                    };
+
+
+                    if (!$toggleBoundBtn.hasClass('active')) {
+                        url = basePath + 'customer_config/bound_port.action';
+                    }
+
+                    var $box = $(this).parents('.box');
+                    $.ajax({
+                            url: url,
+                            type: 'POST',
+                            dataType: 'json',
+                            data: data,
+                            beforeSend: commonBeforeSend($box)
+                        })
+                        .done(function(data) {
+                            if ($toggleBoundBtn.hasClass('active'))
+                                $toggleBoundBtn.text('上线');
+                            else
+                                $toggleBoundBtn.text('下线');
+
+                            $toggleBoundBtn.toggleClass('active');
+                        })
+                        .fail(commonFail)
+                        .always($.proxy(commonAlways, $box));
+
+                }).on("render.bs.accordion", function(event) {
+                    var $accordion = $(this),
+                        devices = $accordion.data('deviceDetail'),
+                        template = $("#deviceTmpl").html(),
+                        result = ejs.render(template, {
+                            devices: devices,
+                            customerId: customerId,
+                            accordionId: $accordion.attr("id"),
+                            bounded: $accordion.attr("data-bounded")
+                        });
+
+                    $accordion.html(result);
+
+                    /*$deviceAccordion.find('table.table').DataTable({
+                        "language": {
+                                "url": basePath + "/lang/dataTables.chinese.lang"
+                        }
+                    });*/
+                })
+                //解绑此客户在设备上占用的端口
+                .on("click", "button.unbound-device", function(event) {
+
+                    var $unboundDevice = $(this);
+
+                    $confirmModal.data('message', '确定要解绑当前客户在此设备上的所有端口?')
+                        .find('button.ok').on('click', function(event) {
+
+                            /*
+                                删除附加的解绑客户的操作
+                             */
+                            $(this).off('click');
+                            $confirmModal.on('hidden.bs.modal', function(event) {
+
+                                $(this).off('hidden.bs.modal');
+                                $unboundDevice.trigger('unbound.device');
+                            }).modal('hide');
+                        });
+
+                    $confirmModal.modal('show');
+
+                }).on('unbound.device', 'button', function(event) {
+
+                    var ip = $(this).attr('data-ip'),
+                        portCount = parseInt($(this).attr('data-port-count'));
+
+                    var $box = $(this).parents('.box');
+                    $.ajax({
+                            url: basePath + 'customer_config/unbound_device_interface_for_this_customer.action',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                "host.ipAddress": ip,
+                                "customer.customerId": customerId
+                            },
+                            beforeSend: commonBeforeSend($box)
+                        })
+                        .done(function() {
+                            location.reload();
+                        })
+                        .fail(commonFail)
+                        .always($.proxy(commonAlways, $box));
+                    event.preventDefault();
                 });
+            // 设备Panel分页
+            this.$accordion.find(".panel-list ul.pagination").on("click", "li", function(event) {
 
-                $(".port-count-label").trigger('render.bs.label', increment);
-            })
-            .fail(commonFail)
-            .always($.proxy(commonAlways, $box));
+                var currentPageNumber = $(this).attr("data-page");
 
-    }).on("render.bs.collapse", function(event) {
-        var devices = $(this).data('deviceDetail'),
-            template = $("#deviceTmpl").html(),
-            result = ejs.render(template, {
-                devices: devices,
-                customerId: customerId
+                if (isNaN(parseInt(currentPageNumber))) {
+
+                    if (currentPageNumber === 'prev') {
+                        currentPageNumber = parseInt($(event.delegateTarget).children('li.active').attr("data-page"));
+                        currentPageNumber = currentPageNumber - 1 < 1 ? 1 : (currentPageNumber - 1);
+                    } else {
+                        currentPageNumber = parseInt($(event.delegateTarget).children('li.active').attr("data-page"));
+                        var totalPageCount = parseInt($(this).prev().attr("data-page"));
+                        currentPageNumber = currentPageNumber + 1 > totalPageCount ? totalPageCount : (currentPageNumber + 1);
+                    }
+                }
+
+                currentPageNumber = parseInt(currentPageNumber);
+                currentPageNumber -= 1;
+
+                that.getPagingDeviceDetail({
+                    countPerPage: 10,
+                    currentPageNumber: currentPageNumber
+                });
+            }).on("render.bs.pagination", function(event, data) {
+                var template = $("#devicePaginationTmpl").html(),
+                    result = ejs.render(template, data);
+
+                $(this).html(result);
             });
 
-        $(this).html(result);
+            this.$accordion.find(".info").on("render.bs.info", function(event, data) {
+                data.currentPageEnd = data.currentPageEnd < data.totalCount ? data.currentPageEnd : data.totalCount;
+                $(this).text('显示第' + (data.currentPageStart + 1) + '至第' + data.currentPageEnd + '项结果，共' + data.totalCount + '项');
+            });
+        };
+
+        // 渲染accordion
+        Accordion.prototype.render = function(devices) {
+
+            this.$collapse.data("deviceDetail", devices)
+                .triggerHandler("render.bs.accordion");
+        };
+
+        Accordion.prototype.getPagingDeviceDetail = function(opts) {
+            var accordion = this,
+                $box = this.$collapse.parents(".box");
+
+            var data = {
+                "customer.customerId": customerId
+            };
+            $.extend(data, {
+                countPerPage: 10,
+                currentPageNumber: 0
+            }, opts);
+            /*
+                获取设备
+            */
+            $.ajax({
+                    url: this.url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: data,
+                    beforeSend: function(jqXHR, settings) {
+                        var tmpl = $("#overlayTmpl").html(),
+                            result = ejs.render(tmpl);
+                        $box.append(result);
+                    }
+                })
+                .done(function(data, textStatus, jqXHR) {
+
+                    if (data && data.totalCount > 0) {
+
+                        //格式化数据
+                        var devices = [];
+                        for (var i = 0, list = data.list, size = list.length; i < size; i++) {
+                            var device = list[i],
+                                interfaces = device.interfaces,
+                                ports = [];
+
+                            for (var j in interfaces) {
+                                var inf = interfaces[j];
+                                ports.push({
+                                    "id": inf.ifIndex,
+                                    "name": inf.ifDesc,
+                                    "status": inf.ifStatus,
+                                    "customerId": inf.customerId,
+                                    "speed": inf.ifSpeed
+                                });
+                            }
+
+                            devices.push({
+                                ip: device.device.ipAddress,
+                                ports: ports
+                            });
+
+                        }
+                        data.devices = devices;
+                        renderAccordionPagingInfo.call(accordion, data);
+                        renderAccordionPagingComponent.call(accordion, data);
+
+                        accordion.render(data.devices);
+                    }
+                })
+                .fail(commonFail)
+                .always($.proxy(commonAlways, $box));
+        };
+
+        return Accordion;
+    })();
+
+
+    var deviceAccordion = new Accordion({
+        id: "#deviceAccordion",
+        url: basePath + 'customer_config/query_unbound_device_detail.action'
     });
+
+    deviceAccordion.getPagingDeviceDetail();
+
+    var boundAccordion = new Accordion({
+        id: "#boundAccordion",
+        url: basePath + 'customer_config/query_bound_device_detail.action'
+    });
+
+    boundAccordion.getPagingDeviceDetail();
+
 
     $(".port-count-label").on("render.bs.label", function(event, increment) {
         var $this = $(this);
         $this.text(parseInt($this.text()) + increment);
-    });
-
-    // 设备Panel分页
-    $(".panel-list ul.pagination").on("click", "li", function(event) {
-
-        var currentPageNumber = $(this).attr("data-page");
-
-        if (isNaN(parseInt(currentPageNumber))) {
-
-            if (currentPageNumber === 'prev') {
-                currentPageNumber = parseInt($(event.delegateTarget).children('li.active').attr("data-page"));
-                currentPageNumber = currentPageNumber - 1 < 1 ? 1 : (currentPageNumber - 1);
-            } else {
-                currentPageNumber = parseInt($(event.delegateTarget).children('li.active').attr("data-page"));
-                var totalPageCount = parseInt($(this).prev().attr("data-page"));
-                currentPageNumber = currentPageNumber + 1 > totalPageCount ? totalPageCount : (currentPageNumber + 1);
-            }
-        }
-
-        currentPageNumber = parseInt(currentPageNumber);
-        currentPageNumber -= 1;
-
-        getPagingDeviceDetail({
-            countPerPage: 10,
-            currentPageNumber: currentPageNumber
-        });
-    }).on("render.bs.pagination", function(event, data) {
-        var template = $("#devicePaginationTmpl").html(),
-            result = ejs.render(template, data);
-
-        $(this).html(result);
-    });
-
-    $("#info").on("render.bs.info", function(event, data) {
-        data.currentPageEnd = data.currentPageEnd < data.totalCount ? data.currentPageEnd : data.totalCount;
-        $(this).text('显示第' + (data.currentPageStart + 1) + '至第' + data.currentPageEnd + '项结果，共' + data.totalCount + '项');
     });
 
     /*

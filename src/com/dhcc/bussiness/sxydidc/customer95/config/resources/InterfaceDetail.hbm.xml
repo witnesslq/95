@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 2016-12-23 13:03:10 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="com.dhcc.bussiness.sxydidc.customer95.config.models.DeviceInterface" table="DEVICE_INTERFACE" schema="" optimistic-lock="version">
+    <class name="com.dhcc.bussiness.sxydidc.customer95.config.models.InterfaceDetail" optimistic-lock="version">
         <id name="id" type="long">
             <column name="ID" precision="10" scale="0" />
             <generator class="assigned" />
@@ -26,6 +26,14 @@
         <property name="ifDescr" type="string">
             <column name="IF_DESCR" length="50" />
         </property>
-        
+        <property name="customerId" type="string">
+            <column name="CUSTOMER_ID" length="50" />
+        </property>
+        <property name="startTime" type="string">
+            <column name="STARTTIME" />
+        </property>
+        <property name="endTime" type="string">
+            <column name="ENDTIME" />
+        </property>
     </class>
 </hibernate-mapping>
