@@ -2,27 +2,49 @@ $(function() {
 	
 	/*
 		按天，月，年查询的掩码日期控件
-	 */
+	 
 	$("input[data-mask]").inputmask("yyyy-mm-dd", {
 		"placeholder": "yyyy-mm-dd",
 		"clearIncomplete": true
 	});
+	*/
 	
+	/*
+	 *日期控件 
+	 */
 	$("#datetime").click(function(){
-		$('#datetime').datepicker({format: "yyyy-mm-dd",language: "zh-CN",startView:0, minViewMode: 0});
+		$('#datetime').datepicker({
+			format: "yyyy-mm-dd",
+			language: "zh-CN",
+			todayHighlight: true,// 默认今天的日期
+			autoclose: true,//选中之后自动隐藏日期选择框
+		});
 		$("#datetime").datepicker("show");
+	});
+	/*
+	 * 输入框获取焦点 隐藏提示
+	 */
+	$("#datetime").focus(function(){
+		$("input[data-mask]").tooltip("hide");
 	});
 	
 	
 	/*
 		初始化提示框
 		在没有输入日期就点击查询按钮的情况下显示
-	 
+	 */
 	$("input[data-mask]").tooltip({
 		placement: "bottom",
 		title: "请输入日期，再点击查询按钮"
 	});
-	*/
+	
+	/*
+	 * 鼠标经过input关闭提示
+	 */
+	$("#datetime").mouseover(function(){
+		$("input[data-mask]").tooltip("hide");
+	});
+	
 	Highcharts.setOptions({
 		global: {
 			useUTC: false
@@ -74,14 +96,15 @@ $(function() {
 		dateMillisecond = new Date(date).getTime(),
 		viewMode = $(event.delegateTarget).find("input[data-mask]").attr("data-view-mode"),
 		type = viewMode == 0 ? "day" : (viewMode == 1 ? "month" : "year");
-
+		
 		//忘记输入日期，不能查询
 		if ("" == date.trim()) {
 			$(event.delegateTarget).find("input[data-mask]").tooltip("show");
 			return;
 		}
+		
 		var selectedPortBtnList = $("#portList div.box-body dl button.btn-primary");
-
+		
 		// 有端口按钮被选中
 		if (selectedPortBtnList.length > 0) {
 			var interfaceList = [];
