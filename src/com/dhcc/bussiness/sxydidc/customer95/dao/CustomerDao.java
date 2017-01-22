@@ -135,9 +135,9 @@ public class CustomerDao {
 				Session session = sessionFactory.getCurrentSession();
 				Transaction transaction = session.beginTransaction();
 				try{
-					Query query = session.createSQLQuery("select customer_id,customer_name,0 as port_count from customer c where not exists (select * from (select customer_id from topo_interface natural join customer ) where c.customer_id =customer_id )"
+					Query query = session.createSQLQuery("select customer_id,customer_name,0 as port_count from customer c where not exists (select * from (select customer_id from topo_interface natural join customer where endTime is null) where c.customer_id =customer_id )"
 							+ " union all "
-							+ "select customer_id,customer_name,count(*) as port_count from topo_interface natural join customer group by customer_id,customer_name" );
+							+ "select customer_id,customer_name,count(*) as port_count from topo_interface natural join customer where endTime is null group by customer_id,customer_name" );
 					
 					List<Object[]> resultList = query.list();
 					List<CustomerSummary> list = new ArrayList<CustomerSummary>();

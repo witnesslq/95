@@ -15,6 +15,7 @@ import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.customer95.models.ProductIp;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
+import com.dhcc.bussiness.sxydidc.quality.services.DateRange;
 
 public class TopoInterfaceDao {
 
@@ -94,12 +95,19 @@ public class TopoInterfaceDao {
 	 * 由于
 	 * 多个客户IP会对应到一个vlan口上，目前从采集口视角来可视化丢包率、错包率
 	 */
-	public List<TopoInterface> queryGatherInterfaceListFor(Customer customer){
+	public List<TopoInterface> queryGatherInterfaceListFor(Customer customer, DateRange dateRange){
 		Session session = sessionFactory.getCurrentSession();
 		Transaction transaction = session.beginTransaction();
 		try{
-			Query query = session.createQuery("from  TopoInterface where customerId=:customerId order by nodeId");			
+			Query query = session.createSQLQuery("select * from (select * from Topo_Interface where   customer_Id=:customerId) t where "
+					+ "  (endTime is null and to_date(startTime,'yyyy-mm-dd hh24:mi:ss')<=to_date(:endTime,'yyyy-mm-dd hh24:mi:ss'))"
+					+ " or (to_date(startTime,'yyyy-mm-dd hh24:mi:ss')>=to_date(:startTime,'yyyy-mm-dd hh24:mi:ss') and to_date(startTime,'yyyy-mm-dd hh24:mi:ss')<=to_date(:endTime,'yyyy-mm-dd hh24:mi:ss'))"
+					+ " or (to_date(endTime,'yyyy-mm-dd hh24:mi:ss')>=to_date(:startTime,'yyyy-mm-dd hh24:mi:ss') and to_date(endTime,'yyyy-mm-dd hh24:mi:ss')<=to_date(:endTime,'yyyy-mm-dd hh24:mi:ss'))"
+					+ " order by node_Id")
+					.addEntity(TopoInterface.class);			
 			query.setString("customerId", customer.getCustomerId());
+			query.setString("startTime", dateRange.getStartDate());
+			query.setString("endTime", dateRange.getEndDate());
 			List<TopoInterface> interfaceList = query.list();
 			
 		

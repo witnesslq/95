@@ -9,32 +9,27 @@ import com.dhcc.bussiness.sxydidc.quality.dao.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.dao.TopoInterfaceDao;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
+import com.dhcc.bussiness.sxydidc.quality.services.PortipsInterfaceService;
 import com.opensymphony.xwork2.ActionSupport;
 
-public class PortipsInterfaceAction  extends ActionSupport{
+public class GetCustomerPortipsAction  extends ActionSupport{
 
 	private String type;
 	private long date;
 	private Customer customer;
 	
-	private List<TopoInterface> gatherInterfaceList;
 	
 
-	/**
-	 * @return the gatherInterfaceList
+	/* (non-Javadoc)
+	 * @see com.opensymphony.xwork2.ActionSupport#validate()
 	 */
-	public List<TopoInterface> getGatherInterfaceList() {
-		return gatherInterfaceList;
+	@Override
+	public void validate() {
+		// TODO Auto-generated method stub
+		if(this.customer == null || this.customer.getCustomerId() == null){
+			this.addFieldError("customer", "没有客户ID");
+		}
 	}
-
-	/**
-	 * @param gatherInterfaceList the gatherInterfaceList to set
-	 */
-	public void setGatherInterfaceList(List<TopoInterface> gatherInterfaceList) {
-		this.gatherInterfaceList = gatherInterfaceList;
-	}
-
-
 
 	private List<Portips> list;
 	/**
@@ -87,13 +82,8 @@ public class PortipsInterfaceAction  extends ActionSupport{
 	@Override
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
-		TopoInterfaceDao interfaceDao = new TopoInterfaceDao();
-//		每个客户的IP所在的设备IP表和所对端口序号索引
-		List<TopoInterface> interfaceList = interfaceDao.queryGatherInterfaceListFor(customer);
-		
-		PortipsDao portipsDao = new PortipsDao(type,date);
-		this.list = portipsDao.queryPortipsForInterface(interfaceList);
-		
+		PortipsInterfaceService service = new PortipsInterfaceService();
+		this.list = service.fetchPortipsBy(customer, type, date);
 		return SUCCESS;
 	}
 
@@ -109,18 +99,6 @@ public class PortipsInterfaceAction  extends ActionSupport{
 	 */
 	public void setList(List<Portips> list) {
 		this.list = list;
-	}
-
-	
-	/* 指定索引的采集口按天，月，年的丢包率、错包率
-	 * @see com.opensymphony.xwork2.ActionSupport#execute()
-	 */
-	public String executeForGatherInterface() throws Exception {
-		// TODO Auto-generated method stub
-		PortipsDao portipsDao = new PortipsDao(type,date);
-		this.list = portipsDao.queryPortipsForInterface(this.gatherInterfaceList);
-		
-		return SUCCESS;
 	}
 
 }

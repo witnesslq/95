@@ -344,7 +344,8 @@ $(function() {
 		contentType: "application/x-www-form-urlencoded",
 		method: "POST",
 		data: {
-			"customer.customerId": customerId
+			"customer.customerId": customerId,
+			"date":new Date().getTime()
 		},
 		beforeSend: function(jqXHR, settings) {
 			var tmpl = $("#overlayTmpl").html(),
@@ -374,6 +375,7 @@ $(function() {
 				var clickedPort = $(this);
 				//当前点击的按钮变色，其它按钮置灰，目前同时只能查询一个端口
 				clickedPort.toggleClass("btn-default").toggleClass("btn-primary");
+				$("button.query-btn").trigger("click");
 			});
 		},
 		error: function(jqXHR, textStatus, errorThrown) {

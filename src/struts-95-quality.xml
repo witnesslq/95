@@ -14,34 +14,6 @@
     </interceptor-stack>
 </interceptors>
 
-<!-- 所有用户概况列表 包括客户的IP数量、告警数量、丢包率、错包率 -->
-	<action name="query_all_customer_summary" class="com.dhcc.bussiness.sxydidc.customer95.actions.CustomerSummaryAction">
-		<result name="success"  type="json">
-				<param name="root">list</param>
-				<param name="includeProperties">
-					\[\d+\]\.customerId,
-					\[\d+\]\.customerName,
-					\[\d+\]\.ipCount,
-					\[\d+\]\.alarmCount,
-					\[\d+\]\.portips\.discardsperc,
-					\[\d+\]\.portips\.errorsperc
-				</param>
-			</result>
-	</action>
-
-<!-- 客户的所有IP -->
-	<action name="query_customer_portips_list" class="com.dhcc.bussiness.sxydidc.quality.actions.PortipsAction">
-		<result name="success"  type="json">
-				<param name="root">list</param>
-				<param name="includeProperties">
-					\[\d+\]\.errorsperc,
-					\[\d+\]\.discardsperc,
-					\[\d+\]\.collecttime
-	
-				</param>
-			</result>
-	</action>
-	
 	<action name="query_all_customer_summary_for_gather_interface" class="com.dhcc.bussiness.sxydidc.customer95.actions.CustomerSummaryForGatherInterfaceAction">
 		<result name="success"  type="json">
 				<param name="root">list</param>
@@ -57,7 +29,7 @@
 	</action>
 	
 	<!-- 客户所有采集口丢包、错包数据 -->
-	<action name="query_customer_portips_list" class="com.dhcc.bussiness.sxydidc.quality.actions.PortipsInterfaceAction">
+	<action name="query_customer_portips_list" class="com.dhcc.bussiness.sxydidc.quality.actions.GetCustomerPortipsAction">
 		<result name="success"  type="json">
 				<param name="root">list</param>
 				<param name="includeProperties">
@@ -82,7 +54,7 @@
 	</action>
 	
 	<!-- 采集口丢包、错包数据 -->
-	<action name="query_portips_list_for_gather_interface" class="com.dhcc.bussiness.sxydidc.quality.actions.PortipsInterfaceAction" method="executeForGatherInterface">
+	<action name="query_portips_list_for_gather_interface" class="com.dhcc.bussiness.sxydidc.quality.actions.GetPortipsAction" method="executeForGatherInterface">
 		<interceptor-ref name="jsonStack"></interceptor-ref>
 		<result name="success"  type="json">
 				<param name="root">list</param>

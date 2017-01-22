@@ -108,9 +108,12 @@ public class PortipsDao {
 							.append(ip)
 							.append(" where entity='出口' and subentity='"
 									+ topoInterface.getIfIndex()
-									+ "' and to_char(collecttime,'"
-									+ this.dateFormat + "') = '" + date
-									+ "'")
+									+ "' and collecttime between to_date('"
+									+ topoInterface.getStartTime() + "','"
+									+ this.DAY_FORMAT
+									+ " hh24:mi:ss') and to_date('"
+									+ topoInterface.getEndTime() + "','"
+									+ this.DAY_FORMAT + " hh24:mi:ss')")
 							.append(" union all ");
 				}
 				if (sql.length() > 0) {
@@ -122,20 +125,16 @@ public class PortipsDao {
 				finalSql.append("select round(avg(discardsperc),1) as discardsperc,round(avg(errorsperc),1) as errorsperc,");
 
 				if (YEAR.equals(type)) {
-					finalSql.append("to_char(collecttime,'"
-							+ this.MONTH_FORMAT
+					finalSql.append("to_char(collecttime,'" + this.MONTH_FORMAT
 							+ "') as collecttime");
 				} else if (MONTH.equals(type)) {
-					finalSql.append("to_char(collecttime,'"
-							+ this.DAY_FORMAT
+					finalSql.append("to_char(collecttime,'" + this.DAY_FORMAT
 							+ "') as collecttime");
 				} else if (DAY.equals(type)) {
-					finalSql.append("to_char(collecttime,'"
-							+ this.DAY_FORMAT
+					finalSql.append("to_char(collecttime,'" + this.DAY_FORMAT
 							+ " hh24:mi:ss') as collecttime");
 				} else {
-					finalSql.append("to_char(collecttime,'"
-							+ this.DAY_FORMAT
+					finalSql.append("to_char(collecttime,'" + this.DAY_FORMAT
 							+ " hh24:mi:ss') as collecttime");
 				}
 
@@ -143,8 +142,7 @@ public class PortipsDao {
 						.append(") group by ");
 
 				if (YEAR.equals(type)) {
-					finalSql.append("to_char(collecttime,'"
-							+ this.MONTH_FORMAT
+					finalSql.append("to_char(collecttime,'" + this.MONTH_FORMAT
 							+ "')");
 				} else {
 					finalSql.append("collecttime");
@@ -197,8 +195,12 @@ public class PortipsDao {
 							.append(ip)
 							.append(" where entity='出口' and subentity='"
 									+ topoInterface.getIfIndex()
-									+ "' and to_char(collecttime,'"
-									+ this.DAY_FORMAT + "') = '" + date + "'")
+									+ "' and collecttime between to_date('"
+									+ topoInterface.getStartTime() + "','"
+									+ this.DAY_FORMAT
+									+ " hh24:mi:ss') and to_date('"
+									+ topoInterface.getEndTime() + "','"
+									+ this.DAY_FORMAT + " hh24:mi:ss')")
 							.append(" union all ");
 				}
 				if (sql.length() > 0) {

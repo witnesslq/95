@@ -8,6 +8,8 @@ import com.dhcc.bussiness.sxydidc.quality.dao.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.dao.TopoInterfaceDao;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
+import com.dhcc.bussiness.sxydidc.quality.services.DateRange;
+import com.dhcc.bussiness.sxydidc.quality.services.PortipsInterfaceService;
 
 public class CustomerSummaryService {
 
@@ -43,11 +45,13 @@ public class CustomerSummaryService {
 		TopoInterfaceDao interfaceDao = new TopoInterfaceDao();
 		PortipsDao portipsDao = new PortipsDao();
 	
+		DateRange range = new DateRange();
 		for(CustomerSummary summary:list){
 			
 //			每个客户的端口所在的设备IP表和所对端口序号索引
-			List<TopoInterface> interfaceList = interfaceDao.queryGatherInterfaceListFor(summary);
-			
+			List<TopoInterface> interfaceList = interfaceDao.queryGatherInterfaceListFor(summary, range);
+			PortipsInterfaceService service = new PortipsInterfaceService();
+			service.resetRange(range, interfaceList);
 			Portips portips = portipsDao.queryAvgPortipsForInterface(interfaceList);
 			
 			summary.setPortips(portips);

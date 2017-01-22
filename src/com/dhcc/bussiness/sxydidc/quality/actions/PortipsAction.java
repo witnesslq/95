@@ -9,6 +9,7 @@ import com.dhcc.bussiness.sxydidc.quality.dao.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.dao.TopoInterfaceDao;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
+import com.dhcc.bussiness.sxydidc.quality.services.PortipsInterfaceService;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class PortipsAction extends ActionSupport {
@@ -90,14 +91,8 @@ public class PortipsAction extends ActionSupport {
 	@Override
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
-		TopoInterfaceDao interfaceDao = new TopoInterfaceDao();
-		// 每个客户的IP所在的设备IP表和所对端口序号索引
-		List<TopoInterface> interfaceList = interfaceDao
-				.queryTopoInterfaceListFor(customer);
-
-		PortipsDao portipsDao = new PortipsDao(type, date);
-		this.list = portipsDao.queryPortipsForInterface(interfaceList);
-
+		PortipsInterfaceService service = new PortipsInterfaceService();
+		this.list = service.fetchPortipsBy(this.customer,this.type,this.date);
 		return SUCCESS;
 	}
 

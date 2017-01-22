@@ -2,11 +2,16 @@ package com.dhcc.bussiness.sxydidc.quality.dao;
 
 import static org.junit.Assert.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
+import com.dhcc.bussiness.sxydidc.quality.services.DateRange;
 
 public class TopoInterfaceDaoTest {
 
@@ -42,7 +47,11 @@ public class TopoInterfaceDaoTest {
 	@Test
 	public void testQueryGatherInterfaceListForCustomer(){
 		Customer customer = new Customer();
-		customer.setCustomerId("a6fcb705-dccb-453c-a58e-ba5006bd2707");
-		System.out.println(dao.queryGatherInterfaceListFor(customer));
+		customer.setCustomerId("016997fd-2a7f-499c-ac71-f62e16be77be");
+		
+		Calendar ca = Calendar.getInstance();
+		ca.set(2017, 0, 20);
+		DateRange dateRange = new DateRange(ca.getTimeInMillis());
+		System.out.println(dao.queryGatherInterfaceListFor(customer, dateRange));
 	}
 }
