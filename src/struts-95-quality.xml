@@ -14,6 +14,33 @@
     </interceptor-stack>
 </interceptors>
 
+	
+	<global-results>
+			<result type="json" name="input">
+				
+				<param name="statusCode">400</param>
+				<param name="root">fieldErrors</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+			
+			<result type="json" name="error">
+				
+				<param name="statusCode">422</param>
+				<param name="root">actionErrors</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+			<result name="HibernameException" type="json">
+				<param name="errorCode">503</param>
+			</result>
+
+		</global-results>
+		
+		<!-- 发生hibernate运行异常时的响应 -->
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.IllegalArgumentException"></exception-mapping>
+			<exception-mapping exception="org.hibernate.HibernateException" result="HibernateException"></exception-mapping>
+		</global-exception-mappings>
+		
 	<action name="query_all_customer_summary_for_gather_interface" class="com.dhcc.bussiness.sxydidc.customer95.actions.CustomerSummaryForGatherInterfaceAction">
 		<result name="success"  type="json">
 				<param name="root">list</param>
