@@ -180,7 +180,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 										<div id="portList" class="box box-default">
 											<div class="box-header with-border">
 												<h3 class="box-title">端口
-													<span class="label label-primary">共<%=portCount  %>个</span>
+													
 												</h3>
 												<!-- <div class="box-tools">
 														<div class="has-feedback">
@@ -193,7 +193,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 												</button></div>
 											</div>
 											<div class="box-body">
-												
+												无
 											</div>
 											<div class="box-footer">
 												*点击端口，输入日期，点击查询按钮查询
