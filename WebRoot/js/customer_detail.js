@@ -374,7 +374,8 @@ $(function() {
                         $toggleBoundBtn = $(this),
                         ip = $toggleBoundBtn.parents('div[data-ip]').attr("data-ip").trim(),
                         portId = $toggleBoundBtn.attr("data-port-id"),
-                        portName = $toggleBoundBtn.attr("data-port-name");
+                        portName = $toggleBoundBtn.attr("data-port-name"),
+                        increment = -1;
 
                     var data = {
                         "topoInterface.nodeId": ip,
@@ -386,6 +387,7 @@ $(function() {
 
                     if (!$toggleBoundBtn.hasClass('active')) {
                         url = basePath + 'customer_config/bound_port.action';
+                        increment = 1;
                     }
 
                     var $box = $(this).parents('.box');
@@ -401,7 +403,7 @@ $(function() {
                                 $toggleBoundBtn.text('上线');
                             else
                                 $toggleBoundBtn.text('下线');
-
+                            $(".port-count-label").trigger("render.bs.label",increment);
                             $toggleBoundBtn.toggleClass('active');
                         })
                         .fail(commonFail)
