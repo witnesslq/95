@@ -1,6 +1,5 @@
 $(function() {
 
-
     /*
     	格式化日期
      */
@@ -338,6 +337,9 @@ $(function() {
         }]
     });
 
+    /*
+    	客户某天全天时段内的端口
+     */
     function fetchPorts(date) {
         $.ajax({
             url: "query_customer_port_list.action",

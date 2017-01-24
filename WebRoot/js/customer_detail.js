@@ -366,7 +366,9 @@ $(function() {
             */
             this.$collapse.on("click", "button.toggle-bound-port", function(event) {
 
-                    if (!!!customerId) return;
+                    if (!!!customerId) {
+                        return;
+                    }
                     var url = basePath + 'customer_config/unbound_port.action',
                         currentCustomerId = customerId,
                         $toggleBoundBtn = $(this),
@@ -467,6 +469,13 @@ $(function() {
                         .fail(commonFail)
                         .always($.proxy(commonAlways, $box));
                     event.preventDefault();
+                }).tooltip({
+                    trigger:"hover",
+                    selector:"button.toggle-bound-port",
+                    title: function() {
+                        if(!!!customerId)
+                            return "请先点击“保存”按钮创建客户";
+                    }
                 });
             // 设备Panel分页
             this.$accordion.find(".panel-list ul.pagination").on("click", "li", function(event) {
