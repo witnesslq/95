@@ -91,7 +91,7 @@ public class FlowBill implements Exportable {
 		CommonDateFormat sdf = CommonDateFormat.FLOW_MONTH_DATE_FORMAT;
 		calendar.setTime(monthDate);
 		String startTime = sdf.format(monthDate)+"1日  00：00",
-				endTime = sdf.format(monthDate)+calendar.getMaximum(Calendar.DAY_OF_MONTH)+"日 24：00";
+				endTime = sdf.format(monthDate)+calendar.getActualMaximum(Calendar.DAY_OF_MONTH)+"日 23：55";
 				
 	      params.put("caption", "山西移动"+sdf.format(monthDate)+this.bussinessName+"九五峰值流量计费");
 	      params.put("businessName", this.bussinessName);

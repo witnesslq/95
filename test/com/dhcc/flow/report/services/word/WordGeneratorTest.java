@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.BeforeClass;
@@ -55,4 +56,12 @@ public class WordGeneratorTest {
 		System.out.println(url.getFile());
 	}
 
+	@Test
+	public void testCalendarMaximumDay(){
+		Calendar c = Calendar.getInstance();
+		System.out.println(c.getLeastMaximum(Calendar.DAY_OF_MONTH));
+		System.out.println(c.getMaximum(Calendar.DAY_OF_MONTH));
+		System.out.println(c.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+	}
 }
