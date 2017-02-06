@@ -100,7 +100,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 										<div class="box box-default" id="customerBox">
 											<div class="box-header with-border">
 												<h3 class="box-title">客户
-												<span class="label label-default port-count-label"></span>
+												<span class="label label-default port-count-label">0</span>
 												</h3>
 												<div class="box-tools"><button class="btn btn-box-tool" data-widget="collapse">
 													<i class="fa fa-minus"></i>
@@ -137,7 +137,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<div class="box box-default">
 										<div class="box-header with-border">
 											<h3 class="box-title">已有端口
-											<span class="label label-default port-count-label"></span>
+											<span class="label label-default port-count-label">0</span>
 											</h3>
 											<div class="box-tools"><button class="btn btn-box-tool" data-widget="collapse">
 												<i class="fa fa-minus"></i>
