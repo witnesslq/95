@@ -5,6 +5,4 @@ target
 WebRoot/WEB-INF/classes
 WebRoot/node_modules
 logs/*
-src/SystemConfigResources.properties
-
-/results/
+results
