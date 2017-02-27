@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
@@ -33,6 +34,7 @@ public class PortipsInterfaceServiceTest {
 	}
 
 	@Test
+	@Ignore
 	public void testFetchPortipsByListOfTopoInterfaceStringLong() {
 		fail("Not yet implemented"); // TODO
 	}

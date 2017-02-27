@@ -11,6 +11,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.quartz.JobExecutionException;
 
@@ -29,6 +30,7 @@ public class CustomerSummaryJobTest {
 	}
 
 	@Test
+	@Ignore
 	public void testExecute() {
 		try {
 			job.execute(null);

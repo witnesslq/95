@@ -7,22 +7,16 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CustomerParseUtilTest {
 
-	static CustomerParseUtil util;
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	 private CustomerParseUtil util;
+	@Before
+	public  void setUp() throws Exception {
 		util = new CustomerParseUtil();
-	}
-
-	@Test
-	public void testRead() {
-	
-	util.read("G:\\快盘\\开发实施项目\\ISP流量统计与质量监测系统\\文档\\", "客户合同及产品信息模版", "xlsx");
-	
 	}
 
 	@Test

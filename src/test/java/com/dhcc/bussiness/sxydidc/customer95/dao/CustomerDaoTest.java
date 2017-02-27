@@ -3,6 +3,7 @@ package com.dhcc.bussiness.sxydidc.customer95.dao;
 import static org.junit.Assert.*;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
@@ -22,6 +23,7 @@ public class CustomerDaoTest {
 	}
 
 	@Test
+	@Ignore
 	public void testSaveMany() {
 		fail("Not yet implemented");
 	}

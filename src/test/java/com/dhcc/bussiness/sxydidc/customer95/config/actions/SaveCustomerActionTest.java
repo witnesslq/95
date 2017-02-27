@@ -3,6 +3,7 @@ package com.dhcc.bussiness.sxydidc.customer95.config.actions;
 import static org.junit.Assert.*;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
@@ -51,6 +52,7 @@ public class SaveCustomerActionTest {
 	
 
 	@Test
+	@Ignore
 	public void testSave() {
 		fail("Not yet implemented"); // TODO
 	}

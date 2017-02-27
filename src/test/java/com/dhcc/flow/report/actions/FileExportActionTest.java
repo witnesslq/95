@@ -8,7 +8,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
@@ -19,9 +21,9 @@ import com.dhcc.flow.report.services.CommonDateFormat;
 
 public class FileExportActionTest {
 
-	static FileExportAction action;
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	 FileExportAction action;
+	@Before
+	public  void setUp() throws Exception {
 		action = new FileExportAction();
 	
 		FlowAccount flowAccount = new FlowAccount();
@@ -36,6 +38,7 @@ public class FileExportActionTest {
 	}
 
 	@Test
+	@Ignore
 	public void testExecute() {
 
 		try {

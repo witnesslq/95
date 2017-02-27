@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.UUID;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
@@ -33,6 +34,7 @@ public class CustomerDaoTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testSaveOrUpdateForUpdate(){
 		Customer customer = new Customer();
 		customer.setCustomerId(UUID.randomUUID().toString());
@@ -51,11 +53,11 @@ public class CustomerDaoTest {
 		dao.delete(customer);
 	}
 	
-	@Test
-	public void testQueryOne(){
+	@Test(expected=IllegalArgumentException.class)
+	public void testQueryOneNotExistThisCustomer(){
 		Customer customer = new Customer();
 		customer.setCustomerName("计划表");
-		System.out.println(dao.queryOne(customer));;
+		dao.queryOne(customer);
 	}
 	
 }
