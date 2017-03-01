@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.Date;
-
 import com.dhcc.flow.report.dao.FlowAccountDao;
 import com.dhcc.flow.report.models.CustomerFlowAccount;
 import com.dhcc.flow.report.models.Exportable;
@@ -18,13 +17,10 @@ import com.dhcc.flow.report.services.word.WordGenerator;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class FileExportAction extends ActionSupport{
-
-	
 	private String exportType;
 	private long date;
 	
 	private FlowAccount flowAccount;
-	
 	/**
 	 * @return the flowAccount
 	 */

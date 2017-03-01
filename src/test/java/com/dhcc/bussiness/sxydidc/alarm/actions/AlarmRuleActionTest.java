@@ -2,14 +2,15 @@ package com.dhcc.bussiness.sxydidc.alarm.actions;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class AlarmRuleActionTest {
 
-	static AlarmRuleAction action;
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	 AlarmRuleAction action;
+	@Before
+	public  void setUp() throws Exception {
 		action  = new AlarmRuleAction();
 	}
 
