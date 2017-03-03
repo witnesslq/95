@@ -5,7 +5,5 @@ target
 results
 /logs/
 src/main/webapp/WEB-INF/classes/*
-src/main/webapp/WEB-INF/classes/!.gitkeep
 src/main/webapp/WEB-INF/lib/*
-src/main/webapp/WEB-INF/lib/!.gitkeep
 src/main/webapp/node_modules
