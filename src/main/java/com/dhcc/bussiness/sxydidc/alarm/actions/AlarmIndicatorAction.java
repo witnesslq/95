@@ -66,8 +66,8 @@ public class AlarmIndicatorAction extends ActionSupport {
 	/* 所有数字类型的规则所属的指标
 	 * @see com.opensymphony.xwork2.ActionSupport#execute()
 	 */
-	@Override
-	public String execute() throws Exception {
+
+	public String execute( ) throws Exception {
 		// TODO Auto-generated method stub
 		AlarmIndicatorDao dao = new AlarmIndicatorDao();
 		this.list = dao.queryListForAllNumberType();

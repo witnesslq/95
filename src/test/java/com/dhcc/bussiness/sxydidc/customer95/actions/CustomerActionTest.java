@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -11,9 +12,9 @@ import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 
 public class CustomerActionTest {
 
-	static CustomerAction action ;
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	 CustomerAction action ;
+	@Before
+	public  void setUp() throws Exception {
 		action = new CustomerAction();
 		Customer customer = new Customer();
 		customer.setCustomerName("公司");

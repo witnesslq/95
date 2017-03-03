@@ -17,6 +17,7 @@ public class AlarmIndicatorActionTest {
 	public void testExecute() {
 		try {
 			action.execute();
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

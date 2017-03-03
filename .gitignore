@@ -2,8 +2,8 @@
 .project
 .classpath
 target
-WebRoot/WEB-INF/classes
-WebRoot/WEB-INF/lib
-WebRoot/node_modules
 results
 /logs/
+src/main/webapp/WEB-INF/classes
+src/main/webapp/WEB-INF/lib
+src/main/webapp/node_modules
