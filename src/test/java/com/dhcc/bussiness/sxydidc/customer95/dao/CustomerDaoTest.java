@@ -2,7 +2,7 @@ package com.dhcc.bussiness.sxydidc.customer95.dao;
 
 import static org.junit.Assert.*;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -10,14 +10,15 @@ import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 
 public class CustomerDaoTest {
 
-	static CustomerDao dao;
+	 CustomerDao dao;
 	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	@Before
+	public  void setUp() throws Exception {
 		dao = new CustomerDao();
 	}
 
 	@Test
+	@Ignore
 	public void testDeleteAll() {
 		dao.deleteAll();
 	}
