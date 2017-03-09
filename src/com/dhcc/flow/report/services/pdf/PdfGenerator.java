@@ -157,7 +157,7 @@ public class PdfGenerator extends Generator {
       tableParagraph.add(table);
        document.add(tableParagraph);
         Paragraph annotation = new  Paragraph("注：\n"
-        		+ "1.提取规则：对淘宝租用端口每五分钟进行一次采样，一个月为一个周期，并将该计费周期内采集到的数据由大到小排序，去掉最大的 5%数量的值，取剩下 95%的点的数据的最大值为当月峰值流量。\n"
+        		+ "1.提取规则：对聚合端口每五分钟进行一次采样，一个月为一个周期，并将该计费周期内采集到的数据由大到小排序，去掉最大的 5%数量的值，取剩下 95%的点的数据的最大值为当月峰值流量。\n"
         		+ "2.计算规则：当月共提取S个峰值点，去掉最大的前5%的峰值点，即峰值最大的0.05*S 个点，取第0.05*S+1个点，为当月的95%峰值流量。\n"
         		+ "（1）流量峰值点数：S；（2）： 95%峰值流量点：0.05*S+1个；（3） 95%峰值流量(Gbps)：第0.05*S+1个点对应峰值流量。",font);
         annotation.setSpacingBefore(15f);
