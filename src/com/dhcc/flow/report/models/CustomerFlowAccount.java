@@ -77,7 +77,7 @@ public class CustomerFlowAccount implements Exportable{
 			e.printStackTrace();
 		}
 		String startTime = sdf.format(calendar.getTime())+"1日  00：00",
-				endTime = sdf.format(calendar.getTime())+calendar.getMaximum(Calendar.DAY_OF_MONTH)+"日 24：00";
+				endTime = sdf.format(calendar.getTime())+calendar.getActualMaximum(Calendar.DAY_OF_MONTH)+"日 23：55";
 				
 	      params.put("caption", "山西移动"+sdf.format(calendar.getTime())+this.customer.getCustomerName()+"九五峰值流量计费");
 	      params.put("businessName", this.customer.getCustomerName());
