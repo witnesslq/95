@@ -2,21 +2,26 @@ package com.dhcc.bussiness.sxydidc.customer95.config.dao;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+
+
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoHostNode;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes=TopoInterfaceDao.class)
 public class TopoInterfaceDaoTest {
 
-	static TopoInterfaceDao dao;
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		dao = new TopoInterfaceDao();
-	}
-
+	@Autowired
+	private TopoInterfaceDao dao;
 	@Test
 	public void testQueryBy() {
 		Customer customer = new Customer();
@@ -24,6 +29,7 @@ public class TopoInterfaceDaoTest {
 		System.out.println(dao.queryBy(customer));
 	}
 
+	
 	@Test
 	public void testSave(){
 		TopoInterface topoInterface = new TopoInterface();

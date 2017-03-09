@@ -10,6 +10,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dhcc.bussiness.sxydidc.alarm.HibernateUtil;
 import com.dhcc.bussiness.sxydidc.customer95.config.models.DeviceInterface;
@@ -17,7 +19,10 @@ import com.dhcc.bussiness.sxydidc.customer95.config.models.DeviceSummary;
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoHostNode;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
+import com.opensymphony.xwork2.util.finder.ClassFinder.Info;
 
+
+@ComponentScan
 public class TopoInterfaceDao {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -25,10 +30,9 @@ public class TopoInterfaceDao {
 	 * 删除客户占用的所有端口
 	 */
 	public void deleteAllBy(Customer customer){
-
 		Session session = HibernateUtil.getSession();
 		Transaction transaction = session.beginTransaction();
-		
+
 		try{
 			Query query = session.createQuery("delete from TopoInterface t where t.customerId = :customerId")
 			.setString("customerId", customer.getCustomerId());

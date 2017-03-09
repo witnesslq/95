@@ -8,8 +8,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 
+
+@Configuration
 public class HibernateUtil  {
 
 	private static final Log log = LogFactory.getLog(HibernateUtil.class);
@@ -18,7 +22,7 @@ public class HibernateUtil  {
 	
 		try{
 			if(sessionFactory == null){
-				Configuration configuration = new Configuration();
+				org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();
 				sessionFactory = configuration.configure().buildSessionFactory();
 			}
 	
@@ -27,6 +31,8 @@ public class HibernateUtil  {
 		}
 		
 	}
+	
+	@Bean
 	public static SessionFactory getSessionFactory() {
 		try {
 			return sessionFactory;

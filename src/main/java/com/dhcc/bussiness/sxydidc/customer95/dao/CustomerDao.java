@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
@@ -21,22 +23,33 @@ public class CustomerDao {
 
 	private static final Log log = LogFactory.getLog(CustomerDao.class);
 
-	private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	private  SessionFactory sessionFactory;
 	
+	/**
+	 * @param sessionFactory the sessionFactory to set
+	 */
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	/**
+	 * @return the sessionFactory
+	 */
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
 	/*
 	 * 删除所有客户及相关联的合同，产品
 	 */
 	public boolean deleteAll(){
 
 		Session session = sessionFactory.getCurrentSession();
-		Transaction transaction = session.beginTransaction();
 		try{
 			Query query = session.createQuery("delete from Customer");
 			query.executeUpdate();
-			transaction.commit();
 			return true;
 		}catch(RuntimeException e){
-			transaction.rollback();
 			log.error(e);
 		}
 		return false;

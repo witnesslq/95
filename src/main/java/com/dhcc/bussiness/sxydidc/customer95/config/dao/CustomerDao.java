@@ -5,15 +5,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dhcc.bussiness.sxydidc.alarm.HibernateUtil;
 import com.dhcc.bussiness.sxydidc.customer95.config.models.CustomerSummary;
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 
+@Component
 public class CustomerDao {
 
 	public List<CustomerSummary>  queryAll(){
@@ -50,29 +58,16 @@ public class CustomerDao {
 		return Collections.emptyList();
 	}
 	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 	/*
 	 * 添加或者更新客户信息
 	 */
 	public void saveOrUpdate(Customer customer) {
 
-		Session session= HibernateUtil.getSession();
-		Transaction transaction = session.beginTransaction();
-		
-		try{
-			boolean isExist = !session.createQuery("select new Customer(c.customerId,c.customerName) from Customer c where c.customerName=:customerName")
-					.setString("customerName", customer.getCustomerName()).list().isEmpty();
-			
-			if(isExist) {
-				transaction.commit();
-				throw new IllegalArgumentException("客户"+customer.getCustomerName()+"已存在");
-			}
+		Session session= sessionFactory.getCurrentSession();
 			session.saveOrUpdate(customer);
-			transaction.commit();
-		}catch(HibernateException e){
-			transaction.rollback();
-			e.printStackTrace();
-			throw e;
-		}
 	}
 	
 	/*
@@ -135,28 +130,19 @@ public class CustomerDao {
 	 */
 	public Customer queryOne(Customer customer){
 
-		Session session = HibernateUtil.getSession();
-		Transaction transaction = session.beginTransaction();
-		
+		Session session = sessionFactory.getCurrentSession();
+
 		try{
 			Query query = session.createQuery("select new Customer(c.customerId,c.customerName) from Customer c where c.customerName=:customerName")
 					.setString("customerName", customer.getCustomerName());
 			
 			List<Customer> list = query.list();
 			
-			transaction.commit();
-			
 			if(list.size()>0)
 				return list.get(0);
 			else
 				throw new IllegalArgumentException("没有名称为 "+customer.getCustomerName()+" 客户");
 		}catch(HibernateException e){
-			try{
-				transaction.rollback();
-			}catch(HibernateException ex){
-				ex.printStackTrace();
-			}
-
 			e.printStackTrace();
 			throw e;
 		}

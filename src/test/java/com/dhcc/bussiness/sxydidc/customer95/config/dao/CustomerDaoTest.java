@@ -4,19 +4,25 @@ import static org.junit.Assert.*;
 
 import java.util.UUID;
 
+import javax.annotation.Resource;
+
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 
+@RunWith(SpringRunner.class)
+@ContextConfiguration(locations = "classpath:applicationContext.xml")
 public class CustomerDaoTest {
 
-	static CustomerDao dao;
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		dao  = new CustomerDao();
-	}
+	@Resource(name="customerConfigDao")
+	 CustomerDao dao;
 
 	@Test
 	public void testQueryBy() {
@@ -26,6 +32,7 @@ public class CustomerDaoTest {
 	}
 
 	@Test
+	@Transactional
 	public void testSaveOrUpdate(){
 		Customer customer = new Customer();
 		customer.setCustomerId(UUID.randomUUID().toString());
@@ -53,10 +60,12 @@ public class CustomerDaoTest {
 		dao.delete(customer);
 	}
 	
+	
 	@Test(expected=IllegalArgumentException.class)
+	@Transactional
 	public void testQueryOneNotExistThisCustomer(){
 		Customer customer = new Customer();
-		customer.setCustomerName("计划表");
+		customer.setCustomerName("test1");
 		dao.queryOne(customer);
 	}
 	
