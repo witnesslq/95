@@ -1,21 +1,20 @@
 package com.dhcc.bussiness.sxydidc.customer95.config.services;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dhcc.bussiness.sxydidc.alarm.HibernateUtil;
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
+import com.dhcc.spring.config.ApplicationContextConfig;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes={CustomerService.class})
+@ContextConfiguration(classes={ApplicationContextConfig.class})
 public class CustomerServiceTest {
 
 	@Autowired
@@ -30,11 +29,12 @@ public class CustomerServiceTest {
 		service.saveOrUpdate(customer);
 	}
 
+	@Transactional
 	@Test
 	public void testHas(){
 		Customer customer = new Customer();
-		customer.setCustomerName("计划表");
+		customer.setCustomerName("test");
 		
-		System.out.println(service.has(customer));
+		assertTrue(service.has(customer));
 	}
 }

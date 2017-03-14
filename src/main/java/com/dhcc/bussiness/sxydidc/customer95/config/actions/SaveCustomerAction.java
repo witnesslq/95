@@ -3,6 +3,7 @@ package com.dhcc.bussiness.sxydidc.customer95.config.actions;
 import com.dhcc.bussiness.sxydidc.customer95.config.dao.CustomerDao;
 import com.dhcc.bussiness.sxydidc.customer95.config.services.CustomerService;
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
+import com.dhcc.spring.config.ApplicationContextConfig;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.interceptor.ValidationErrorAware;
 
@@ -35,7 +36,7 @@ public class SaveCustomerAction extends ActionSupport implements ValidationError
 		}
 		
 		if(!this.hasFieldErrors()){
-			CustomerService service = new CustomerService();
+			CustomerService service = ApplicationContextConfig.getContext().getBean(CustomerService.class);
 			if(service.has(customer)){
 				this.addActionError("客户"+customer.getCustomerName()+"已存在");
 			}
@@ -67,7 +68,7 @@ public class SaveCustomerAction extends ActionSupport implements ValidationError
 	public String save() throws Exception {
 		// TODO Auto-generated method stub
 	
-		CustomerService service = new CustomerService();
+		CustomerService service = ApplicationContextConfig.getContext().getBean(CustomerService.class);
 		try{
 			service.saveOrUpdate(customer);
 		}catch(IllegalArgumentException e){

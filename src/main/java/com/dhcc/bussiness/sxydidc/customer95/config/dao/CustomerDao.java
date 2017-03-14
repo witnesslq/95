@@ -13,6 +13,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,9 +76,12 @@ public class CustomerDao {
 	 * 某单个客户所占端口数量
 	 */
 	public CustomerSummary  queryBy(Customer customer){
-		Session session= HibernateUtil.getSession();
-		Transaction transaction = session.beginTransaction();
-		
+		Session session = null;
+		try{
+		session = sessionFactory.getCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		try{
 			Query query = session.createQuery("select count(*) as portCount from  TopoInterface t  where t.customerId=:customerId and t.endTime is null")
 					.setString("customerId", customer.getCustomerId());
@@ -87,11 +92,9 @@ public class CustomerDao {
 			
 			customerSummary.setPortCount(rows.get(0).intValue());
 			
-			transaction.commit();
 			return customerSummary;
 		}catch(HibernateException e){
 			
-			transaction.rollback();
 			e.printStackTrace();
 			throw e;
 		}
@@ -130,7 +133,12 @@ public class CustomerDao {
 	 */
 	public Customer queryOne(Customer customer){
 
-		Session session = sessionFactory.getCurrentSession();
+		Session session = null;
+		try{
+		session = sessionFactory.getCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
 		try{
 			Query query = session.createQuery("select new Customer(c.customerId,c.customerName) from Customer c where c.customerName=:customerName")

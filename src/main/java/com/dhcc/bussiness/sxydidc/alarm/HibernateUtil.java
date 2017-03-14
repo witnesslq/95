@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
 
-@Configuration
 public class HibernateUtil  {
 
 	private static final Log log = LogFactory.getLog(HibernateUtil.class);
@@ -32,7 +31,6 @@ public class HibernateUtil  {
 		
 	}
 	
-	@Bean
 	public static SessionFactory getSessionFactory() {
 		try {
 			return sessionFactory;

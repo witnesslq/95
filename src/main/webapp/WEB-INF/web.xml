@@ -10,10 +10,13 @@ version="2.4">
   	<servlet-class>com.dhcc.bussiness.sxydidc.alarm.actions.HibernateInitServlet</servlet-class>
   	<load-on-startup>1</load-on-startup>
   </servlet> -->
-  
   <listener>
-    <listener-class>com.dhcc.bussiness.sxydidc.initialize.InitListener</listener-class>
+  	<description>初始化Spring Application Context</description>
+  	<listener-class>com.dhcc.spring.config.ConfigApplicationContextServletContextListener</listener-class>
   </listener>
+<!--   <listener>
+    <listener-class>com.dhcc.bussiness.sxydidc.initialize.InitListener</listener-class>
+  </listener> -->
   <!-- <listener>
   	<description>初始化统计任务</description>
   	<listener-class>com.dhcc.bussiness.sxydidc.quality.servlets.ScheduleJobServletContextListener</listener-class>

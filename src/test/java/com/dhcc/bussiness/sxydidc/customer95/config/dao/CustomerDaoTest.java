@@ -1,30 +1,27 @@
 package com.dhcc.bussiness.sxydidc.customer95.config.dao;
 
-import static org.junit.Assert.*;
-
 import java.util.UUID;
 
-import javax.annotation.Resource;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
+import com.dhcc.spring.config.ApplicationContextConfig;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(locations = "classpath:applicationContext.xml")
+@ContextConfiguration(classes=ApplicationContextConfig.class)
 public class CustomerDaoTest {
 
-	@Resource(name="customerConfigDao")
-	 CustomerDao dao;
+	@Autowired
+	 private CustomerDao dao;
 
 	@Test
+	@Transactional
 	public void testQueryBy() {
 		Customer customer = new Customer();
 		customer.setCustomerId("8154c1ea-b8c7-4c51-8d0a-ea06d71a87b6");
@@ -65,7 +62,7 @@ public class CustomerDaoTest {
 	@Transactional
 	public void testQueryOneNotExistThisCustomer(){
 		Customer customer = new Customer();
-		customer.setCustomerName("test1");
+		customer.setCustomerName("testu");
 		dao.queryOne(customer);
 	}
 	
