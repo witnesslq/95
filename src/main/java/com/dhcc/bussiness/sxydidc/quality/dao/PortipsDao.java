@@ -21,6 +21,7 @@ import com.dhcc.bussiness.sxydidc.alarm.HibernateUtil;
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
+import com.dhcc.bussiness.sxydidc.quality.services.DateRange;
 
 public class PortipsDao {
 
@@ -42,6 +43,8 @@ public class PortipsDao {
 	private static final String MONTH = "month";
 	private static final String YEAR = "year";
 
+	
+	private DateRange dateRange;
 	/**
 	 * 默认采集点表和按天查询
 	 */
@@ -81,7 +84,7 @@ public class PortipsDao {
 			
 		}
 	}
-
+	public PortipsDao(String type,  DateRange dateRange) {	this.dateRange = dateRange;	}
 	private final SessionFactory sessionFactory = HibernateUtil
 			.getSessionFactory();
 

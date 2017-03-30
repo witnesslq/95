@@ -5,9 +5,30 @@ import java.util.Date;
 
 public class DateRange {
 
+	private static final String DAY_FORMAT = "yyyy-MM-dd";
+	private static final String MONTH_FORMAT = "yyyy-MM";
+	private static final String YEAR_FORMAT = "yyyy";
 	private String startDate;
 	private String endDate;
 	
+	/**
+	 * @param startDate
+	 * @param endDate
+	 */
+	private DateRange(String startDate, String endDate) {
+		super();
+		this.startDate = startDate+" 00:00:00";
+		this.endDate = endDate+" 23:59:59";
+	}
+
+	public DateRange(String type,long startDate,long endDate){
+		
+	}
+	public DateRange(long startDate,long endDate) {
+		this(sdf.format(new Date(startDate)),sdf.format(new Date(endDate)) );
+	}
+
+
 	/**
 	 * @param startDate
 	 * @param endDate

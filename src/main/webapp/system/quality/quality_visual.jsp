@@ -216,14 +216,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							<!-- highchats -->
 							<script src="<%=basePath%>node_modules/highcharts/highcharts.js"></script>
 							<script src="<%=basePath%>node_modules/highcharts/modules/exporting.js"></script>
-							<script src="<%=basePath%>node_modules/admin-lte/plugins/datepicker/bootstrap-datepicker.js"></script>
-							<script src="<%=basePath%>node_modules/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
-							<script src="<%=basePath%>node_modules/admin-lte/plugins/daterangepicker/moment.min.js"></script>
+							<!-- moment -->
+							<script src="<%=basePath%>/node_modules/moment/min/moment.min.js"></script>
+
+							<!-- date range picker-->
 							<script src="<%=basePath%>/node_modules/admin-lte/plugins/daterangepicker/daterangepicker.js"></script>
-							<!-- InputMask -->
-							<script src="<%=basePath%>node_modules/admin-lte/plugins/input-mask/jquery.inputmask.js"></script>
-							<script src="<%=basePath%>node_modules/admin-lte/plugins/input-mask/jquery.inputmask.extensions.js"></script>
-							<script src="<%=basePath%>node_modules/admin-lte/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+							
 							<!-- AdminLTE App -->
 							<script src="<%=basePath%>/node_modules/admin-lte/dist/js/app.min.js"></script>
 							<script>

@@ -11,6 +11,33 @@ import com.opensymphony.xwork2.ActionSupport;
 public class TopoInterfaceAction extends ActionSupport {
 
 	private List<TopoInterface> list;
+	private long startDate;
+	private long endDate;
+	
+	/**
+	 * @return the startDate
+	 */
+	public long getStartDate() {
+		return startDate;
+	}
+	/**
+	 * @param startDate the startDate to set
+	 */
+	public void setStartDate(long startDate) {
+		this.startDate = startDate;
+	}
+	/**
+	 * @return the endDate
+	 */
+	public long getEndDate() {
+		return endDate;
+	}
+	/**
+	 * @param endDate the endDate to set
+	 */
+	public void setEndDate(long endDate) {
+		this.endDate = endDate;
+	}
 	private long date;
 	/**
 	 * @return the date
@@ -56,7 +83,7 @@ public class TopoInterfaceAction extends ActionSupport {
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
 		TopoInterfaceDao dao = new TopoInterfaceDao();
-		this.list = dao.queryGatherInterfaceListFor(this.customer, new DateRange(this.date));
+		this.list = dao.queryGatherInterfaceListFor(this.customer, new DateRange(this.startDate,this.endDate));
 		return SUCCESS;
 	}
 	/* (non-Javadoc)

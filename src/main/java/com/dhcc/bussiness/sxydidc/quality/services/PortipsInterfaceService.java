@@ -31,6 +31,23 @@ public class PortipsInterfaceService {
 		return portipsDao.queryPortipsForInterface(interfaceList);
 	}
 
+	/*
+	 * 客户规定时段内质量数据
+	 */
+	public List<Portips> fetchPortipsInDateRangeBy(Customer customer, String type,
+			DateRange dateRange) {
+		// TODO Auto-generated method stub
+		TopoInterfaceDao interfaceDao = new TopoInterfaceDao();
+		
+		List<TopoInterface> interfaceList = interfaceDao
+				.queryGatherInterfaceListFor(customer, dateRange);
+
+		resetRange(dateRange, interfaceList);
+
+		PortipsDao portipsDao = new PortipsDao(type, dateRange);
+		return portipsDao.queryPortipsForInterface(interfaceList);
+	}
+	
 	/* 重置端口的性能数据的展示时间段
 	 * @param dateRange
 	 * @param interfaceList

@@ -7,14 +7,12 @@
 	<packaging>war</packaging>
 	<name>95计费</name>
 	<description>95计费管理门户</description>
-	<properties>
-		<hibernate.connection.password>95idc</hibernate.connection.password>
-        <hibernate.connection.url>jdbc:oracle:thin:@192.168.1.156:1521:orcl</hibernate.connection.url>
-        <hibernate.connection.username>95idc</hibernate.connection.username>
-	</properties>
-	<build>
 	
-		<testSourceDirectory>src/main/java</testSourceDirectory>
+	<build>
+		<filters>
+			<filter>${basedir}/src/main/filters/hibernate.cfg.dev.properties</filter>
+		</filters>
+		<!-- <testSourceDirectory>src/main/java</testSourceDirectory> -->
 		<resources>
 		<!-- 生成hibernate资源文件到与之关联的类文件夹 -->
 			<resource>

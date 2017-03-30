@@ -1,36 +1,104 @@
 $(function() {
 
-    /*
-    	格式化日期
-     */
-    function SimpleDateFormat(pattern) {
+    var DateRange = (function(argument) {
 
-    }
-    SimpleDateFormat.prototype.format = function(date) {
-        return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
+        var DEFAULT_OPTS = { type: "day" };
+
+        return function(startDate, endDate) {
+
+
+            this.type;
+            this.startDate = startDate;
+            this.endDate = endDate;
+
+            $.extend(this, DEFAULT_OPTS);
+
+        };
+    })();
+
+    DateRange.prototype.toString = function() {
+        return this.startDate.format("YYYY-MM-DD") + "到" + this.endDate.format("YYYY-MM-DD")+"日";
     };
-    /*
-    	按天，月，年查询的掩码日期控件
-     
-    $("input[data-mask]").inputmask("yyyy-mm-dd", {
-    	"placeholder": "yyyy-mm-dd",
-    	"clearIncomplete": true
+
+    DateRange.prototype.startDateMilliSeconds = function() {
+        return this.startDate.valueOf();
+    };
+    DateRange.prototype.endDateMilliSeconds = function() {
+        return this.endDate.valueOf();
+    };
+
+    var today = new DateRange(moment(), moment());
+
+    $('#datetime').data("dateRange", today).daterangepicker({
+        "showDropdowns": true,
+        "ranges": {
+            "今天": [
+                today.startDate,
+                today.endDate
+            ],
+            "昨天": [
+                moment(today.startDate).subtract(1, "days"),
+                moment(today.endDate).subtract(1, "days")
+            ],
+            "最近7天": [
+                moment(today.startDate).subtract(6, "days"),
+                today.endDate
+            ],
+            "最近30天": [
+                moment(today.startDate).subtract(29, "days"),
+                today.endDate
+            ],
+            "本月": [
+                moment(today.startDate).date(1),
+                moment(today.endDate).date(moment().daysInMonth())
+            ],
+            "上月": [
+
+                moment(today.startDate).subtract(1, "month").date(1),
+                moment(today.endDate).subtract(1, "month").date(moment().subtract(1, "month").daysInMonth())
+            ]
+        },
+        "locale": {
+            "format": "YYYY-MM-DD",
+            "separator": " 到 ",
+            "applyLabel": "确定",
+            "cancelLabel": "取消",
+            "fromLabel": "从",
+            "toLabel": "到",
+            "customRangeLabel": "自定义",
+            "weekLabel": "周",
+            "daysOfWeek": [
+                "日",
+                "一",
+                "二",
+                "三",
+                "四",
+                "五",
+                "六"
+            ],
+            "monthNames": [
+                "一月",
+                "二月",
+                "三月",
+                "四月",
+                "五月",
+                "六月",
+                "七月",
+                "八月",
+                "九月",
+                "十月",
+                "十一月",
+                "十二月"
+            ],
+            "firstDay": 1
+        },
+        "autoUpdateInput": true,
+        "alwaysShowCalendars": true,
+        "startDate": today.startDate,
+        "endDate": today.endDate
+    }, function(start, end, label) {
+        $(this.element[0]).data("dateRange", new DateRange(start, end));
     });
-    */
-
-    /*
-     *日期控件 
-     */
-    $("#datetime").click(function() {
-        $('#datetime').datepicker({
-            format: "yyyy-mm-dd",
-            language: "zh-CN",
-            todayHighlight: true, // 默认今天的日期
-            autoclose: true, //选中之后自动隐藏日期选择框
-        });
-        $("#datetime").datepicker("show");
-    }).val(new SimpleDateFormat().format(new Date()));
-
 
 
     Highcharts.setOptions({
@@ -77,16 +145,13 @@ $(function() {
     };
 
     function parseDateOpts() {
-        var $queryBtn = $(this);
-        var date = $queryBtn.parents(".input-group").find("input").val(),
-            dateMillisecond = new Date(date).getTime(),
-            type = "day";
+        var $queryBtn = $(this),
 
-        return {
-            date: date,
-            dateMillisecond: dateMillisecond,
-            type: type
-        };
+            $datetimeInput = $queryBtn.parents(".input-group").find("input"),
+
+            dateRange = $datetimeInput.data("dateRange");
+
+        return dateRange;
     }
     /*
     点击 查询 ，查询客户或者采集口，相应日期的丢包、错包数据
@@ -94,23 +159,15 @@ $(function() {
     $("#dateForRatio").on("click", "button.query-btn", function(event) {
 
 
-        var dateOpts = parseDateOpts.call(this);
-        //忘记输入日期，不能查询
-        if ("" == dateOpts.date.trim()) {
-            $(event.delegateTarget).find("input[data-mask]").tooltip("show");
-            return;
-        }
-        fetchPorts(dateOpts.dateMillisecond);
+        var dateRange = parseDateOpts.call(this);
 
-        $("#ratioContainer").triggerHandler('render.ratio.chart', dateOpts);
+        fetchPorts(dateRange);
+
+        $("#ratioContainer").triggerHandler('render.ratio.chart', dateRange);
 
     });
 
-    $("#ratioContainer").on("render.ratio.chart", function(event, opts) {
-
-        var date = opts.date,
-            dateMillisecond = opts.dateMillisecond,
-            type = opts.type;
+    $("#ratioContainer").on("render.ratio.chart", function(event, dateRange) {
 
         var selectedPortBtnList = $("#portList div.box-body dl button.btn-primary");
 
@@ -132,13 +189,14 @@ $(function() {
                 url: "query_portips_list_for_gather_interface.action",
                 contentType: "application/json",
                 data: JSON.stringify({
-                    type: type,
-                    date: dateMillisecond,
+                    type: dateRange.type,
+                    startDate: dateRange.startDateMilliSeconds(),
+                    endDate: dateRange.endDateMilliSeconds(),
                     "gatherInterfaceList": interfaceList
                 }),
                 plotOther: (function() {
                     ratioPlot.setTitle({
-                        text: date + customerName + '的错误率、丢包率'
+                        text: dateRange + customerName + '的错误率、丢包率'
                     });
 
                 })(),
@@ -155,13 +213,14 @@ $(function() {
             visualize({
                 url: "query_customer_portips_list.action",
                 data: {
-                    type: type,
-                    date: dateMillisecond,
+                    type: dateRange.type,
+                    startDate: dateRange.startDateMilliSeconds(),
+                    endDate: dateRange.endDateMilliSeconds(),
                     "customer.customerId": customerId
                 },
                 plotOther: (function() {
                     ratioPlot.setTitle({
-                        text: date + customerName + '的错误率、丢包率'
+                        text: dateRange + customerName + '的错误率、丢包率'
                     });
                 })(),
                 render: ratioRender.render,
@@ -176,7 +235,7 @@ $(function() {
         }
     });
     /*$("#dateForAlarm").on("click", "button.query-btn", function(event) {
-    	var date = $(event.delegateTarget).children("input[data-mask]").val();
+        var date = $(event.delegateTarget).children("input[data-mask]").val();
 
     });*/
 
@@ -210,7 +269,7 @@ $(function() {
             enabled: false
         },
         title: {
-            text: new SimpleDateFormat().format(new Date()) + customerName + '的错误率、丢包率'
+            text: today+customerName + '的错误率、丢包率'
         },
         subtitle: {
             text: document.ontouchstart === undefined ?
@@ -261,8 +320,8 @@ $(function() {
     });
 
     /*
-    	异步获取客户丢包率、错包率数据
-    	 */
+        异步获取客户丢包率、错包率数据
+         */
     function visualize(o) {
 
         function executeThese(funcArrayOrFunc) {
@@ -309,7 +368,7 @@ $(function() {
     }
 
     /*
-    	展示不同的告警信息
+        展示不同的告警信息
      */
     $("#alertModal").on("show.bs.modal", function(event) {
         var modal = $(this);
@@ -317,13 +376,14 @@ $(function() {
     });
 
     /*
-    	初始按天查询当天此客户的丢包率、错包率数据
+        初始按天查询当天此客户的丢包率、错包率数据
      */
     visualize({
         url: "query_customer_portips_list.action",
         data: {
             type: "day",
-            date: new Date().getTime(),
+            startDate: today.startDateMilliSeconds(),
+            endDate: today.endDateMilliSeconds(),
             "customer.customerId": customerId
         },
 
@@ -338,16 +398,17 @@ $(function() {
     });
 
     /*
-    	客户某天全天时段内的端口
+        客户某时段内占用的端口
      */
-    function fetchPorts(date) {
+    function fetchPorts(dateRange) {
         $.ajax({
             url: "query_customer_port_list.action",
             contentType: "application/x-www-form-urlencoded",
             method: "POST",
             data: {
                 "customer.customerId": customerId,
-                "date": date
+                "startDate": dateRange.startDateMilliSeconds(),
+                "endDate": dateRange.endDateMilliSeconds()
             },
             beforeSend: function(jqXHR, settings) {
                 var tmpl = $("#overlayTmpl").html(),
@@ -374,7 +435,7 @@ $(function() {
 
 
                 var tmpl = $("#portBtnTmpl").html(),
-                	result = "无";
+                    result = "无";
                 if (ips.length > 0) {
                     result = ejs.render(tmpl, {
                         ips: ips
@@ -397,129 +458,129 @@ $(function() {
             }
         });
     }
-    fetchPorts(new Date().getTime());
+    fetchPorts(today);
     /*var colors = Highcharts.getOptions().colors,
-    	categories = ['MSIE', 'Firefox', 'Chrome', 'Safari', 'Opera'],
-    	data = [{
-    		y: 55.11,
-    		color: colors[0],
-    		drilldown: {
-    			name: 'MSIE versions',
-    			categories: ['MSIE 6.0', 'MSIE 7.0', 'MSIE 8.0', 'MSIE 9.0'],
-    			data: [10.85, 7.35, 33.06, 2.81],
-    			color: colors[0]
-    		}
-    	}, {
-    		y: 21.63,
-    		color: colors[1],
-    		drilldown: {
-    			name: 'Firefox versions',
-    			categories: ['Firefox 2.0', 'Firefox 3.0', 'Firefox 3.5', 'Firefox 3.6', 'Firefox 4.0'],
-    			data: [0.20, 0.83, 1.58, 13.12, 5.43],
-    			color: colors[1]
-    		}
-    	}, {
-    		y: 11.94,
-    		color: colors[2],
-    		drilldown: {
-    			name: 'Chrome versions',
-    			categories: ['Chrome 5.0', 'Chrome 6.0', 'Chrome 7.0', 'Chrome 8.0', 'Chrome 9.0',
-    				'Chrome 10.0', 'Chrome 11.0', 'Chrome 12.0'
-    			],
-    			data: [0.12, 0.19, 0.12, 0.36, 0.32, 9.91, 0.50, 0.22],
-    			color: colors[2]
-    		}
-    	}, {
-    		y: 7.15,
-    		color: colors[3],
-    		drilldown: {
-    			name: 'Safari versions',
-    			categories: ['Safari 5.0', 'Safari 4.0', 'Safari Win 5.0', 'Safari 4.1', 'Safari/Maxthon',
-    				'Safari 3.1', 'Safari 4.1'
-    			],
-    			data: [4.55, 1.42, 0.23, 0.21, 0.20, 0.19, 0.14],
-    			color: colors[3]
-    		}
-    	}, {
-    		y: 2.14,
-    		color: colors[4],
-    		drilldown: {
-    			name: 'Opera versions',
-    			categories: ['Opera 9.x', 'Opera 10.x', 'Opera 11.x'],
-    			data: [0.12, 0.37, 1.65],
-    			color: colors[4]
-    		}
-    	}],
-    	browserData = [],
-    	versionsData = [],
-    	i,
-    	j,
-    	dataLen = data.length,
-    	drillDataLen,
-    	brightness;
+        categories = ['MSIE', 'Firefox', 'Chrome', 'Safari', 'Opera'],
+        data = [{
+            y: 55.11,
+            color: colors[0],
+            drilldown: {
+                name: 'MSIE versions',
+                categories: ['MSIE 6.0', 'MSIE 7.0', 'MSIE 8.0', 'MSIE 9.0'],
+                data: [10.85, 7.35, 33.06, 2.81],
+                color: colors[0]
+            }
+        }, {
+            y: 21.63,
+            color: colors[1],
+            drilldown: {
+                name: 'Firefox versions',
+                categories: ['Firefox 2.0', 'Firefox 3.0', 'Firefox 3.5', 'Firefox 3.6', 'Firefox 4.0'],
+                data: [0.20, 0.83, 1.58, 13.12, 5.43],
+                color: colors[1]
+            }
+        }, {
+            y: 11.94,
+            color: colors[2],
+            drilldown: {
+                name: 'Chrome versions',
+                categories: ['Chrome 5.0', 'Chrome 6.0', 'Chrome 7.0', 'Chrome 8.0', 'Chrome 9.0',
+                    'Chrome 10.0', 'Chrome 11.0', 'Chrome 12.0'
+                ],
+                data: [0.12, 0.19, 0.12, 0.36, 0.32, 9.91, 0.50, 0.22],
+                color: colors[2]
+            }
+        }, {
+            y: 7.15,
+            color: colors[3],
+            drilldown: {
+                name: 'Safari versions',
+                categories: ['Safari 5.0', 'Safari 4.0', 'Safari Win 5.0', 'Safari 4.1', 'Safari/Maxthon',
+                    'Safari 3.1', 'Safari 4.1'
+                ],
+                data: [4.55, 1.42, 0.23, 0.21, 0.20, 0.19, 0.14],
+                color: colors[3]
+            }
+        }, {
+            y: 2.14,
+            color: colors[4],
+            drilldown: {
+                name: 'Opera versions',
+                categories: ['Opera 9.x', 'Opera 10.x', 'Opera 11.x'],
+                data: [0.12, 0.37, 1.65],
+                color: colors[4]
+            }
+        }],
+        browserData = [],
+        versionsData = [],
+        i,
+        j,
+        dataLen = data.length,
+        drillDataLen,
+        brightness;
     // Build the data arrays
     for (i = 0; i < dataLen; i += 1) {
-    	// add browser data
-    	browserData.push({
-    		name: categories[i],
-    		y: data[i].y,
-    		color: data[i].color
-    	});
-    	// add version data
-    	drillDataLen = data[i].drilldown.data.length;
-    	for (j = 0; j < drillDataLen; j += 1) {
-    		brightness = 0.2 - (j / drillDataLen) / 5;
-    		versionsData.push({
-    			name: data[i].drilldown.categories[j],
-    			y: data[i].drilldown.data[j],
-    			color: Highcharts.Color(data[i].color).brighten(brightness).get()
-    		});
-    	}
+        // add browser data
+        browserData.push({
+            name: categories[i],
+            y: data[i].y,
+            color: data[i].color
+        });
+        // add version data
+        drillDataLen = data[i].drilldown.data.length;
+        for (j = 0; j < drillDataLen; j += 1) {
+            brightness = 0.2 - (j / drillDataLen) / 5;
+            versionsData.push({
+                name: data[i].drilldown.categories[j],
+                y: data[i].drilldown.data[j],
+                color: Highcharts.Color(data[i].color).brighten(brightness).get()
+            });
+        }
     }
     // Create the chart
     $('#alarmContainer').highcharts({
-    	chart: {
-    		type: 'pie'
-    	},
-    	title: {
-    		text: 'Browser market share, April, 2011'
-    	},
-    	yAxis: {
-    		title: {
-    			text: 'Total percent market share'
-    		}
-    	},
-    	plotOptions: {
-    		pie: {
-    			shadow: false,
-    			center: ['50%', '50%']
-    		}
-    	},
-    	tooltip: {
-    		valueSuffix: '%'
-    	},
-    	series: [{
-    		name: 'Browsers',
-    		data: browserData,
-    		size: '60%',
-    		dataLabels: {
-    			formatter: function() {
-    				return this.y > 5 ? this.point.name : null;
-    			},
-    			color: 'white',
-    			distance: -30
-    		}
-    	}, {
-    		name: 'Versions',
-    		data: versionsData,
-    		size: '80%',
-    		innerSize: '60%',
-    		dataLabels: {
-    			formatter: function() {
-    				// display only if larger than 1
-    				return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + '%' : null;
-    			}
-    		}
-    	}]
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: 'Browser market share, April, 2011'
+        },
+        yAxis: {
+            title: {
+                text: 'Total percent market share'
+            }
+        },
+        plotOptions: {
+            pie: {
+                shadow: false,
+                center: ['50%', '50%']
+            }
+        },
+        tooltip: {
+            valueSuffix: '%'
+        },
+        series: [{
+            name: 'Browsers',
+            data: browserData,
+            size: '60%',
+            dataLabels: {
+                formatter: function() {
+                    return this.y > 5 ? this.point.name : null;
+                },
+                color: 'white',
+                distance: -30
+            }
+        }, {
+            name: 'Versions',
+            data: versionsData,
+            size: '80%',
+            innerSize: '60%',
+            dataLabels: {
+                formatter: function() {
+                    // display only if larger than 1
+                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + '%' : null;
+                }
+            }
+        }]
     });*/
 });

@@ -16,6 +16,8 @@ public class GetCustomerPortipsAction  extends ActionSupport{
 
 	private String type;
 	private long date;
+	private long startDate;
+	private long endDate;
 	private Customer customer;
 	
 	
