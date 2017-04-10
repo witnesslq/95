@@ -315,7 +315,7 @@ $(function() {
 
                     $(".info").text('');
 
-                    $(".panel-list ul.pagination").html('<li class="disabled"><a href="#">上页</a></li><li class="disabled"><a href="#">下页</a></li>');
+                    $(".panel-list ul.pagination").html('');
                 })
                 .fail(commonFail)
                 .always($.proxy(commonAlways, $box));
