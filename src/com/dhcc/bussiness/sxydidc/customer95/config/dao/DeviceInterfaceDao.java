@@ -71,7 +71,7 @@ public class DeviceInterfaceDao {
 		Transaction transaction = session.beginTransaction();
 		
 		try{
-			Query query = session.createSQLQuery("select d.id,d.node_Id ,d.if_Index ,d.if_Desc  ,if_speed  ,if_status  ,if_descr ,null as customer_Id  ,null as startTime,null as endTime from (select * from Device_Interface d where d.node_Id = :ipAddress  and not exists (select * from Topo_Interface t where t.endTime is null and d.node_Id = t.node_Id and d.if_index = t.if_index )) d order by if_desc asc ")
+			Query query = session.createSQLQuery("select d.id,d.node_Id ,d.if_Index ,d.if_Desc  ,if_speed  ,if_status  ,if_descr ,null as customer_Id  ,null as startTime,null as endTime from (select * from Device_Interface d where d.node_Id = :ipAddress  and not exists (select * from Topo_Interface t where t.endTime is null and d.node_Id = t.node_Id and d.if_index = t.if_index )) d order by to_number( if_index) asc ")
 					.addEntity(InterfaceDetail.class);
 			query.setString("ipAddress", host.getIpAddress());
 			

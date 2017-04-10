@@ -2,6 +2,7 @@ package com.dhcc.bussiness.sxydidc.customer95.config.services;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +29,7 @@ public abstract class DeviceInterfaceServiceSupport {
 		for (TopoHostNode host : hostList) {
 	
 			List interfaces = this.queryBy(host);
-			Set interfaceSet = new HashSet();
+			Set interfaceSet = new LinkedHashSet();
 			interfaceSet.addAll(interfaces);
 	
 			deviceList.add(new DeviceDetail(host, interfaceSet));
