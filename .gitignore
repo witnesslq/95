@@ -1,10 +1,8 @@
-.settings/*
+/.settings/
 .project
 .classpath
-target
-WebRoot/WEB-INF/classes
-WebRoot/node_modules
-logs/*
-src/SystemConfigResources.properties
-
+/target/
+/logs/
+/src/main/webapp/WEB-INF/classes/
 /results/
+/.externalToolBuilders/

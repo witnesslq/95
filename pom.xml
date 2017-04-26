@@ -8,19 +8,13 @@
 	<name>95计费</name>
 	<description>95计费管理门户</description>
 	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<!-- <testSourceDirectory>test</testSourceDirectory> -->
-		<outputDirectory>WebRoot\WEB-INF\classes</outputDirectory>
-		<!-- <testOutputDirectory>WebRoot\WEB-INF\classes</testOutputDirectory> -->
 	
+		<testSourceDirectory>src/main/java</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.4</version>
-				<configuration>
-					<warSourceDirectory>WebRoot</warSourceDirectory>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
+				
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -30,8 +24,28 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<port>8080</port>
+					<path>/95idc</path>
+					<uriEncoding>UTF-8</uriEncoding>
+					<finalName>mgr</finalName>
+					<server>tomcat7</server>
+				</configuration>
+			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.tomcat.maven</groupId>
+					<artifactId>tomcat7-maven-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<dependencies>
 
@@ -187,15 +201,13 @@
 			<artifactId>jfreechart</artifactId>
 			<version>1.0.19</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.lowagie/itext -->
-		<dependency>
-			<groupId>com.lowagie</groupId>
-			<artifactId>itext</artifactId>
-			<version>4.2.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/WebRoot/WEB-INF/lib/itext-4.2.1.jar</systemPath>
-		</dependency>
-
+	<!-- https://mvnrepository.com/artifact/com.lowagie/itext -->
+<dependency>
+    <groupId>com.lowagie</groupId>
+    <artifactId>itext</artifactId>
+    <version>2.1.7</version>
+</dependency>
+	
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -204,5 +216,5 @@
 		</dependency>
 
 	</dependencies>
-	
+
 </project>
