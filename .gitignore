@@ -3,6 +3,5 @@
 .classpath
 /target/
 /logs/
-/src/main/webapp/WEB-INF/classes/
 /results/
 /.externalToolBuilders/
