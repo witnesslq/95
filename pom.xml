@@ -7,9 +7,30 @@
 	<packaging>war</packaging>
 	<name>95计费</name>
 	<description>95计费管理门户</description>
+	<properties>
+		<hibernate.connection.password>95idc</hibernate.connection.password>
+        <hibernate.connection.url>jdbc:oracle:thin:@192.168.1.156:1521:orcl</hibernate.connection.url>
+        <hibernate.connection.username>95idc</hibernate.connection.username>
+	</properties>
 	<build>
 	
 		<testSourceDirectory>src/main/java</testSourceDirectory>
+		<resources>
+		<!-- 生成hibernate资源文件到与之关联的类文件夹 -->
+			<resource>
+				<directory>${basedir}/src/main/java</directory>
+				<filtering>false</filtering>
+				
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+			<!-- 数据库等开发和生产环境有区别的配置统一到POM中 -->
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
@@ -32,7 +53,6 @@
 					<port>8080</port>
 					<path>/95idc</path>
 					<uriEncoding>UTF-8</uriEncoding>
-					<finalName>mgr</finalName>
 					<server>tomcat7</server>
 				</configuration>
 			</plugin>
