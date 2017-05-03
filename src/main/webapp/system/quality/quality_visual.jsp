@@ -259,7 +259,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								
 								</dl>
 							</script>
-							<script src="<%=basePath  %>/node_modules/ejs/ejs.js"></script>
-							<script src="<%=basePath%>/js/quality_visual.js"></script>
+							<script src="<%=basePath  %>node_modules/ejs/ejs.js"></script>
+							<script src="<%=basePath  %>js/common_widgets.js"></script>
+							<script src="<%=basePath%>js/quality_visual.js"></script>
 						</body>
 					</html>

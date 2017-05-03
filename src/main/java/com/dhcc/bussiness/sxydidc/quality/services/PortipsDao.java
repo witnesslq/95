@@ -1,8 +1,7 @@
-package com.dhcc.bussiness.sxydidc.quality.dao;
+package com.dhcc.bussiness.sxydidc.quality.services;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,7 +20,6 @@ import com.dhcc.bussiness.sxydidc.alarm.HibernateUtil;
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
-import com.dhcc.bussiness.sxydidc.quality.services.DateRange;
 
 public class PortipsDao {
 
@@ -29,16 +27,6 @@ public class PortipsDao {
 	private String tableType;
 	private String dateFormat;
 	private String type;
-	private String date;
-	private static final String DAY_FORMAT = "yyyy-MM-dd";
-	private static final String MONTH_FORMAT = "yyyy-MM";
-	private static final String YEAR_FORMAT = "yyyy";
-	private static final SimpleDateFormat DAY_SDF = new SimpleDateFormat(
-			DAY_FORMAT);
-	private static final SimpleDateFormat MONTH_SDF = new SimpleDateFormat(
-			MONTH_FORMAT);
-	private static final SimpleDateFormat YEAR_SDF = new SimpleDateFormat(
-			YEAR_FORMAT);
 	private static final String DAY = "day";
 	private static final String MONTH = "month";
 	private static final String YEAR = "year";
@@ -52,39 +40,32 @@ public class PortipsDao {
 		super();
 		this.tableType = "";
 		this.type = DAY;
-		this.dateFormat = DAY_FORMAT;
-		this.date = DAY_SDF.format(new Date());
+		this.dateFormat = DateRange.DAY_FORMAT;
 	}
 
 	/*
 	 * 按照type和date查询对应表date时间的数据
 	 * 日期是毫秒数
 	 */
-	public PortipsDao(String type,  long dateMillisecond) {
+	public PortipsDao(String type) {
 		this();
-		if (date != null) {//没有传入日期，查询当天的信息
-
-			if (DAY.equals(type)) {
-				this.tableType = "";
-				this.dateFormat = this.DAY_FORMAT;
-				this.date = DAY_SDF.format(new Date(dateMillisecond));
-			} else if (MONTH.equals(type)) {
-				this.tableType = "day";
-				this.dateFormat = this.MONTH_FORMAT;
-				this.date = MONTH_SDF.format(new Date(dateMillisecond));
-			} else if (YEAR.equals(type)) {
-				this.tableType = "day";
-				this.dateFormat = this.YEAR_FORMAT;
-				this.date = YEAR_SDF.format(new Date(dateMillisecond));
-			} else {
-				this.tableType = "";
-				this.dateFormat = this.DAY_FORMAT;
-				this.date = DAY_SDF.format(new Date(dateMillisecond));
-			}
-			
+	
+		if (DAY.equals(type)) {
+			this.tableType = "";
+			this.dateFormat = DateRange.DAY_FORMAT;
+		} else if (MONTH.equals(type)) {
+			this.tableType = "day";
+			this.dateFormat = DateRange.MONTH_FORMAT;
+		} else if (YEAR.equals(type)) {
+			this.tableType = "day";
+			this.dateFormat = DateRange.YEAR_FORMAT;
+		} else {
+			this.tableType = "";
+			this.dateFormat = DateRange.DAY_FORMAT;
 		}
+		
+	
 	}
-	public PortipsDao(String type,  DateRange dateRange) {	this.dateRange = dateRange;	}
 	private final SessionFactory sessionFactory = HibernateUtil
 			.getSessionFactory();
 
@@ -113,10 +94,10 @@ public class PortipsDao {
 									+ topoInterface.getIfIndex()
 									+ "' and collecttime between to_date('"
 									+ topoInterface.getStartTime() + "','"
-									+ this.DAY_FORMAT
+									+ DateRange.DAY_FORMAT
 									+ " hh24:mi:ss') and to_date('"
 									+ topoInterface.getEndTime() + "','"
-									+ this.DAY_FORMAT + " hh24:mi:ss')")
+									+ DateRange.DAY_FORMAT + " hh24:mi:ss')")
 							.append(" union all ");
 				}
 				if (sql.length() > 0) {
@@ -128,16 +109,16 @@ public class PortipsDao {
 				finalSql.append("select round(avg(discardsperc),1) as discardsperc,round(avg(errorsperc),1) as errorsperc,");
 
 				if (YEAR.equals(type)) {
-					finalSql.append("to_char(collecttime,'" + this.MONTH_FORMAT
+					finalSql.append("to_char(collecttime,'" + DateRange.MONTH_FORMAT
 							+ "') as collecttime");
 				} else if (MONTH.equals(type)) {
-					finalSql.append("to_char(collecttime,'" + this.DAY_FORMAT
+					finalSql.append("to_char(collecttime,'" + DateRange.DAY_FORMAT
 							+ "') as collecttime");
 				} else if (DAY.equals(type)) {
-					finalSql.append("to_char(collecttime,'" + this.DAY_FORMAT
+					finalSql.append("to_char(collecttime,'" + DateRange.DAY_FORMAT
 							+ " hh24:mi:ss') as collecttime");
 				} else {
-					finalSql.append("to_char(collecttime,'" + this.DAY_FORMAT
+					finalSql.append("to_char(collecttime,'" + DateRange.DAY_FORMAT
 							+ " hh24:mi:ss') as collecttime");
 				}
 
@@ -145,7 +126,7 @@ public class PortipsDao {
 						.append(") group by ");
 
 				if (YEAR.equals(type)) {
-					finalSql.append("to_char(collecttime,'" + this.MONTH_FORMAT
+					finalSql.append("to_char(collecttime,'" + DateRange.MONTH_FORMAT
 							+ "')");
 				} else {
 					finalSql.append("collecttime");
@@ -200,10 +181,10 @@ public class PortipsDao {
 									+ topoInterface.getIfIndex()
 									+ "' and collecttime between to_date('"
 									+ topoInterface.getStartTime() + "','"
-									+ this.DAY_FORMAT
+									+ DateRange.DAY_FORMAT
 									+ " hh24:mi:ss') and to_date('"
 									+ topoInterface.getEndTime() + "','"
-									+ this.DAY_FORMAT + " hh24:mi:ss')")
+									+ DateRange.DAY_FORMAT + " hh24:mi:ss')")
 							.append(" union all ");
 				}
 				if (sql.length() > 0) {

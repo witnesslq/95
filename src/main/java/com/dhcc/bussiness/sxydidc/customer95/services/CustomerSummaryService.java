@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.dhcc.bussiness.sxydidc.customer95.dao.CustomerDao;
 import com.dhcc.bussiness.sxydidc.customer95.models.CustomerSummary;
-import com.dhcc.bussiness.sxydidc.quality.dao.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.dao.TopoInterfaceDao;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
 import com.dhcc.bussiness.sxydidc.quality.services.DateRange;
+import com.dhcc.bussiness.sxydidc.quality.services.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.services.PortipsInterfaceService;
 
 public class CustomerSummaryService {

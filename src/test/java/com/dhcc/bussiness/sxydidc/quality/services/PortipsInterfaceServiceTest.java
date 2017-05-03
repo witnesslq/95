@@ -31,6 +31,19 @@ public class PortipsInterfaceServiceTest {
 		System.out.println(service.fetchPortipsBy(customer, "day", ca.getTime().getTime()));
 	
 	}
+	
+	@Test
+	public void testFetchPortipsInDateRangeBy() {
+
+		Customer customer = new Customer();
+		customer.setCustomerId("016997fd-2a7f-499c-ac71-f62e16be77be");
+		
+		Calendar ca = Calendar.getInstance();
+		ca.set(2017, 0, 20);
+	
+		System.out.println(service.fetchPortipsInDateRangeBy(customer, "day", new DateRange(ca.getTime().getTime(),ca.getTime().getTime())));
+	
+	}
 
 	@Test
 	public void testFetchPortipsByListOfTopoInterfaceStringLong() {

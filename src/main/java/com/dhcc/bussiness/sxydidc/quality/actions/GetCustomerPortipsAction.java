@@ -5,10 +5,11 @@ import java.util.List;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.customer95.models.ProductIp;
-import com.dhcc.bussiness.sxydidc.quality.dao.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.dao.TopoInterfaceDao;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
+import com.dhcc.bussiness.sxydidc.quality.services.DateRange;
+import com.dhcc.bussiness.sxydidc.quality.services.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.services.PortipsInterfaceService;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -85,7 +86,7 @@ public class GetCustomerPortipsAction  extends ActionSupport{
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
 		PortipsInterfaceService service = new PortipsInterfaceService();
-		this.list = service.fetchPortipsBy(customer, type, date);
+		this.list = service.fetchPortipsInDateRangeBy(customer, type, new DateRange(this.startDate,this.endDate));
 		return SUCCESS;
 	}
 

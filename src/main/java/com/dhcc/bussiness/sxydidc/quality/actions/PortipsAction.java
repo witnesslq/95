@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
 import com.dhcc.bussiness.sxydidc.customer95.models.ProductIp;
-import com.dhcc.bussiness.sxydidc.quality.dao.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.dao.TopoInterfaceDao;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
+import com.dhcc.bussiness.sxydidc.quality.services.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.services.PortipsInterfaceService;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -123,7 +123,7 @@ public class PortipsAction extends ActionSupport {
 		List<TopoInterface> interfaceList = interfaceDao
 				.queryTopoInterfaceListFor(productIp);
 
-		PortipsDao portipsDao = new PortipsDao(type, date);
+		PortipsDao portipsDao = new PortipsDao(type);
 		this.list = portipsDao.queryPortipsForInterface(interfaceList);
 
 		return SUCCESS;

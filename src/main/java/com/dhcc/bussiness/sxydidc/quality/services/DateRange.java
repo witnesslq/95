@@ -5,11 +5,17 @@ import java.util.Date;
 
 public class DateRange {
 
-	private static final String DAY_FORMAT = "yyyy-MM-dd";
-	private static final String MONTH_FORMAT = "yyyy-MM";
-	private static final String YEAR_FORMAT = "yyyy";
 	private String startDate;
 	private String endDate;
+	static final String YEAR_FORMAT = "yyyy";
+	static final String MONTH_FORMAT = "yyyy-MM";
+	static final String DAY_FORMAT = "yyyy-MM-dd";
+	private static final SimpleDateFormat MONTH_SDF = new SimpleDateFormat(
+	DateRange.MONTH_FORMAT);
+	private static final SimpleDateFormat YEAR_SDF = new SimpleDateFormat(
+	DateRange.YEAR_FORMAT);
+	private static final SimpleDateFormat DAY_SDF = new SimpleDateFormat(
+	DateRange.DAY_FORMAT);
 	
 	/**
 	 * @param startDate
@@ -25,7 +31,7 @@ public class DateRange {
 		
 	}
 	public DateRange(long startDate,long endDate) {
-		this(sdf.format(new Date(startDate)),sdf.format(new Date(endDate)) );
+		this(DAY_SDF.format(new Date(startDate)),DAY_SDF.format(new Date(endDate)) );
 	}
 
 
@@ -39,14 +45,13 @@ public class DateRange {
 		this.endDate =  baseDate+" 23:59:59";
 	}
 	
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	/**
 	 * 
 	 */
 	public DateRange(long date) {
 		
-		this(sdf.format(new Date(date)) );
+		this(DAY_SDF.format(new Date(date)) );
 	}
 
 
@@ -54,7 +59,7 @@ public class DateRange {
 	 * 
 	 */
 	public DateRange() {
-		this(sdf.format(new Date()));
+		this(DAY_SDF.format(new Date()));
 		// TODO Auto-generated constructor stub
 	}
 

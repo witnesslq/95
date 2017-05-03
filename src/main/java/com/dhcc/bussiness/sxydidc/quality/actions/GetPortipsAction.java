@@ -2,9 +2,10 @@ package com.dhcc.bussiness.sxydidc.quality.actions;
 
 import java.util.List;
 
-import com.dhcc.bussiness.sxydidc.quality.dao.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
+import com.dhcc.bussiness.sxydidc.quality.services.DateRange;
+import com.dhcc.bussiness.sxydidc.quality.services.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.services.PortipsInterfaceService;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -13,6 +14,36 @@ public class GetPortipsAction extends ActionSupport{
 	private String type;
 	private long date;
 	private List<Portips> list;
+	
+	private long startDate;
+	private long endDate;
+	/**
+	 * @return the startDate
+	 */
+	public long getStartDate() {
+		return startDate;
+	}
+
+	/**
+	 * @param startDate the startDate to set
+	 */
+	public void setStartDate(long startDate) {
+		this.startDate = startDate;
+	}
+
+	/**
+	 * @return the endDate
+	 */
+	public long getEndDate() {
+		return endDate;
+	}
+
+	/**
+	 * @param endDate the endDate to set
+	 */
+	public void setEndDate(long endDate) {
+		this.endDate = endDate;
+	}
 
 	/**
 	 * @return the list
@@ -79,7 +110,7 @@ public class GetPortipsAction extends ActionSupport{
 	public String executeForGatherInterface() throws Exception {
 		// TODO Auto-generated method stub
 		PortipsInterfaceService service = new PortipsInterfaceService();
-		this.list = service.fetchPortipsBy(this.gatherInterfaceList,type, date);
+		this.list = service.fetchPortipsBy(this.gatherInterfaceList,type, new DateRange(this.startDate,this.endDate));
 		
 		return SUCCESS;
 	}

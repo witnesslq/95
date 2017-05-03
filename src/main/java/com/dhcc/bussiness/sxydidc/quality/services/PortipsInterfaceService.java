@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.dhcc.bussiness.sxydidc.customer95.models.Customer;
-import com.dhcc.bussiness.sxydidc.quality.dao.PortipsDao;
 import com.dhcc.bussiness.sxydidc.quality.dao.TopoInterfaceDao;
 import com.dhcc.bussiness.sxydidc.quality.models.Portips;
 import com.dhcc.bussiness.sxydidc.quality.models.TopoInterface;
@@ -27,12 +26,13 @@ public class PortipsInterfaceService {
 
 		resetRange(dateRange, interfaceList);
 
-		PortipsDao portipsDao = new PortipsDao(type, date);
+		PortipsDao portipsDao = new PortipsDao(type);
 		return portipsDao.queryPortipsForInterface(interfaceList);
 	}
 
 	/*
 	 * 客户规定时段内质量数据
+	 * 当前是以天为单位的时段，可能是某几天
 	 */
 	public List<Portips> fetchPortipsInDateRangeBy(Customer customer, String type,
 			DateRange dateRange) {
@@ -44,7 +44,7 @@ public class PortipsInterfaceService {
 
 		resetRange(dateRange, interfaceList);
 
-		PortipsDao portipsDao = new PortipsDao(type, dateRange);
+		PortipsDao portipsDao = new PortipsDao(type);
 		return portipsDao.queryPortipsForInterface(interfaceList);
 	}
 	
@@ -99,13 +99,11 @@ public class PortipsInterfaceService {
 	/*
 	 * 一些端口规定时段内质量数据
 	 */
-	public List<Portips> fetchPortipsBy( List<TopoInterface> gatherInterfaceList,String type,long date){
+	public List<Portips> fetchPortipsBy( List<TopoInterface> gatherInterfaceList,String type,DateRange dateRange){
 		// TODO Auto-generated method stub
 
-		DateRange dateRange = new DateRange(date);
-
 		resetRange(dateRange, gatherInterfaceList);
-		PortipsDao portipsDao = new PortipsDao(type,date);
+		PortipsDao portipsDao = new PortipsDao(type);
 		return portipsDao.queryPortipsForInterface(gatherInterfaceList);
 	}
 }

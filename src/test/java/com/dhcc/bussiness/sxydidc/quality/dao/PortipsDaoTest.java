@@ -8,6 +8,8 @@ import java.util.Date;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.dhcc.bussiness.sxydidc.quality.services.PortipsDao;
+
 public class PortipsDaoTest {
 
 	static PortipsDao dao ;
